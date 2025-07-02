@@ -1,5 +1,5 @@
 import chromadb
-from chromadb.errors import NotFoundError
+from chromadb.errors import InvalidCollectionException
 import datetime
 
 class DatabaseHandler:
@@ -15,8 +15,9 @@ class DatabaseHandler:
         try:
             find_collection = self.client.get_collection(name=name)
             return find_collection
-        except ValueError as e:
-            print(f"Error: {e}")
+        except InvalidCollectionException as e:
+            print(f"Error: {e}\nCreating new collection: {name}")
+            
             collection = self.client.create_collection(
                     name=name, 
                     metadata={
@@ -51,3 +52,19 @@ class DatabaseHandler:
         )
 
         return result
+    
+    def get_collections(self) -> list[chromadb.Collection] :
+        """Get a list of all collections in the Chroma database."""
+        return self.client.list_collections()
+    
+    def delete_all_collections(self):
+        """Delete all collections in the Chroma database."""
+        collections = self.get_collections()
+        for collection in collections:
+            try:
+                self.client.delete_collection(name=collection.name)
+                print("Deleted collection:", collection.name)
+            except InvalidCollectionException:
+                print(f"Collection {collection.name} not found.")
+            except Exception as e:
+                print(f"Error deleting collection {collection.name}: {e}")
