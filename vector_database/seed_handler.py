@@ -11,7 +11,7 @@ class SeedHandler:
         self.wikipedia_dataset = load_dataset("indonesian-nlp/wikipedia-id")
     
     def seed(self):
-        self.insert_wikipedia_data()
+        self.insert_wikipedia_data(n=1000)
     
     def insert_wikipedia_data(self, n: int):
         print("Inserting wikipedia data into the vector database...")
@@ -29,9 +29,14 @@ class SeedHandler:
 
         docs = [f'{row['title']} - {row['text']}' for row in full_dataset]
         ids = [f'{row['docid']}' for row in full_dataset]
+        metadatas = [{
+            "source": "wikipedia_id",
+            "title": row['title'],
+            "docid": row['docid'],
+        } for row in full_dataset]
 
         collection.add(
             documents=docs,
-            metadatas=[{"source": "wikipedia_id"}] * len(docs),
+            metadatas=metadatas,
             ids=ids
         )
