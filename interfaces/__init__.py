@@ -1,0 +1,2 @@
+from interfaces.document_interface import IDocument
+from interfaces.metadata_interface import IMetadata
