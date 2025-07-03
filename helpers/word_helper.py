@@ -1,7 +1,8 @@
 import re
+import string
 from nltk.tokenize import word_tokenize
 
-def read_words_from_file(self, filepath: str):
+def read_words_from_file(filepath: str):
         with open(filepath, 'r', encoding='utf-8') as f:
             words = f.read().splitlines()
         return words
@@ -19,3 +20,27 @@ class WordHelper:
         words = [word for word in words if word.lower() not in stop_words]
 
         return ' '.join(words)
+    
+    @staticmethod
+    def get_tokens(s):
+        if not s:
+            return []
+        return WordHelper.normalize_text(s).split()
+    
+    @staticmethod
+    def normalize_text(text: str):
+        def remove_articles(text):
+            regex = re.compile(r"\b(a|an|the)\b", re.UNICODE)
+            return re.sub(regex, " ", text)
+
+        def white_space_fix(text):
+            return " ".join(text.split())
+
+        def remove_punc(text):
+            exclude = set(string.punctuation)
+            return "".join(ch for ch in text if ch not in exclude)
+
+        def lower(text):
+            return text.lower()
+
+        return white_space_fix(remove_articles(remove_punc(lower(text))))
