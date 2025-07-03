@@ -1,3 +1,4 @@
+from interfaces import IDocument
 from llm.base_llm import BaseLLM
 from google import genai
 from google.genai import types
@@ -21,7 +22,7 @@ class GeminiLLM(BaseLLM):
         ]
 
         generate_content_config = types.GenerateContentConfig(
-            temperature=2,
+            temperature=0,
             response_mime_type="text/plain",
         )
 
@@ -35,7 +36,7 @@ class GeminiLLM(BaseLLM):
             result += chunk.text
             # print(chunk.text, end="")
         
-        return result        return result
+        return result
     
     def format_with_document(self, prompt: str, documents: list[IDocument]) -> str:
         """
@@ -51,3 +52,10 @@ class GeminiLLM(BaseLLM):
             "Berikan jawaban yang singkat."
         ])
     
+    def validate_context(self, query: str, context:str) -> bool:
+        question = f"Apakah konteks berikut cukup untuk menjawab pertanyaan: '{query}'?\n\nKonteks:\n{context}\n\nJawab dengan 'Ya' atau 'Tidak'."
+
+        response = self.answer(question)
+        print(response)
+        
+        return True if "Ya" in response else False
