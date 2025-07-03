@@ -35,4 +35,19 @@ class GeminiLLM(BaseLLM):
             result += chunk.text
             # print(chunk.text, end="")
         
-        return result
+        return result        return result
+    
+    def format_with_document(self, prompt: str, documents: list[IDocument]) -> str:
+        """
+        Formats the prompt with the document content.
+        """
+        context_formatted = ""
+        for doc in documents:
+            context_formatted += f"Context Title: {doc.metadata.title}\n{doc.text}\n\n"
+        
+        return "\n".join([
+            context_formatted,
+            f"Q: {prompt}",
+            "Berikan jawaban yang singkat."
+        ])
+    

@@ -13,5 +13,6 @@ class SingleRetrieval(BaseMethod):
         retrieval_query = WordHelper.remove_stop_words(query)
         retrieved_document = self.retrieve_document(retrieval_query)
 
-        answer = self.llm.answer(query, [retrieved_document])
+        formatted_query = self.llm.format_with_document(query, [retrieved_document])
+        answer = self.llm.answer(formatted_query)
         return answer

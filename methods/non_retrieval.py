@@ -8,4 +8,5 @@ class NonRetrieval(BaseMethod):
         This method is a placeholder for non-retrieval methods.
         It simply returns an answer from llm without any retrieval process.
         """
-        return self.llm.answer(query)
+        format_query = f"Q: {query}\nBerikan jawaban yang singkat."
+        return self.llm.answer(format_query)
