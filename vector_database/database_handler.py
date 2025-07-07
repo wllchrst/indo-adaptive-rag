@@ -1,9 +1,11 @@
 import chromadb
 from chromadb.errors import InvalidCollectionException
 import datetime
+from vector_database.custom_embedder import IndoEmbeddingFunction
 
 class DatabaseHandler:
     def __init__(self):
+        self.embedding_function = IndoEmbeddingFunction()
         self.client = chromadb.PersistentClient(path="./chroma_db")
     
     def get_or_create_collection(self,
@@ -23,7 +25,8 @@ class DatabaseHandler:
                     metadata={
                         "description": description,
                         "created": str(datetime.datetime.now())
-                    }
+                    },
+                    embedding_function=self.embedding_function
                 )
 
             return collection
