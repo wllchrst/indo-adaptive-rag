@@ -11,7 +11,7 @@ class BaseMethod(ABC):
         self.database_handler = DatabaseHandler()
     
     @abstractmethod
-    def answer(self, query: str):
+    def answer(self, query: str, with_logging: bool):
         pass
 
     def retrieve_document(self, query: str, total_result: int = 5) -> IDocument:
@@ -71,3 +71,12 @@ class BaseMethod(ABC):
 
         documents.sort(key=lambda doc: doc["distance"])
         return documents[:5]
+    
+    def log_actions(self, method: str, query: str, answer: str, with_logging: bool):
+        if not with_logging:
+            return
+        
+        print("*" * 40)
+        print(method)
+        print(f'Query: {query}')
+        print(f'Answer: {answer}')
