@@ -1,1 +1,2 @@
 from classification.gather_data import gather_indo_qa
+from classification.classify import classify_indo_qa
