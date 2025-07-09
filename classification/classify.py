@@ -25,14 +25,16 @@ def classify_indo_qa():
         if count == 3:
             return
 
-def classify(question: str, answer: str, logging: bool = False) -> str:
-    non_retrieval_prediction = get_answer(question, non_retrieval)
-    single_retrieval_prediction = get_answer(question, single_retrieval)
+def classify(question: str, answer: str, logging_classification: bool = False, log_method: bool = False) -> str:
+    non_retrieval_prediction = get_answer(question, non_retrieval, log_method)
+    single_retrieval_prediction = get_answer(question, single_retrieval, log_method)
+    multistep_retrieval_prediction = get_answer(question, multistep_retrieval, log_method)
 
     non_retrieval_result = EvaluationHelper.compute_scores(answer, non_retrieval_prediction)
     single_retrieval_result = EvaluationHelper.compute_scores(answer, single_retrieval_prediction)
+    multi_retrieval_result = EvaluationHelper.compute_scores(answer, multistep_retrieval_prediction)
 
-    if logging:
+    if logging_classification:
         print("*" * 35)
         print(f'Question: {question}')
         print(f'Actual answer: {answer}')
@@ -41,12 +43,18 @@ def classify(question: str, answer: str, logging: bool = False) -> str:
 
     if non_retrieval_result['exact_match'] == 1:
         return 'A'
+    elif single_retrieval_result['exact_match'] == 1:
+        return 'B'
+    elif multi_retrieval_result['exact_match'] == 1:
+        return 'C'
     elif non_retrieval_result['f1_score'] > single_retrieval_result['f1_score']:
         return 'A'
-    else:
+    elif single_retrieval_result['f1_score'] > multi_retrieval_result['f1_score']:
         return 'B'
+    else:
+        return 'C'
     
-def get_answer(question: str, mode: str) -> str:
+def get_answer(question: str, mode: str, log_method: bool) -> str:
     if mode not in methods:
         raise ValueError(f"Invalid mode: {mode}. Available modes: {', '.join(methods.keys())}")
-    return methods[mode].answer(question, True)
+    return methods[mode].answer(question, log_method)
