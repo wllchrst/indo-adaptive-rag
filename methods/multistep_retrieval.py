@@ -6,7 +6,7 @@ class MultistepRetrieval(BaseMethod):
     def __init__(self):
         super().__init__()
 
-    def answer(self, query: str, with_logging: bool = False):
+    def answer(self, query: str, with_logging: bool = False, index: str=''):
         """
         This method retrieves multiple relevant documents from the vector database
         and uses them to answer the query.

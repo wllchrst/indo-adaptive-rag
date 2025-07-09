@@ -3,7 +3,7 @@ class NonRetrieval(BaseMethod):
     def __init__(self):
         super().__init__()
 
-    def answer(self, query: str, with_logging: bool = False):
+    def answer(self, query: str, with_logging: bool = False, index: str = ''):
         """True
         This method is a placeholder for non-retrieval methods.
         It simply returns an answer from llm without any retrieval process.
