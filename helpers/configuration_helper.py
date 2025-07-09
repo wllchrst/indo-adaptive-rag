@@ -14,4 +14,4 @@ class ConfigurationHelper:
                 data = yaml.safe_load(file)
                 self.configs[file_name.split('.')[0]] = data
 
-configuration_helper = ConfigurationHelper()
+# configuration_helper = ConfigurationHelper()

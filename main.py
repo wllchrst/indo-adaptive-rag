@@ -1,4 +1,4 @@
-from classification import classify_indo_qa
+from classification.classify import classify
 
 def seed_data():
     from vector_database import SeedHandler
@@ -8,8 +8,12 @@ def seed_data():
         handler.seed()
     except Exception as e:
         print(f"Error seeding data: {e}")
+
+def build_elasticsearch_index():
+    from bm25 import build_all_index
+    build_all_index()
     
-def test_querying(query: str):
+def test_querying_chroma(query: str):
     from vector_database import DatabaseHandler
     
     handler = DatabaseHandler()    
@@ -22,17 +26,27 @@ def test_querying(query: str):
 
     # print(result)
 
+def test_querying_elastic(query: str):
+    from bm25 import ElasticsearchRetriever
+    retriever = ElasticsearchRetriever()
+
+    results = retriever.search(
+        index='indoqa',
+        query=query,
+        total_result=5
+    )
+
+    for result in results:
+        print(result)
+
 def main():
     # If this is your first time running the application you should 
     # seed all the data into the vector database for context
-    seed_data()
+    # seed_data() # ! CHROMADB
+    # build_elasticsearch_index() # ! Elasticsearch make sure the docker compose is running
+    from classification import classify_indo_qa
     
-    # classify_indo_qa()
-    # query = 'Dengan siapa Chaerul Saleh, Sukarni, Wikana, dan para pemuda pejuang berdiskusi?'
-    # clean_query = 'Chaerul Saleh, Sukarni, Wikana'
+    classify_indo_qa()
 
-    # test_querying(query)
-    # test_querying(clean_query)
-    
 if __name__ == "__main__":
     main()
