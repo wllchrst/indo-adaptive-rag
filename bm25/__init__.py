@@ -1,1 +1,2 @@
 from bm25.build_indexes import build_all_index
+from bm25.elasticsearch_retriever import ElasticsearchRetriever
