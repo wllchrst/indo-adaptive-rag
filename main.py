@@ -1,5 +1,3 @@
-from classification.classify import classify
-
 def seed_data():
     from vector_database import SeedHandler
     try:
