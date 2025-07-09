@@ -20,15 +20,26 @@ def classify_indo_qa():
         question = row['question']
         answer = row['answer']
 
-        classify(question, answer, False)
+        classify(
+            question=question,
+            answer=answer,
+            logging_classification=True,
+            log_method=False,
+            index='indoqa'
+        )
         count += 1
         if count == 3:
             return
 
-def classify(question: str, answer: str, logging_classification: bool = False, log_method: bool = False) -> str:
-    non_retrieval_prediction = get_answer(question, non_retrieval, log_method)
-    single_retrieval_prediction = get_answer(question, single_retrieval, log_method)
-    multistep_retrieval_prediction = get_answer(question, multistep_retrieval, log_method)
+def classify(question: str,
+                answer: str,
+                logging_classification: bool = False,
+                log_method: bool = False,
+                index: str = '') -> str:
+
+    non_retrieval_prediction = get_answer(question, non_retrieval, log_method, index)
+    single_retrieval_prediction = get_answer(question, single_retrieval, log_method, index)
+    multistep_retrieval_prediction = '' # get_answer(question, multistep_retrieval, log_method, index)
 
     non_retrieval_result = EvaluationHelper.compute_scores(answer, non_retrieval_prediction)
     single_retrieval_result = EvaluationHelper.compute_scores(answer, single_retrieval_prediction)
@@ -54,7 +65,7 @@ def classify(question: str, answer: str, logging_classification: bool = False, l
     else:
         return 'C'
     
-def get_answer(question: str, mode: str, log_method: bool) -> str:
+def get_answer(question: str, mode: str, log_method: bool, index: str) -> str:
     if mode not in methods:
         raise ValueError(f"Invalid mode: {mode}. Available modes: {', '.join(methods.keys())}")
-    return methods[mode].answer(question, log_method)
+    return methods[mode].answer(question, log_method, index)
