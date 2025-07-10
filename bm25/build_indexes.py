@@ -48,7 +48,7 @@ def build_all_index():
 
         # INDOQA
         indoqa_docs = make_indoqa_context()
-        es.indices.delete(index=indoqa_index)
+        es.indices.delete(index=indoqa_index, ignore_unavailable=True)
         es.indices.create(index=indoqa_index)
         insert_documents(indoqa_index, indoqa_docs)
     except Exception as e:
