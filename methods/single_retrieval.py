@@ -2,8 +2,8 @@ from methods.base_method import BaseMethod
 from helpers import WordHelper
 
 class SingleRetrieval(BaseMethod):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, model_type: str):
+        super().__init__(model_type)
     
     def answer(self,
                query: str,

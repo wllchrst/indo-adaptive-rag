@@ -1,18 +1,24 @@
 from nltk.tokenize import word_tokenize
 from abc import ABC, abstractmethod
-from llm import GeminiLLM
+from llm import GeminiLLM, HuggingFaceLLM
 from vector_database import DatabaseHandler
 from interfaces import IDocument, IMetadata
 from bm25 import ElasticsearchRetriever
 from typing import List
 
 class BaseMethod(ABC):
-    def __init__(self):
+    def __init__(self, model_type='gemini'):
         super().__init__()
-        self.llm = GeminiLLM()
+        self.assign_llm(model_type=model_type)
         self.database_handler = DatabaseHandler()
         self.elastic_retriever = ElasticsearchRetriever()
-    
+
+    def assign_llm(self, model_type: str):
+        if model_type == 'gemini':
+            self.llm = GeminiLLM()
+        elif model_type == 'hugging_face':
+            self.llm = HuggingFaceLLM()
+
     @abstractmethod
     def answer(self, query: str, with_logging: bool, index: str):
         pass

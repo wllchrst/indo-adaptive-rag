@@ -3,8 +3,8 @@ from methods.base_method import BaseMethod
 from interfaces import IDocument
 from helpers import WordHelper
 class MultistepRetrieval(BaseMethod):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, model_type: str):
+        super().__init__(model_type)
 
     def answer(self, query: str, with_logging: bool = False, index: str=''):
         """

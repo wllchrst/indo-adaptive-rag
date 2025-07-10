@@ -6,10 +6,12 @@ non_retrieval = 'non-retrieval'
 single_retrieval = 'single-retrieval'
 multistep_retrieval = 'multistep-retrieval'
 
+# model_type = 'hugging_face'
+model_type = 'gemini'
 methods = {
-    non_retrieval: NonRetrieval(),
-    single_retrieval: SingleRetrieval(),
-    multistep_retrieval: MultistepRetrieval()
+    non_retrieval: NonRetrieval(model_type),
+    single_retrieval: SingleRetrieval(model_type),
+    multistep_retrieval: MultistepRetrieval(model_type)
 }
 
 def classify_indo_qa():

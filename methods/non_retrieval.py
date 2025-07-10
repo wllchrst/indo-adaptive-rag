@@ -1,7 +1,7 @@
 from methods.base_method import BaseMethod
 class NonRetrieval(BaseMethod):
-    def __init__(self):
-        super().__init__()
+    def __init__(self, model_type: str):
+        super().__init__(model_type)
 
     def answer(self, query: str, with_logging: bool = False, index: str = ''):
         """True
