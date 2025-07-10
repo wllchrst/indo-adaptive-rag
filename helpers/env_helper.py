@@ -6,7 +6,7 @@ ENVS = ["GEMINI_API_KEY", "ELASTIC_HOST"]
 class EnvHelper:
     """Class for gathering and saving all env for the application """
     def __init__(self):
-        load_dotenv(dotenv_path='.env')
+        load_dotenv(dotenv_path='.env', override=True)
         self.envs = {}
 
         self.gather_envs()
