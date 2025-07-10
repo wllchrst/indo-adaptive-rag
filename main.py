@@ -36,6 +36,17 @@ def test_querying_elastic(query: str):
 
     for result in results:
         print(result)
+        
+def test_llm():
+    question = "Siapa nama presiden pertama Indonesia"
+    try:
+        from llm import HuggingFaceLLM
+        model_name = 'kalisai/Nusantara-0.8b-Indo-Chat'
+        llm = HuggingFaceLLM(model_name=model_name)
+        answer = llm.answer(question)
+        print(f"Answering Finished: {answer}")
+    except Exception as e:
+        print(e)
 
 def main():
     # If this is your first time running the application you should 
