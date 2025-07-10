@@ -20,9 +20,7 @@ class SingleRetrieval(BaseMethod):
             index=index
         )
 
-        print(retrieved_document)
-
-        formatted_query = self.llm.format_with_document(query, [retrieved_document])
+        formatted_query = self.llm.format_with_document(query, retrieved_document)
         answer = self.llm.answer(formatted_query)
 
         self.log_actions(

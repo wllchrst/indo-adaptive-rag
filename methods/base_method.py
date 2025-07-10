@@ -20,7 +20,7 @@ class BaseMethod(ABC):
     def retrieve_document(self,
                             query: str,
                             total_result: int = 5,
-                            index: str = '') -> IDocument:
+                            index: str = '') -> List[IDocument]:
         """
         This method retrieves a single document from the vector database based on the query.
         """
@@ -34,9 +34,9 @@ class BaseMethod(ABC):
             total_result=total_result,
             index=index
         )
-        return documents[0]
+        return documents
     
-    def retrieve_elasticsearch(self, query: str, total_result: int, index: str):
+    def retrieve_elasticsearch(self, query: str, total_result: int, index: str) -> List[IDocument]:
         search_result = self.elastic_retriever.search(index=index, query=query, total_result=total_result)
 
         documents: List[IDocument] = []
@@ -54,9 +54,8 @@ class BaseMethod(ABC):
         
         return documents
     
-    def retrieve_chromadb(self, query: str, total_result: int = 5):
+    def retrieve_chromadb(self, query: str, total_result: int = 5) -> List[IDocument]:
         collections = self.database_handler.get_collections()
-        document = None
 
         for collection in collections:
             result = self.database_handler.query(
@@ -64,6 +63,8 @@ class BaseMethod(ABC):
                 query=query,
                 total_result=total_result
             )
+
+            documents : List[IDocument] = []
 
             if len(result['documents'][0]) > 0:
                 current_document = IDocument(
@@ -72,41 +73,9 @@ class BaseMethod(ABC):
                     metadata=IMetadata(**result['metadatas'][0][0])
                 )
 
-                if document is None or current_document['distance'] < document['distance']:
-                    document = current_document
+                documents.append(current_document)
 
-        return document
-    
-    def retrieve_documents(self, query: str, total_result: int = 5) -> list[str]:
-        """
-        This method retrieves multiple documents from the vector database based on the query.
-        """
-        collections = self.database_handler.get_collections()
-        documents = []
-
-        for collection in collections:
-            result = self.database_handler.query(
-                collection_name=collection.name,
-                query=query,
-                total_result=total_result
-            )
-
-            if len(result['documents'][0]) > 0:
-                texts = result['documents'][0]
-                distances = result['distances'][0]
-                metadatas = result['metadatas'][0]
-
-                for text, distance, metadata in zip(texts, distances, metadatas):
-                    formatted_document = {
-                        "text": text,
-                        "distance": distance,
-                        "metadata": metadata
-                    }
-
-                    documents.append(formatted_document)
-
-        documents.sort(key=lambda doc: doc["distance"])
-        return documents[:5]
+        return documents
     
     def log_actions(self, method: str, query: str, answer: str, with_logging: bool):
         if not with_logging:
