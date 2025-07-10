@@ -1,6 +1,9 @@
 import re
 import string
+import nltk
 from nltk.tokenize import word_tokenize
+
+nltk.download('punkt_tab')
 
 def read_words_from_file(filepath: str):
         with open(filepath, 'r', encoding='utf-8') as f:
@@ -8,7 +11,6 @@ def read_words_from_file(filepath: str):
         return words
 
 stop_words = read_words_from_file('stop_words.txt')
-
 class WordHelper:
     @staticmethod
     def remove_non_alphabetic(text: str) -> str:
