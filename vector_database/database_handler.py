@@ -1,5 +1,4 @@
 import chromadb
-from chromadb.errors import InvalidCollectionException
 import datetime
 from vector_database.custom_embedder import IndoEmbeddingFunction
 
@@ -17,7 +16,7 @@ class DatabaseHandler:
         try:
             find_collection = self.client.get_collection(name=name)
             return find_collection
-        except InvalidCollectionException as e:
+        except Exception as e:
             print(f"Error: {e}\nCreating new collection: {name}")
             
             collection = self.client.create_collection(
@@ -67,7 +66,7 @@ class DatabaseHandler:
             try:
                 self.client.delete_collection(name=collection.name)
                 print("Deleted collection:", collection.name)
-            except InvalidCollectionException:
+            except Exception as e:
                 print(f"Collection {collection.name} not found.")
             except Exception as e:
                 print(f"Error deleting collection {collection.name}: {e}")
