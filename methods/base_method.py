@@ -25,7 +25,7 @@ class BaseMethod(ABC):
 
     def retrieve_document(self,
                             query: str,
-                            total_result: int = 5,
+                            total_result: int = 3,
                             index: str = '') -> List[IDocument]:
         """
         This method retrieves a single document from the vector database based on the query.

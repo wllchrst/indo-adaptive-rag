@@ -18,34 +18,43 @@ class MultistepRetrieval(BaseMethod):
            b. Limitations of reptitions in the retrieval is reached
 
         """
-        retrieved_documents = self.retrieve(query)
+        retrieved_documents = self.retrieve(query, index=index)
 
         return retrieved_documents
         
     def retrieve(self,
                 original_question: str,
                 previous_reasonings: List[str] = [],
+                previous_documents: List[IDocument] = [],
                 query: str = '',
                 current_count: int = 0,
-                limit_count: int = 5):
+                limit_count: int = 5,
+                index: str ='',
+                retrieval_count: int = 3):
         retrieval_query = original_question if query == '' else query
-        first_document = self.retrieve_document(retrieval_query, total_result=5)
+        documents = self.retrieve_document(retrieval_query, total_result=retrieval_count, index=index)
 
-        result, is_answered = self.reasoning(original_question, [first_document], previous_reasonings)
+        result, is_answered = self.reasoning(
+            question=original_question,
+            documents=documents,
+            previous_reasonings=previous_reasonings
+        )
 
         if is_answered:
             return result
         elif current_count >= limit_count:
             return "Tidak dapat menemukan jawaban yang tepat. Silakan coba pertanyaan lain."
-        
+
         previous_reasonings.append(result)
+        previous_documents.append(documents)
         
         self.retrieve(
             original_question=original_question,
             query=result,
             limit_count=limit_count,
             current_count=current_count + 1,
-            previous_reasonings=previous_reasonings
+            previous_reasonings=previous_reasonings,
+            previous_documents=previous_documents
         )
 
     def reasoning(self,
@@ -74,10 +83,13 @@ class MultistepRetrieval(BaseMethod):
         ])
         
         print("_" * 50)
+        print(f"Previous reasonings: {previous_reasonings}")
 
+        print("Reasoning Prompt")
         print(reasoning_prompt)
 
         answer = self.llm.answer(reasoning_prompt)
+        answer = WordHelper.clean_sentence(answer)
         print(f"Answer: {answer}")
 
         if "Jawaban" in answer:
