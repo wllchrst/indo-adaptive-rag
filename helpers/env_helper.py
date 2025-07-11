@@ -1,7 +1,7 @@
 import os
 from dotenv import load_dotenv
 
-ENVS = ["GEMINI_API_KEY", "ELASTIC_HOST"]
+ENVS = ["GEMINI_API_KEY", "ELASTIC_HOST", "CACHE_DIRECTORY"]
 
 class EnvHelper:
     """Class for gathering and saving all env for the application """
@@ -30,5 +30,6 @@ class EnvHelper:
     def assign_env(self):
         self.GEMINI_API_KEY = self.envs[ENVS[0]]
         self.ELASTIC_HOST = self.envs[ENVS[1]]
+        self.CACHE_DIRECTORY = self.envs[ENVS[2]]
 
 env_helper = EnvHelper()
