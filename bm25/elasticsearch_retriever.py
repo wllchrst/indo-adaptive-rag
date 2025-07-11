@@ -1,13 +1,17 @@
 from elasticsearch import Elasticsearch
 from helpers import env_helper
-from typing import List
+from joblib import Memory
+from helpers import env_helper
+
+memory = Memory(location=env_helper.CACHE_DIRECTORY, verbose=0)
+es = Elasticsearch(env_helper.ELASTIC_HOST)
 
 class ElasticsearchRetriever:
-    def __init__(self):
-        self.es = Elasticsearch(env_helper.ELASTIC_HOST)
-
-    def search(self, index: str, query: str, total_result: int) -> List[str] :
-        query_result = self.es.search(
+    @staticmethod
+    @memory.cache
+    def search(index: str, query: str, total_result: int):
+        print("Searching not from cache")
+        query_result = es.search(
             index=index,
             size=total_result,
             query={
@@ -20,9 +24,11 @@ class ElasticsearchRetriever:
         hits = query_result['hits']['hits']
 
         return hits
-        
-    def search_all(self, index: str):
-        res = self.es.search(
+    
+    @staticmethod
+    @memory.cache
+    def search_all(index: str):
+        res = es.search(
             index=index,
             query={
                 "match_all": {}
