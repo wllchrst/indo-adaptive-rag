@@ -24,6 +24,14 @@ class WordHelper:
         return ' '.join(words)
     
     @staticmethod
+    def clean_sentence(text: str) -> str:
+        # Remove markdown bold (**text**)
+        text = re.sub(r'\*\*(.*?)\*\*', r'\1', text)
+        # Remove newline escape characters (\n, \r)
+        text = text.replace('\\n', '').replace('\\r', '')
+        return text.strip()
+    
+    @staticmethod
     def get_tokens(s):
         if not s:
             return []
@@ -31,6 +39,7 @@ class WordHelper:
     
     @staticmethod
     def normalize_text(text: str):
+        print(f"TEXT TO NORMALIZE: {text}")
         def remove_articles(text):
             regex = re.compile(r"\b(a|an|the)\b", re.UNICODE)
             return re.sub(regex, " ", text)
