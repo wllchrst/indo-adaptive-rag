@@ -13,8 +13,8 @@ class SingleRetrieval(BaseMethod):
         This method retrieves a single relevant document from the vector database
         and uses it to answer the query.
         """
-        print(f"Index: {index}")
-        retrieval_query = WordHelper.remove_stop_words(query)
+        retrieval_query = WordHelper.clean_sentence(WordHelper.remove_stop_words(query))
+
         retrieved_document = self.retrieve_document(
             query=retrieval_query,
             index=index
