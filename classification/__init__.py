@@ -1,2 +1,3 @@
 from classification.gather_data import gather_indo_qa
-from classification.classify import classify_indo_qafrom classification.build_cache import build_cache_elastic
+from classification.classify import classify_indo_qa
+from classification.build_cache import build_cache_elastic
