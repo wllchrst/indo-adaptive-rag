@@ -1,11 +1,27 @@
-version: '3'
+version: "3"
 services:
   elasticsearch:
     image: elasticsearch:9.0.2
     ports:
       - 9200:9200
     environment:
-      discovery.type: 'single-node'
-      xpack.security.enabled: 'false'
-      ELASTIC_PASSWORD: 'password'
-      ES_JAVA_OPTS: '-Xmx2g -Xms2g'
+      discovery.type: "single-node"
+      xpack.security.enabled: "false"
+      ELASTIC_PASSWORD: "password"
+      ES_JAVA_OPTS: "-Xmx2g -Xms2g"
+
+  my-python-app:
+    build: .
+    container_name: my-python-app
+    command: python -m main
+    env_file:
+      - .env
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - ELASTIC_HOST=${ELASTIC_HOST}
+      - CACHE_DIRECTORY=${CACHE_DIRECTORY}
+    volumes:
+      - ./${CACHE_DIRECTORY}:${CACHE_DIRECTORY}
+
+volumes:
+  joblib-cache:
