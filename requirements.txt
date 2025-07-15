@@ -15,4 +15,4 @@ elasticsearch
 google==3.0.0
 python-dotenv==1.1.1
 hf_xet==1.1.5
-jobllib==1.5.1
+joblib==1.5.1
