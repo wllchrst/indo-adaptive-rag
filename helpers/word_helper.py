@@ -39,7 +39,6 @@ class WordHelper:
     
     @staticmethod
     def normalize_text(text: str):
-        print(f"TEXT TO NORMALIZE: {text}")
         def remove_articles(text):
             regex = re.compile(r"\b(a|an|the)\b", re.UNICODE)
             return re.sub(regex, " ", text)
