@@ -1,3 +1,5 @@
+import pandas as pd
+import traceback
 from classification.gather_data import gather_indo_qa
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
 from helpers import EvaluationHelper
@@ -14,24 +16,37 @@ methods = {
     multistep_retrieval: MultistepRetrieval(model_type)
 }
 
-def classify_indo_qa():
-    train_df, test_df = gather_indo_qa()
-    count = 0
+def classify_indo_qa(testing: bool, log_classification: bool):
+    try: 
+        train_df, test_df = gather_indo_qa()
+        full_df = pd.concat([train_df, test_df]).reset_index(drop=True)
+        classifications = []
 
-    for index, row in train_df.iterrows():
-        question = row['question']
-        answer = row['answer']
+        for index, row in full_df.iterrows():
+            question = row['question']
+            answer = row['answer']
 
-        classify(
-            question=question,
-            answer=answer,
-            logging_classification=True,
-            log_method=False,
-            index='indoqa'
-        )
-        count += 1
-        if count == 3:
-            return
+            classification_result = classify(
+                question=question,
+                answer=answer,
+                logging_classification=log_classification,
+                log_method=False,
+                index='indoqa'
+            )
+
+            classifications.append(classification_result)
+
+            if len(classifications) == 3 and testing:
+                break
+
+        full_df.loc[:len(classifications)-1, 'classification'] = classifications
+        full_df.to_csv('classification_result/indoqa_classified.csv')
+        
+        return True
+    except Exception as e:
+        traceback.print_exc()
+        print(f"Error classifying indoqa: {e}")
+        return False
 
 def classify(question: str,
                 answer: str,
@@ -41,11 +56,9 @@ def classify(question: str,
 
     non_retrieval_prediction = get_answer(question, non_retrieval, log_method, index)
     single_retrieval_prediction = get_answer(question, single_retrieval, log_method, index)
-    multistep_retrieval_prediction = '' # get_answer(question, multistep_retrieval, log_method, index)
-
+    
     non_retrieval_result = EvaluationHelper.compute_scores(answer, non_retrieval_prediction)
     single_retrieval_result = EvaluationHelper.compute_scores(answer, single_retrieval_prediction)
-    multi_retrieval_result = EvaluationHelper.compute_scores(answer, multistep_retrieval_prediction)
 
     if logging_classification:
         print("*" * 35)
@@ -58,10 +71,17 @@ def classify(question: str,
         return 'A'
     elif single_retrieval_result['exact_match'] == 1:
         return 'B'
-    elif multi_retrieval_result['exact_match'] == 1:
-        return 'C'
     elif non_retrieval_result['f1_score'] > single_retrieval_result['f1_score']:
         return 'A'
+    
+    multistep_retrieval_prediction = get_answer(question, multistep_retrieval, log_method, index)
+    multi_retrieval_result = EvaluationHelper.compute_scores(answer, multistep_retrieval_prediction)
+    
+    if logging_classification:
+        print(f'Multistep Retrieval: {multistep_retrieval_prediction}')
+    
+    if multi_retrieval_result['exact_match'] == 1:
+        return 'C'
     elif single_retrieval_result['f1_score'] > multi_retrieval_result['f1_score']:
         return 'B'
     else:
