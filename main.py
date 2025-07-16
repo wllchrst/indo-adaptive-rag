@@ -1,3 +1,6 @@
+from helpers import env_helper
+from classification.build_cache import build_cache_elastic
+
 def seed_data():
     from vector_database import SeedHandler
     try:
@@ -48,14 +51,31 @@ def test_llm():
     except Exception as e:
         print(e)
 
+def clear_cache() -> bool:
+    try:
+        from joblib import Memory
+        memory = Memory(location=env_helper.CACHE_DIRECTORY, verbose=0)
+        memory.clear()
+        return True
+    except Exception as e:
+        print(f"Error clearing cache: {e}")
+        return False
+
+def run_classification_indoqa():
+    from classification import classify_indo_qa, build_cache_elastic
+    # cache_cleared = clear_cache()
+
+    # if not cache_cleared:
+    #     print("Classification failed, clearing cache failed")
+    #     return
+
+    # build_cache_elastic("indoqa")
+    classify_indo_qa(True, True)
+
 def main():
-    # If this is your first time running the application you should 
-    # seed all the data into the vector database for context
-    # seed_data() # ! CHROMADB
-    # build_elasticsearch_index() # ! Elasticsearch make sure the docker compose is running
-    from classification import classify_indo_qa
-    
-    classify_indo_qa()
+    run_classification_indoqa()
+    # test_querying_elastic("Chaerul Saleh")
 
 if __name__ == "__main__":
+    print("Script main.py is being run")
     main()
