@@ -9,19 +9,27 @@ services:
       xpack.security.enabled: "false"
       ELASTIC_PASSWORD: "password"
       ES_JAVA_OPTS: "-Xmx2g -Xms2g"
+    healthcheck:
+      test: curl -s http://localhost:9200 || exit 1
+      interval: 5s
+      retries: 10
 
-  my-python-app:
+  project_run:
     build: .
     container_name: my-python-app
     command: python -m main
     env_file:
-      - .env
+      - .env_docker
     environment:
       - GEMINI_API_KEY=${GEMINI_API_KEY}
       - ELASTIC_HOST=${ELASTIC_HOST}
       - CACHE_DIRECTORY=${CACHE_DIRECTORY}
     volumes:
-      - ./${CACHE_DIRECTORY}:${CACHE_DIRECTORY}
+      - .:/app 
+    depends_on:
+      - elasticsearch
 
 volumes:
   joblib-cache:
+
+    
