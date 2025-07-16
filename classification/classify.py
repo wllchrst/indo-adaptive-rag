@@ -40,7 +40,10 @@ def classify_indo_qa(testing: bool, log_classification: bool):
                 break
 
         full_df.loc[:len(classifications)-1, 'classification'] = classifications
-        full_df.to_csv('classification_result/indoqa_classified.csv')
+
+        save_path ='classification_result/indoqa_classified.csv' 
+        full_df.to_csv(save_path)
+        print(f"Classification complete, file is save at {save_path}")
         
         return True
     except Exception as e:
