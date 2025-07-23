@@ -1,5 +1,7 @@
 import pandas as pd
+import os
 import traceback
+import ast
 from elasticsearch import Elasticsearch
 from typing import List, TypedDict
 from helpers import env_helper
@@ -20,7 +22,7 @@ def make_indoqa_context() -> List[Document]:
     full_df = full_df.drop_duplicates(subset=['context'])
 
     docs: List[Document] = []
-    for index, row in full_df.iterrows():
+    for _, row in full_df.iterrows():
         doc: Document = {
             'id':row['id'],
             'answer': row['answer'],
@@ -31,6 +33,29 @@ def make_indoqa_context() -> List[Document]:
         docs.append(doc)
 
     return docs
+
+def make_musique_context(path: str):
+    file_names = os.listdir(path)
+    docs: List[Document] = []
+
+    for file_name in file_names:
+        file_path = os.path.join(path, file_name)
+        df = pd.read_csv(file_path)
+
+        for _, row in df.iterrows():
+            contexts = row['contexts']
+            context = ast.literal_eval(contexts)[0]
+            for sentence in context['sentences']:
+                doc: Document = {
+                    'id':row['id'],
+                    'answer': row['answer'],
+                    'question': row['question'],
+                    'text': sentence
+                }
+
+                docs.append(doc)
+
+    return docs 
 
 def insert_documents(index: str, documents: List[Document]):
     operations = []
@@ -45,12 +70,18 @@ def build_all_index():
         print(f"Elasticsearch information: {es.info()}")
         # index names
         indoqa_index = 'indoqa'
+        musique_index = 'musique'
 
         # INDOQA
         indoqa_docs = make_indoqa_context()
         es.indices.delete(index=indoqa_index, ignore_unavailable=True)
         es.indices.create(index=indoqa_index)
         insert_documents(indoqa_index, indoqa_docs)
+        
+        musique_docs = make_musique_context("musique")
+        es.indices.delete(index=musique_index, ignore_unavailable=True)
+        es.indices.create(index=musique_index)
+        insert_documents(musique_index, musique_docs)
     except Exception as e:
         print(f"Error while building all index: {e}")
         traceback.print_exc()
