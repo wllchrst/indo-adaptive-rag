@@ -37,8 +37,7 @@ def translate_safe(text: str) -> str:
             return " ".join(pipe(chunk)[0]['translation_text'] for chunk in chunks)
     except Exception as e:
         print(f"[Translation skipped] Error: {e} | Text: {text[:50]}...")
-        return text
-
+        raise e
 
 def translate_row_musique(data) -> Optional[dict]:
     id = data['id']
