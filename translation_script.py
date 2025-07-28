@@ -94,17 +94,18 @@ def translate_multihop_iteration(
         if loaded_dataset is not None and id in loaded_dataset['id'].values:
             print(f"Skipping already translated id: {id}")
             continue
-
-        if index == 17:
+        elif index == 17:
             continue
-
-        translated_row = translate_row_musique(data)
-
-        if testing and len(rows) > 2:
+        elif testing and len(rows) > 2:
             print('Testing done')
             break
 
-        rows.append(translated_row)
+        try:
+            translated_row = translate_row_musique(data)
+            rows.append(translated_row)
+        except Exception as e:
+            print(f"Error translating row {index} with id {id}: {e}")
+            continue
 
     return pd.DataFrame(rows)
 
