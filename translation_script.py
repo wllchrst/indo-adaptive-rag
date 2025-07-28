@@ -73,7 +73,11 @@ def translate_row_musique(data) -> Optional[dict]:
     
     return row
 
-def translate_multihop_iteration(dataset: Dataset, testing: bool = False, debug_row: Optional[int] = None) -> pd.DataFrame:
+def translate_multihop_iteration(
+        dataset: Dataset,
+        testing: bool = False,
+        debug_row: Optional[int] = None,
+        loaded_dataset: Optional[pd.DataFrame] = None) -> pd.DataFrame:
     rows = []
 
     if debug_row is not None:
@@ -86,8 +90,15 @@ def translate_multihop_iteration(dataset: Dataset, testing: bool = False, debug_
         return pd.DataFrame(rows)
     
     for index, data in enumerate(dataset):
+        id = data['id']
+        
+        if loaded_dataset is not None and id in loaded_dataset['id'].values:
+            print(f"Skipping already translated id: {id}")
+            continue
+
         if index == 17:
             continue
+
         translated_row = translate_row_musique(data)
 
         if testing and len(rows) > 2:
@@ -98,19 +109,35 @@ def translate_multihop_iteration(dataset: Dataset, testing: bool = False, debug_
 
     return pd.DataFrame(rows)
 
+def get_translated_partition(partition: list[str]) -> dict:
+    folder_path = 'musique'
+    loaded_datasets = {}
+
+    for dataset_name in partition:
+        try:
+            df = pd.read_csv(f'{folder_path}/{dataset_name}.csv')
+
+            loaded_datasets[dataset_name] = df
+        except FileNotFoundError:
+            print(f"File not found for dataset: {dataset_name}")
+            continue
+    
+    return loaded_datasets
+
 def translate_multihop(partition: list[str], testing:bool=False, debug_row: Optional[int] = None) -> bool:
     try:
         hotpot_qa = load_dataset('hotpot_qa', 'fullwiki', trust_remote_code=True)
+        loaded_datasets = get_translated_partition(partition)
         for dataset_name in partition:
             try:
                 dataset = hotpot_qa[dataset_name]
+                loaded_dataset = loaded_datasets[dataset_name]
                 translated_df = translate_multihop_iteration(
-                    dataset=dataset, testing=testing, debug_row=debug_row)
+                    dataset=dataset, testing=testing, debug_row=debug_row, loaded_dataset=loaded_dataset)
 
                 translated_df.to_csv(f'musique/{dataset_name}.csv')
                 print(translated_df.head())
             except KeyError as e:
-                print(f'Error at row {index}: {e}')
                 raise e
 
         print("Translation and saving completed successfully.")
