@@ -37,7 +37,7 @@ def translate_safe(text: str) -> str:
             return " ".join(pipe(chunk)[0]['translation_text'] for chunk in chunks)
     except Exception as e:
         print(f"[Translation skipped] Error: {e} | Text: {text[:50]}...")
-        return text  # return the original text in case of failure
+        return text
 
 
 def translate_row_musique(data) -> Optional[dict]:
@@ -47,19 +47,19 @@ def translate_row_musique(data) -> Optional[dict]:
     facts = data['supporting_facts']
     answer = data['answer']
 
+    print(f'Translating dataset id: {id}')
     if answer is None:
         return None
 
     translated_contexts = []
     for title, sentences in zip(contexts['title'], contexts['sentences']):
-        print(f'Sentences: {sentences}')
-        translated_title = pipe(title)[0]['translation_text']
+        translated_title = translate_safe(title)
         translated_sentences = [translate_safe(sentence) for sentence in sentences]
         translated_contexts.append({'title': translated_title, 'sentences': translated_sentences})
 
     translated_facts = [translate_safe(fact) for fact in facts['title']]
-    translated_question = pipe(question)[0]['translation_text']
-    translated_answer = pipe(answer)[0]['translation_text']
+    translated_question = translate_safe(question)
+    translated_answer = translate_safe(answer)
 
     row = {
         'id': id,
@@ -68,6 +68,8 @@ def translate_row_musique(data) -> Optional[dict]:
         'supporting_facts': translated_facts,
         'answer': translated_answer
     }
+
+    print(f'Done translating dataset {id}')
     
     return row
 
@@ -83,7 +85,9 @@ def translate_multihop_iteration(dataset: Dataset, testing: bool = False, debug_
         rows.append(row_debugging)
         return pd.DataFrame(rows)
     
-    for data in dataset:
+    for index, data in enumerate(dataset):
+        if index == 17:
+            continue
         translated_row = translate_row_musique(data)
 
         if testing and len(rows) > 2:
@@ -97,8 +101,6 @@ def translate_multihop_iteration(dataset: Dataset, testing: bool = False, debug_
 def translate_multihop(partition: list[str], testing:bool=False, debug_row: Optional[int] = None) -> bool:
     try:
         hotpot_qa = load_dataset('hotpot_qa', 'fullwiki', trust_remote_code=True)
-        index = 0
-
         for dataset_name in partition:
             try:
                 dataset = hotpot_qa[dataset_name]
@@ -120,9 +122,9 @@ def translate_multihop(partition: list[str], testing:bool=False, debug_row: Opti
 
 if __name__ == "__main__":
     print("Running translation script")
-    partition = ['validation', 'test']
+    partition = ['validation']
     translate_multihop(
         partition=partition, 
         testing=False, 
-        debug_row=17
+        debug_row=None
     )
