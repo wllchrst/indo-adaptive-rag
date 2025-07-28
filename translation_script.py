@@ -124,6 +124,24 @@ def get_translated_partition(partition: list[str]) -> dict:
     
     return loaded_datasets
 
+def save_dataset(
+    partition_name: str,
+    current_dataset: pd.DataFrame,
+    translated_dataset: Optional[pd.DataFrame] = None) -> bool:
+    try:
+        folder_path = 'musique'
+        if translated_dataset is None:
+            current_dataset.to_csv(f'{folder_path}/{partition_name}.csv', index=False)
+            return True
+        else:
+            full_dataset = pd.concat([current_dataset, translated_dataset])
+            full_dataset.to_csv(f'{folder_path}/{partition_name}.csv', index=False)
+            return True
+    except Exception as e:
+        traceback.print_exc()
+        print(f"An error occurred while saving the dataset: {e}")
+        return False
+
 def translate_multihop(partition: list[str], testing:bool=False, debug_row: Optional[int] = None) -> bool:
     try:
         hotpot_qa = load_dataset('hotpot_qa', 'fullwiki', trust_remote_code=True)
@@ -135,8 +153,15 @@ def translate_multihop(partition: list[str], testing:bool=False, debug_row: Opti
                 translated_df = translate_multihop_iteration(
                     dataset=dataset, testing=testing, debug_row=debug_row, loaded_dataset=loaded_dataset)
 
-                translated_df.to_csv(f'musique/{dataset_name}.csv')
-                print(translated_df.head())
+                saving_result = save_dataset(
+                    partition_name=dataset_name,
+                    current_dataset=translated_df,
+                    translated_dataset=loaded_dataset
+                )
+
+                if not saving_result:
+                    print(f"Failed to save dataset: {dataset_name}")
+
             except KeyError as e:
                 raise e
 
