@@ -87,11 +87,13 @@ def translate_multihop_iteration(
 
         rows.append(row_debugging)
         return pd.DataFrame(rows)
+
+    ids = loaded_dataset['id'].values if loaded_dataset is not None else []
     
     for index, data in enumerate(dataset):
         id = data['id']
         
-        if loaded_dataset is not None and id in loaded_dataset['id'].values:
+        if id in ids:
             print(f"Skipping already translated id: {id}")
             continue
         elif index == 17:
