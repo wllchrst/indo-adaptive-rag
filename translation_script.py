@@ -151,7 +151,7 @@ def translate_multihop(partition: list[str], testing:bool=False, debug_row: Opti
         for dataset_name in partition:
             try:
                 dataset = hotpot_qa[dataset_name]
-                loaded_dataset = loaded_datasets[dataset_name]
+                loaded_dataset = loaded_datasets.get(dataset_name)
                 translated_df = translate_multihop_iteration(
                     dataset=dataset, testing=testing, debug_row=debug_row, loaded_dataset=loaded_dataset)
 
