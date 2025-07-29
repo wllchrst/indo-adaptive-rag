@@ -125,8 +125,7 @@ def translate_multihop_iteration(
             rows.append(translated_row)
         except Exception as e:
             print(f"Error translating row {index} with id {id}: {e}")
-            raise e
-            #continue
+            return pd.DataFrame(rows)
 
     return pd.DataFrame(rows)
 
@@ -182,6 +181,8 @@ def translate_multihop(partition: list[str], testing:bool=False, debug_row: Opti
 
                 if not saving_result:
                     print(f"Failed to save dataset: {dataset_name}")
+                else:
+                    print(f'Saved data with name: {dataset_name}')
 
             except KeyError as e:
                 raise e
