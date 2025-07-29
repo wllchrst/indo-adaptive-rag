@@ -8,11 +8,16 @@ from dotenv import load_dotenv
 from typing import Optional
 
 load_dotenv()
-device_number = 0 if torch.cuda.is_available() else -1
 MAX_TOKEN = 300
 
-print(f"Using device: {device_number}")
-pipe = pipeline("translation", model="Helsinki-NLP/opus-mt-en-id", max_length=2000, device=device_number)
+def init_pipline():
+    device_number = 0 if torch.cuda.is_available() else -1
+    init_pipeline = pipeline("translation", model="Helsinki-NLP/opus-mt-en-id", max_length=2000, device=device_number)
+    print(f"Init translation pipeline on device: {device_number}")
+
+    return init_pipeline
+
+pipe = init_pipline()
 
 def split_long_text(text, max_length=MAX_TOKEN):
     sentences = re.split(r'(?<=[.!?])\s+', text)
@@ -107,6 +112,7 @@ def translate_multihop_iteration(
             rows.append(translated_row)
         except Exception as e:
             print(f"Error translating row {index} with id {id}: {e}")
+            pipe = init_pipline()
             continue
 
     return pd.DataFrame(rows)
