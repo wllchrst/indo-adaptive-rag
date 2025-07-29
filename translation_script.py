@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 from typing import Optional
 
 load_dotenv()
-MAX_TOKEN = 300
+MAX_TOKEN = 250 
 
 def init_pipline():
     device_number = 0 if torch.cuda.is_available() else -1
@@ -19,18 +19,31 @@ def init_pipline():
 
 pipe = init_pipline()
 
-def split_long_text(text, max_length=MAX_TOKEN):
+def split_long_text(text: str, max_length: int = MAX_TOKEN):
     sentences = re.split(r'(?<=[.!?])\s+', text)
     chunks = []
     current = ""
+
     for s in sentences:
-        if len(current) + len(s) < max_length:
-            current += " " + s
+        # Handle very long individual sentences
+        if len(s) > max_length:
+            if current:
+                chunks.append(current.strip())
+                current = ""
+            # Split long sentence into smaller parts
+            for i in range(0, len(s), max_length):
+                chunks.append(s[i:i + max_length].strip())
+            continue
+
+        if len(current) + len(s) + 1 <= max_length:
+            current += " " + s if current else s
         else:
             chunks.append(current.strip())
             current = s
+
     if current:
         chunks.append(current.strip())
+
     return chunks
 
 def translate_safe(text: str) -> str:
@@ -41,7 +54,7 @@ def translate_safe(text: str) -> str:
             chunks = split_long_text(text)
             return " ".join(pipe(chunk)[0]['translation_text'] for chunk in chunks)
     except Exception as e:
-        print(f"[Translation skipped] Error: {e} | Text: {text[:50]}...")
+        print(f"[Translation skipped] Error: {e} \nText: {text}")
         raise e
 
 def translate_row_musique(data) -> Optional[dict]:
@@ -112,8 +125,8 @@ def translate_multihop_iteration(
             rows.append(translated_row)
         except Exception as e:
             print(f"Error translating row {index} with id {id}: {e}")
-            pipe = init_pipline()
-            continue
+            raise e
+            #continue
 
     return pd.DataFrame(rows)
 
