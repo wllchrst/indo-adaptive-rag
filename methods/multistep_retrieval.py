@@ -18,7 +18,8 @@ class MultistepRetrieval(BaseMethod):
            b. Limitations of reptitions in the retrieval is reached
 
         """
-        retrieved_documents = self.retrieve(query, index=index)
+        retrieved_documents = self.retrieve(
+            query, index=index, with_logging=with_logging)
 
         return retrieved_documents
         
@@ -30,7 +31,8 @@ class MultistepRetrieval(BaseMethod):
                 current_count: int = 0,
                 limit_count: int = 5,
                 index: str ='',
-                retrieval_count: int = 3):
+                retrieval_count: int = 3,
+                with_logging: bool = False):
         retrieval_query = original_question if query == '' else query
         documents = self.retrieve_document(retrieval_query, total_result=retrieval_count, index=index)
 
@@ -54,13 +56,15 @@ class MultistepRetrieval(BaseMethod):
             limit_count=limit_count,
             current_count=current_count + 1,
             previous_reasonings=previous_reasonings,
-            previous_documents=previous_documents
+            previous_documents=previous_documents,
+            with_logging=with_logging
         )
 
     def reasoning(self,
                 question: str,
                 documents: List[IDocument],
-                previous_reasonings: List[str]):
+                previous_reasonings: List[str],
+                with_logging: bool = False):
         context = "\n\n".join(
             [
                 "Context Title: "
@@ -81,16 +85,12 @@ class MultistepRetrieval(BaseMethod):
         reasoning_prompt = "\n".join([
             context, "", f"{qn_pretext} {question_instruction}{question}", f"{an_pretext} {reasoning_joined}", answer_instruction
         ])
-        
-        print("_" * 50)
-        print(f"Previous reasonings: {previous_reasonings}")
 
-        print("Reasoning Prompt")
-        print(reasoning_prompt)
+        if with_logging:
+            print(f'Reasoning prompt: {reasoning_prompt}')
 
         answer = self.llm.answer(reasoning_prompt)
         answer = WordHelper.clean_sentence(answer)
-        print(f"Answer: {answer}")
 
         if "Jawaban" in answer:
             answer = answer.split("Jawaban")[1].strip()
