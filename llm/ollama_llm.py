@@ -2,7 +2,7 @@ from llm.base_llm import BaseLLM
 from helpers import env_helper
 from ollama import Client
 
-class GeminiLLM(BaseLLM):
+class OllamaLLM (BaseLLM):
     def __init__(self, model_name = 'bangundwir/bahasa-4b-chat'):
         super().__init__()
         self.API_KEY = env_helper.GEMINI_API_KEY
