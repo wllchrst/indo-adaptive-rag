@@ -1,10 +1,12 @@
 from nltk.tokenize import word_tokenize
 from abc import ABC, abstractmethod
-from llm import GeminiLLM, HuggingFaceLLM
+from llm import GeminiLLM, HuggingFaceLLM, OllamaLLM
 from vector_database import DatabaseHandler
 from interfaces import IDocument, IMetadata
 from bm25 import ElasticsearchRetriever
 from typing import List
+
+model_type_list = ['gemini', 'hugging_face', 'ollama']
 
 class BaseMethod(ABC):
     def __init__(self, model_type='gemini'):
@@ -14,10 +16,16 @@ class BaseMethod(ABC):
         self.elastic_retriever = ElasticsearchRetriever()
 
     def assign_llm(self, model_type: str):
+        if model_type not in model_type_list:
+            raise ValueError(f'Model type must be in this list {model_type_list}')
+
+        print(f'Using model type {model_type}')
         if model_type == 'gemini':
             self.llm = GeminiLLM()
         elif model_type == 'hugging_face':
             self.llm = HuggingFaceLLM()
+        elif model_type == 'ollama':
+            self.llm = OllamaLLM()
 
     @abstractmethod
     def answer(self, query: str, with_logging: bool, index: str):

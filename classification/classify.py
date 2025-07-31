@@ -8,8 +8,10 @@ non_retrieval = 'non-retrieval'
 single_retrieval = 'single-retrieval'
 multistep_retrieval = 'multistep-retrieval'
 
-# model_type = 'hugging_face'
-model_type = 'gemini'
+#model_type = 'hugging_face'
+#model_type = 'gemini'
+model_type = 'ollama'
+
 methods = {
     non_retrieval: NonRetrieval(model_type),
     single_retrieval: SingleRetrieval(model_type),

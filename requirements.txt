@@ -18,3 +18,4 @@ hf_xet==1.1.5
 joblib==1.5.1
 sentencepiece==0.2.0
 pandas==2.3.1
+ollama==0.5.1
