@@ -66,11 +66,11 @@ def classify(question: str,
     single_retrieval_result = EvaluationHelper.compute_scores(answer, single_retrieval_prediction)
 
     if logging_classification:
-        print("*" * 35)
+        print("*" * 100)
         print(f'Question: {question}')
         print(f'Actual answer: {answer}')
-        print(f'No Retrieval: {non_retrieval_prediction}')
-        print(f'Single Retrieval: {single_retrieval_prediction}')
+        print(f'No Retrieval {non_retrieval_result}: {non_retrieval_prediction}')
+        print(f'Single Retrieval {single_retrieval_result}: {single_retrieval_prediction}')
 
     if non_retrieval_result['exact_match'] == 1:
         return 'A'
@@ -80,7 +80,9 @@ def classify(question: str,
         return 'A'
     
     multistep_retrieval_prediction = get_answer(question, multistep_retrieval, log_method, index)
-    multi_retrieval_result = EvaluationHelper.compute_scores(answer, multistep_retrieval_prediction)
+
+    if multistep_retrieval_prediction is not None:
+        multi_retrieval_result = EvaluationHelper.compute_scores(answer, multistep_retrieval_prediction)
     
     if logging_classification:
         print(f'Multistep Retrieval: {multistep_retrieval_prediction}')
