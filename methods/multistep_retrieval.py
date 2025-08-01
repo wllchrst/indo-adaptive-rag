@@ -57,7 +57,8 @@ class MultistepRetrieval(BaseMethod):
             current_count=current_count + 1,
             previous_reasonings=previous_reasonings,
             previous_documents=previous_documents,
-            with_logging=with_logging
+            with_logging=with_logging,
+            index=index
         )
 
     def reasoning(self,
