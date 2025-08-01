@@ -3,6 +3,7 @@ import traceback
 from classification.gather_data import gather_indo_qa
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
 from helpers import EvaluationHelper
+from typing import Optional
 
 non_retrieval = 'non-retrieval'
 single_retrieval = 'single-retrieval'
@@ -79,7 +80,7 @@ def classify(question: str,
     elif non_retrieval_result['f1_score'] > single_retrieval_result['f1_score']:
         return 'A'
     
-    multistep_retrieval_prediction = get_answer(question, multistep_retrieval, log_method, index)
+    multistep_retrieval_prediction = get_answer(question, multistep_retrieval, log_method, index, answer)
 
     if multistep_retrieval_prediction is not None:
         multi_retrieval_result = EvaluationHelper.compute_scores(answer, multistep_retrieval_prediction)
@@ -94,7 +95,7 @@ def classify(question: str,
     else:
         return 'C'
     
-def get_answer(question: str, mode: str, log_method: bool, index: str) -> str:
+def get_answer(question: str, mode: str, log_method: bool, index: str, answer: Optional[str] = None) -> str:
     if mode not in methods:
         raise ValueError(f"Invalid mode: {mode}. Available modes: {', '.join(methods.keys())}")
-    return methods[mode].answer(question, log_method, index)
+    return methods[mode].answer(question, log_method, index, answer)
