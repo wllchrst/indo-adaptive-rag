@@ -42,7 +42,8 @@ class MultistepRetrieval(BaseMethod):
         result, is_answered = self.reasoning(
             question=original_question,
             documents=documents,
-            previous_reasonings=previous_reasonings
+            previous_reasonings=previous_reasonings,
+            actual_answer=answer
         )
 
         if is_answered:
@@ -62,7 +63,7 @@ class MultistepRetrieval(BaseMethod):
             previous_documents=previous_documents,
             with_logging=with_logging,
             index=index,
-            actual_answer=answer
+            answer=answer
         )
 
     def reasoning(self,
