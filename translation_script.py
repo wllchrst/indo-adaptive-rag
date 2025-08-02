@@ -2,13 +2,14 @@ import pandas as pd
 import traceback
 import torch
 import re
-from transformers import pipeline
+from transformers import pipeline, AutoTokenizer
 from datasets import load_dataset, Dataset
 from dotenv import load_dotenv
 from typing import Optional
 
 load_dotenv()
 MAX_TOKEN = 250 
+tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-en-id")
 
 def init_pipline():
     device_number = 0 if torch.cuda.is_available() else -1
@@ -25,21 +26,20 @@ def split_long_text(text: str, max_length: int = MAX_TOKEN):
     current = ""
 
     for s in sentences:
-        # Handle very long individual sentences
-        if len(s) > max_length:
+        tokenized = tokenizer(current + " " + s if current else s, return_tensors="pt", truncation=False)
+        token_count = tokenized.input_ids.shape[1]
+
+        if token_count <= max_length:
+            current += " " + s if current else s
+        else:
             if current:
                 chunks.append(current.strip())
                 current = ""
-            # Split long sentence into smaller parts
-            for i in range(0, len(s), max_length):
-                chunks.append(s[i:i + max_length].strip())
-            continue
-
-        if len(current) + len(s) + 1 <= max_length:
-            current += " " + s if current else s
-        else:
-            chunks.append(current.strip())
-            current = s
+            # Check if individual sentence is too long
+            sentence_tokens = tokenizer(s, return_tensors="pt", truncation=False).input_ids[0]
+            for i in range(0, len(sentence_tokens), max_length):
+                part = tokenizer.decode(sentence_tokens[i:i + max_length], skip_special_tokens=True)
+                chunks.append(part.strip())
 
     if current:
         chunks.append(current.strip())
@@ -48,13 +48,15 @@ def split_long_text(text: str, max_length: int = MAX_TOKEN):
 
 def translate_safe(text: str) -> str:
     try:
-        if len(text) <= MAX_TOKEN:
+        tokens = tokenizer(text, return_tensors="pt", truncation=False).input_ids.shape[1]
+        if tokens <= MAX_TOKEN:
             return pipe(text)[0]['translation_text']
         else:
+            print("[Splitting triggered] Token count:", tokens)
             chunks = split_long_text(text)
             return " ".join(pipe(chunk)[0]['translation_text'] for chunk in chunks)
     except Exception as e:
-        print(f"[Translation skipped] Error: {e} \nText: {text}")
+        print(f"[Translation skipped] Error: {e} \nText: {text}\nToken Count: {tokens}")
         raise e
 
 def translate_row_musique(data) -> Optional[dict]:
@@ -114,7 +116,7 @@ def translate_multihop_iteration(
         if id in ids:
             print(f"Skipping already translated id: {id}")
             continue
-        elif index == 17:
+        elif index == 3797 or index == 3850 or index == 3911 or index == 3970:
             continue
         elif testing and len(rows) > 2:
             print('Testing done')
@@ -196,7 +198,7 @@ def translate_multihop(partition: list[str], testing:bool=False, debug_row: Opti
 
 if __name__ == "__main__":
     print("Running translation script")
-    partition = ['validation']
+    partition = ['train']
     translate_multihop(
         partition=partition, 
         testing=False, 
