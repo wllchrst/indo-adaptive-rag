@@ -5,12 +5,13 @@ from ollama import Client
 class OllamaLLM (BaseLLM):
     def __init__(self, model_name = 'bangundwir/bahasa-4b-chat'):
         super().__init__()
+        model_name = 'deepseek-r1:latest'
         self.API_KEY = env_helper.GEMINI_API_KEY
         self.client = Client(host=env_helper.OLLAMA_HOST)
         self.model_name = model_name
 
     def answer(self, prompt: str) -> str:
-        response = self.client.chat(self.model_name, messages=[
+        response = self.client.chat(self.model_name, think=False, stream=False, messages=[
             {
                 'role': 'user',
                 'content': prompt,

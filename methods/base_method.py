@@ -4,7 +4,7 @@ from llm import GeminiLLM, HuggingFaceLLM, OllamaLLM
 from vector_database import DatabaseHandler
 from interfaces import IDocument, IMetadata
 from bm25 import ElasticsearchRetriever
-from typing import List
+from typing import List, Optional
 
 model_type_list = ['gemini', 'hugging_face', 'ollama']
 
@@ -28,7 +28,7 @@ class BaseMethod(ABC):
             self.llm = OllamaLLM()
 
     @abstractmethod
-    def answer(self, query: str, with_logging: bool, index: str):
+    def answer(self, query: str, with_logging: bool, index: str, answer: Optional[str] = None):
         pass
 
     def retrieve_document(self,

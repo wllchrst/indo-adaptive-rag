@@ -1,5 +1,6 @@
 from methods.base_method import BaseMethod
 from helpers import WordHelper
+from typing import Optional
 
 class SingleRetrieval(BaseMethod):
     def __init__(self, model_type: str):
@@ -8,7 +9,8 @@ class SingleRetrieval(BaseMethod):
     def answer(self,
                query: str,
                with_logging: bool = False, 
-               index: str = ''):
+               index: str = '',
+               answer: Optional[str] = None) -> str:
         """
         This method retrieves a single relevant document from the vector database
         and uses it to answer the query.
@@ -21,13 +23,13 @@ class SingleRetrieval(BaseMethod):
         )
 
         formatted_query = self.llm.format_with_document(query, retrieved_document)
-        answer = self.llm.answer(formatted_query)
+        prediction = self.llm.answer(formatted_query)
 
         self.log_actions(
             method="Single Retrieval",
             query=formatted_query,
-            answer=answer,
+            answer=prediction,
             with_logging=with_logging
         )
 
-        return answer
+        return prediction.strip()

@@ -2,11 +2,13 @@ from typing import List
 from methods.base_method import BaseMethod
 from interfaces import IDocument
 from helpers import WordHelper
+from typing import Optional
+
 class MultistepRetrieval(BaseMethod):
     def __init__(self, model_type: str):
         super().__init__(model_type)
 
-    def answer(self, query: str, with_logging: bool = False, index: str=''):
+    def answer(self, query: str, with_logging: bool = False, index: str='', answer: Optional[str] = None):
         """
         This method retrieves multiple relevant documents from the vector database
         and uses them to answer the query.
@@ -19,12 +21,13 @@ class MultistepRetrieval(BaseMethod):
 
         """
         retrieved_documents = self.retrieve(
-            query, index=index, with_logging=with_logging)
+            query, index=index, with_logging=with_logging, answer=answer)
 
         return retrieved_documents
         
     def retrieve(self,
                 original_question: str,
+                answer: str,
                 previous_reasonings: List[str] = [],
                 previous_documents: List[IDocument] = [],
                 query: str = '',
@@ -39,7 +42,8 @@ class MultistepRetrieval(BaseMethod):
         result, is_answered = self.reasoning(
             question=original_question,
             documents=documents,
-            previous_reasonings=previous_reasonings
+            previous_reasonings=previous_reasonings,
+            actual_answer=answer
         )
 
         if is_answered:
@@ -57,13 +61,16 @@ class MultistepRetrieval(BaseMethod):
             current_count=current_count + 1,
             previous_reasonings=previous_reasonings,
             previous_documents=previous_documents,
-            with_logging=with_logging
+            with_logging=with_logging,
+            index=index,
+            answer=answer
         )
 
     def reasoning(self,
                 question: str,
                 documents: List[IDocument],
                 previous_reasonings: List[str],
+                actual_answer: str,
                 with_logging: bool = False):
         context = "\n\n".join(
             [
@@ -94,6 +101,8 @@ class MultistepRetrieval(BaseMethod):
 
         if "Jawaban" in answer:
             answer = answer.split("Jawaban")[1].strip()
+            return WordHelper.remove_non_alphabetic(answer).strip(), True
+        elif actual_answer in answer:
             return WordHelper.remove_non_alphabetic(answer).strip(), True
         
         return answer, False
