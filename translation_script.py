@@ -6,60 +6,11 @@ from transformers import pipeline, AutoTokenizer
 from datasets import load_dataset, Dataset
 from dotenv import load_dotenv
 from typing import Optional
+from translator import translate_safe
 
 load_dotenv()
-MAX_TOKEN = 250 
-tokenizer = AutoTokenizer.from_pretrained("Helsinki-NLP/opus-mt-en-id")
 
-def init_pipline():
-    device_number = 0 if torch.cuda.is_available() else -1
-    init_pipeline = pipeline("translation", model="Helsinki-NLP/opus-mt-en-id", max_length=2000, device=device_number)
-    print(f"Init translation pipeline on device: {device_number}")
-
-    return init_pipeline
-
-pipe = init_pipline()
-
-def split_long_text(text: str, max_length: int = MAX_TOKEN):
-    sentences = re.split(r'(?<=[.!?])\s+', text)
-    chunks = []
-    current = ""
-
-    for s in sentences:
-        tokenized = tokenizer(current + " " + s if current else s, return_tensors="pt", truncation=False)
-        token_count = tokenized.input_ids.shape[1]
-
-        if token_count <= max_length:
-            current += " " + s if current else s
-        else:
-            if current:
-                chunks.append(current.strip())
-                current = ""
-            # Check if individual sentence is too long
-            sentence_tokens = tokenizer(s, return_tensors="pt", truncation=False).input_ids[0]
-            for i in range(0, len(sentence_tokens), max_length):
-                part = tokenizer.decode(sentence_tokens[i:i + max_length], skip_special_tokens=True)
-                chunks.append(part.strip())
-
-    if current:
-        chunks.append(current.strip())
-
-    return chunks
-
-def translate_safe(text: str) -> str:
-    try:
-        tokens = tokenizer(text, return_tensors="pt", truncation=False).input_ids.shape[1]
-        if tokens <= MAX_TOKEN:
-            return pipe(text)[0]['translation_text']
-        else:
-            print("[Splitting triggered] Token count:", tokens)
-            chunks = split_long_text(text)
-            return " ".join(pipe(chunk)[0]['translation_text'] for chunk in chunks)
-    except Exception as e:
-        print(f"[Translation skipped] Error: {e} \nText: {text}\nToken Count: {tokens}")
-        raise e
-
-def translate_row_musique(data) -> Optional[dict]:
+def translate_row_musique(data, by_token: bool = False) -> Optional[dict]:
     id = data['id']
     question = data['question']
     contexts = data['context']
@@ -72,13 +23,13 @@ def translate_row_musique(data) -> Optional[dict]:
 
     translated_contexts = []
     for title, sentences in zip(contexts['title'], contexts['sentences']):
-        translated_title = translate_safe(title)
-        translated_sentences = [translate_safe(sentence) for sentence in sentences]
+        translated_title = translate_safe(title, by_token=by_token)
+        translated_sentences = [translate_safe(sentence, by_token=by_token) for sentence in sentences]
         translated_contexts.append({'title': translated_title, 'sentences': translated_sentences})
 
-    translated_facts = [translate_safe(fact) for fact in facts['title']]
-    translated_question = translate_safe(question)
-    translated_answer = translate_safe(answer)
+    translated_facts = [translate_safe(fact, by_token=by_token) for fact in facts['title']]
+    translated_question = translate_safe(question, by_token=by_token)
+    translated_answer = translate_safe(answer, by_token=by_token)
 
     row = {
         'id': id,
