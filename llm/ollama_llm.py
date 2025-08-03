@@ -2,10 +2,11 @@ from llm.base_llm import BaseLLM
 from helpers import env_helper
 from ollama import Client
 
+OLLAMA_MODEL_LIST = ['deepseek-r1:latest', 'bangundwir/bahasa-4b-chat']
+
 class OllamaLLM (BaseLLM):
     def __init__(self, model_name = 'bangundwir/bahasa-4b-chat'):
         super().__init__()
-        model_name = 'deepseek-r1:latest'
         self.API_KEY = env_helper.GEMINI_API_KEY
         self.client = Client(host=env_helper.OLLAMA_HOST)
         self.model_name = model_name
