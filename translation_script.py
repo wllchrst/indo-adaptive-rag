@@ -60,6 +60,8 @@ def translate_multihop_iteration(
         return pd.DataFrame(rows)
 
     ids = loaded_dataset['id'].values if loaded_dataset is not None else []
+
+    skip_indices = [3797, 3850, 3911, 3970, 4025, 4048, 4130, 4526]
     
     for index, data in enumerate(dataset):
         id = data['id']
@@ -67,7 +69,7 @@ def translate_multihop_iteration(
         if id in ids:
             print(f"Skipping already translated id: {id}")
             continue
-        elif index == 3797 or index == 3850 or index == 3911 or index == 3970:
+        elif index in skip_indices:
             continue
         elif testing and len(rows) > 2:
             print('Testing done')
