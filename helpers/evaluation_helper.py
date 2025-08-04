@@ -26,9 +26,14 @@ class EvaluationHelper:
     
     @staticmethod
     def compute_scores(a_gold: str, a_pred: str):
-        exact = EvaluationHelper.compute_exact(a_gold, a_pred)
-        f1 = EvaluationHelper.compute_f1(a_gold, a_pred)
-        return {
-            'exact_match': exact,
-            'f1_score': f1
-        }
+        try:
+            exact = EvaluationHelper.compute_exact(a_gold, a_pred)
+            f1 = EvaluationHelper.compute_f1(a_gold, a_pred)
+            return {
+                'exact_match': exact,
+                'f1_score': f1
+            }
+        except Exception as e:
+            print(f"Error computing scores: {e}")
+            print(f'Gold: {a_gold}, Predicted: {a_pred}')
+            raise e
