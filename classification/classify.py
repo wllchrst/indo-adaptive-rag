@@ -1,5 +1,6 @@
 import pandas as pd
 import traceback
+import os
 from classification.gather_data import gather_indo_qa
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
 from helpers import EvaluationHelper
@@ -8,6 +9,7 @@ from typing import Optional
 non_retrieval = 'non-retrieval'
 single_retrieval = 'single-retrieval'
 multistep_retrieval = 'multistep-retrieval'
+save_path = 'classification_result'
 
 #model_type = 'hugging_face'
 #model_type = 'gemini'
@@ -19,7 +21,29 @@ methods = {
     multistep_retrieval: MultistepRetrieval(model_type)
 }
 
-def classify_indo_qa(testing: bool, log_classification: bool):
+def save_classification_result(model_type: str,
+                               dataset_name: str,
+                               dataset_partition: str,
+                               testing: bool,
+                               dataset: pd.DataFrame) -> bool:
+    try:
+        if testing == True:
+            print("Is testing classification, not saving any result")
+            return True
+
+        folder_save_path = f'{save_path}/{model_type}/{dataset_name}_{dataset_partition}.csv'
+        os.makedirs(folder_save_path, exist_ok=True)
+        dataset.to_csv(folder_save_path, index=False)
+
+        print(f'Classification result saved at {folder_save_path}')
+        return True
+    except Exception as e:
+        traceback.print_exc()
+        print(f"Error saving classification result: {e}")
+        return False
+
+def classify_indo_qa(testing: bool,
+                    log_classification: bool):
     try: 
         train_df, test_df = gather_indo_qa()
         full_df = pd.concat([train_df, test_df]).reset_index(drop=True)
@@ -44,9 +68,13 @@ def classify_indo_qa(testing: bool, log_classification: bool):
 
         full_df.loc[:len(classifications)-1, 'classification'] = classifications
 
-        save_path ='classification_result/indoqa_classified.csv' 
-        full_df.to_csv(save_path)
-        print(f"Classification complete, file is save at {save_path}")
+        save_classification_result(
+            dataset=full_df,
+            dataset_name='indoqa',
+            testing=testing,
+            dataset_partition='full',
+            model_type=model_type
+        )
         
         return True
     except Exception as e:
