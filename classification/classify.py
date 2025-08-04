@@ -5,6 +5,7 @@ from classification.gather_data import gather_indo_qa
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
 from helpers import EvaluationHelper
 from typing import Optional, List
+from helpers.word_helper import WordHelper
 
 non_retrieval = 'non-retrieval'
 single_retrieval = 'single-retrieval'
@@ -102,6 +103,11 @@ def classify(question: str,
     
     non_retrieval_result = EvaluationHelper.compute_scores(answer, non_retrieval_prediction)
     single_retrieval_result = EvaluationHelper.compute_scores(answer, single_retrieval_prediction)
+
+    if WordHelper.contains(answer, non_retrieval_prediction):
+        return 'A'
+    elif WordHelper.contains(answer, single_retrieval_prediction):
+        return 'B'
 
     if logging_classification:
         print("*" * 100)

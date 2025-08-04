@@ -54,3 +54,15 @@ class WordHelper:
             return text.lower()
 
         return white_space_fix(remove_articles(remove_punc(lower(text))))
+    
+    @staticmethod
+    def contains(text: str, target: str):
+        """Check if text is contained in target string.
+
+        Args:
+            text (str): text to check for presence in target
+            target (str): target string to check against
+        """        
+        text = WordHelper.normalize_text(text)
+        target = WordHelper.normalize_text(target)
+        return text in target
