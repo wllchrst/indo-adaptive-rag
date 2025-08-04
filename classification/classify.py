@@ -99,16 +99,16 @@ def classify(question: str,
                 log_method: bool = False,
                 index: str = '') -> str:
     non_retrieval_prediction = get_answer(question, non_retrieval, log_method, index)
-    single_retrieval_prediction = get_answer(question, single_retrieval, log_method, index)
-    
-    non_retrieval_result = EvaluationHelper.compute_scores(answer, non_retrieval_prediction)
-    single_retrieval_result = EvaluationHelper.compute_scores(answer, single_retrieval_prediction)
-
     if WordHelper.contains(answer, non_retrieval_prediction):
         return 'A'
-    elif WordHelper.contains(answer, single_retrieval_prediction):
+
+    single_retrieval_prediction = get_answer(question, single_retrieval, log_method, index)
+    if WordHelper.contains(answer, single_retrieval_prediction):
         return 'B'
 
+    non_retrieval_result = EvaluationHelper.compute_scores(answer, non_retrieval_prediction)
+    single_retrieval_result = EvaluationHelper.compute_scores(answer, single_retrieval_prediction)
+    
     if logging_classification:
         print("*" * 100)
         print(f'Question: {question}')
