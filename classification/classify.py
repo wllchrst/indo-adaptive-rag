@@ -121,9 +121,8 @@ def classify(question: str,
 
     if multistep_retrieval_prediction is not None:
         multi_retrieval_result = EvaluationHelper.compute_scores(answer, multistep_retrieval_prediction)
-    
-    if logging_classification:
-        print(f'Multistep Retrieval: {multistep_retrieval_prediction}')
+        if logging_classification:
+            print(f'Multistep Retrieval {multi_retrieval_result}: {multistep_retrieval_prediction}')
     
     if multi_retrieval_result['exact_match'] == 1:
         return 'C'
