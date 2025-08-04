@@ -2,7 +2,7 @@ from llm.base_llm import BaseLLM
 from helpers import env_helper
 from ollama import Client
 
-OLLAMA_MODEL_LIST = ['deepseek-r1:latest', 'bangundwir/bahasa-4b-chat']
+OLLAMA_MODEL_LIST = ['deepseek-r1:latest', 'bangundwir/bahasa-4b-chat', 'gemma3:latest']
 
 class OllamaLLM (BaseLLM):
     def __init__(self, model_name = 'bangundwir/bahasa-4b-chat'):

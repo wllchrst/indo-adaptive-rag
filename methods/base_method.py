@@ -16,8 +16,8 @@ class BaseMethod(ABC):
         self.elastic_retriever = ElasticsearchRetriever()
 
     def assign_llm(self, model_type: str):
-        if model_type not in model_type_list or model_type not in OLLAMA_MODEL_LIST:
-            raise ValueError(f'Model type must be in this list {model_type_list}')
+        if model_type not in model_type_list and model_type not in OLLAMA_MODEL_LIST:
+            raise ValueError(f'Model type must be in this list {model_type_list} | {OLLAMA_MODEL_LIST}')
 
         print(f'Using model type {model_type}')
         if model_type == 'gemini':
