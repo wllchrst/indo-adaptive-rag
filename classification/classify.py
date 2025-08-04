@@ -59,6 +59,10 @@ def classify_indo_qa(testing: bool,
             question = row['question']
             answer = row['answer']
 
+            if question is None or answer is None:
+                print(f"Skipping row {index} due to missing question or answer.")
+                continue
+
             classification_result = classify(
                 question=question,
                 answer=answer,
@@ -93,7 +97,6 @@ def classify(question: str,
                 logging_classification: bool = False,
                 log_method: bool = False,
                 index: str = '') -> str:
-
     non_retrieval_prediction = get_answer(question, non_retrieval, log_method, index)
     single_retrieval_prediction = get_answer(question, single_retrieval, log_method, index)
     
