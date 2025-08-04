@@ -4,7 +4,7 @@ import os
 from classification.gather_data import gather_indo_qa
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
 from helpers import EvaluationHelper
-from typing import Optional
+from typing import Optional, List
 
 non_retrieval = 'non-retrieval'
 single_retrieval = 'single-retrieval'
@@ -13,7 +13,7 @@ save_path = 'classification_result'
 
 #model_type = 'hugging_face'
 #model_type = 'gemini'
-model_type = 'ollama'
+model_type = 'gemma3:latest'
 
 methods = {
     non_retrieval: NonRetrieval(model_type),
@@ -43,11 +43,17 @@ def save_classification_result(model_type: str,
         return False
 
 def classify_indo_qa(testing: bool,
-                    log_classification: bool):
+                    log_classification: bool,
+                    partition: str = 'full'):
     try: 
         train_df, test_df = gather_indo_qa()
         full_df = pd.concat([train_df, test_df]).reset_index(drop=True)
         classifications = []
+
+        if partition == 'train':
+            full_df = train_df
+        elif partition == 'test':
+            full_df = test_df
 
         for index, row in full_df.iterrows():
             question = row['question']
@@ -72,7 +78,7 @@ def classify_indo_qa(testing: bool,
             dataset=full_df,
             dataset_name='indoqa',
             testing=testing,
-            dataset_partition='full',
+            dataset_partition=partition,
             model_type=model_type
         )
         
