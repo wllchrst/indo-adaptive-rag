@@ -1,3 +1,4 @@
 from classification.gather_data import gather_indo_qa
 from classification.classify import classify_indo_qa
+from classification.gather_data import gather_indo_qa, gather_musique_data
 from classification.build_cache import build_cache_elastic
