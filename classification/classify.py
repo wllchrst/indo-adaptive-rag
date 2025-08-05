@@ -1,6 +1,7 @@
 import pandas as pd
 import traceback
 import os
+import re
 from classification.gather_data import gather_indo_qa, gather_musique_data
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
 from helpers import EvaluationHelper
@@ -22,18 +23,33 @@ methods = {
     multistep_retrieval: MultistepRetrieval(model_type)
 }
 
+def sanitize_filename(name: str) -> str:
+    """
+    Replace characters that are invalid in filenames with underscores.
+    This ensures compatibility across all major operating systems.
+    """
+    # This regex matches characters: \ / : * ? " < > | and control characters (0–31)
+    return re.sub(r'[\\/*?:"<>|\x00-\x1F]', '_', name)
+
+
 def save_classification_result(model_type: str,
                                dataset_name: str,
                                dataset_partition: str,
                                testing: bool,
                                dataset: pd.DataFrame) -> bool:
     try:
-        dataset_name = f'{dataset_name}_{testing}'
-        folder_save_path = f'{save_path}/{model_type}/{dataset_name}_{dataset_partition}.csv'
-        os.makedirs(folder_save_path, exist_ok=True)
-        dataset.to_csv(folder_save_path, index=False)
+        # Sanitize components
+        model_type_sanitized = sanitize_filename(model_type)
+        dataset_name_sanitized = sanitize_filename(f'{dataset_name}_{testing}')
+        dataset_partition_sanitized = sanitize_filename(dataset_partition)
 
-        print(f'Classification result saved at {folder_save_path}')
+        folder_path = f'{save_path}/{model_type_sanitized}'
+        file_path = f'{folder_path}/{dataset_name_sanitized}_{dataset_partition_sanitized}.csv'
+
+        os.makedirs(folder_path, exist_ok=True)
+        dataset.to_csv(file_path, index=False)
+
+        print(f'Classification result saved at {file_path}')
         return True
     except Exception as e:
         traceback.print_exc()
