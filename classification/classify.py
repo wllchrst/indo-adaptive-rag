@@ -28,10 +28,7 @@ def save_classification_result(model_type: str,
                                testing: bool,
                                dataset: pd.DataFrame) -> bool:
     try:
-        if testing == True:
-            print("Is testing classification, not saving any result")
-            return True
-
+        dataset_name = f'{dataset_name}_{testing}'
         folder_save_path = f'{save_path}/{model_type}/{dataset_name}_{dataset_partition}.csv'
         os.makedirs(folder_save_path, exist_ok=True)
         dataset.to_csv(folder_save_path, index=False)
