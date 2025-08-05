@@ -1,7 +1,7 @@
 import pandas as pd
 import traceback
 import os
-from classification.gather_data import gather_indo_qa
+from classification.gather_data import gather_indo_qa, gather_musique_data
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
 from helpers import EvaluationHelper
 from typing import Optional, List
@@ -92,6 +92,79 @@ def classify_indo_qa(testing: bool,
         traceback.print_exc()
         print(f"Error classifying indoqa: {e}")
         return False
+
+def run_classification_on_musique(df, model_type, dataset_partition, testing, logging_classification, log_method, index):
+    """
+    Helper function to classify rows in a dataframe and save the result.
+    """
+    try:
+        classifications = []
+
+        for _, row in df.iterrows():
+            question = row['question']
+            answer = row['answer']
+
+            classification_result = classify(
+                question=question,
+                answer=answer,
+                logging_classification=logging_classification,
+                log_method=log_method,
+                index=index
+            )
+            classifications.append(classification_result)
+
+            if testing and len(classifications) > 5:
+                break
+
+        df.loc[:len(classifications) - 1, 'classification'] = classifications
+
+        save_classification_result(
+            model_type=model_type,
+            testing=testing,
+            dataset_partition=dataset_partition,
+            dataset=df,
+            dataset_name='musique'
+        )
+
+        return True
+    except Exception as e:
+        print(f"Error while classifying musique: {e}")
+        return False
+
+def classify_musique(testing: bool,
+                     partition: str = 'all',
+                     uses_context: bool = True,
+                     logging_classification: bool = False,
+                     log_method: bool = False,
+                     index: str = '',
+                     model_type: str = 'default'):
+    """
+    Main function to classify musique dataset.
+    """
+    train_df, validation_df = gather_musique_data(partition)
+
+    if validation_df is not None:
+        print(validation_df.info())
+        run_classification_on_musique(
+            df=validation_df,
+            model_type=model_type,
+            dataset_partition='validation',
+            testing=testing,
+            logging_classification=logging_classification,
+            log_method=log_method,
+            index=index
+        )
+
+    if train_df is not None:
+        run_classification_on_musique(
+            df=train_df,
+            model_type=model_type,
+            dataset_partition='train',
+            testing=testing,
+            logging_classification=logging_classification,
+            log_method=log_method,
+            index=index
+        )
 
 def classify(question: str,
                 answer: str,
