@@ -27,16 +27,14 @@ def test_querying_chroma(query: str):
 
     # print(result)
 
-def test_querying_elastic(query: str):
+def test_querying_elastic(query: str, index: str = 'indoqa'):
     from bm25 import ElasticsearchRetriever
     retriever = ElasticsearchRetriever()
 
-    results = retriever.search(
-        index='indoqa',
-        query=query,
-        total_result=5
-    )
+    # results = retriever.search( index=index, query=query, total_result=5)
+    results = retriever.search_all(index)
 
+    print(results)
     for result in results:
         print(result)
         
@@ -63,18 +61,12 @@ def clear_cache() -> bool:
 
 def run_classification_indoqa():
     from classification import classify_indo_qa, build_cache_elastic
-    # cache_cleared = clear_cache()
-
-    # if not cache_cleared:
-    #     print("Classification failed, clearing cache failed")
-    #     return
-
-    # build_cache_elastic("indoqa")
-    classify_indo_qa(True, True)
+    classify_indo_qa(False, True, 'test')
 
 def main():
-    run_classification_indoqa()
-    # test_querying_elastic("Chaerul Saleh")
+    #run_classification_indoqa()
+    test_querying_elastic("Testing", "musique")
+    #build_elasticsearch_index()
 
 if __name__ == "__main__":
     print("Script main.py is being run")
