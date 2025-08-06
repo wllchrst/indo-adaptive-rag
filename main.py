@@ -76,6 +76,7 @@ def run_classification_indoqa(partition: str):
     classify_indo_qa(
         testing=False,
         log_classification=True,
+        log_method=False,
         partition=partition)
 
 def run_classification_musique(partition: str,
@@ -86,7 +87,8 @@ def run_classification_musique(partition: str,
     classify_musique(
         testing=testing,
         partition=partition,
-        logging_classification=False,
+        logging_classification=True,
+        log_method=False,
         uses_context=context,
     )
 
@@ -113,8 +115,8 @@ def main():
 
     elif arguments.action == 'translation':
         run_translation_script(arguments.partition, arguments.testing)
-
-    raise ValueError(f"Nothing can be run from your arguments {arguments}")
+    else:
+        raise ValueError(f"Nothing can be run from your arguments {arguments}")
 
 if __name__ == "__main__":
     main()
