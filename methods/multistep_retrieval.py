@@ -5,10 +5,10 @@ from helpers import WordHelper
 from typing import Optional
 
 class MultistepRetrieval(BaseMethod):
-    def __init__(self, model_type: str, supporting_facts: list[str] = []):
+    def __init__(self, model_type: str):
         super().__init__(model_type)
 
-    def answer(self, query: str, with_logging: bool = False, index: str='', answer: Optional[str] = None):
+    def answer(self, query: str, with_logging: bool = False, index: str='', answer: Optional[str] = None, supporting_facts: list[str] = []):
         """
         This method retrieves multiple relevant documents from the vector database
         and uses them to answer the query.
@@ -20,10 +20,15 @@ class MultistepRetrieval(BaseMethod):
            b. Limitations of reptitions in the retrieval is reached
 
         """
-        retrieved_documents = self.retrieve(
-            query, index=index, with_logging=with_logging, answer=answer)
+        documents_from_fact = self.gather_documents_by_supporting_facts(
+            supporting_facts=supporting_facts,
+            index=index
+        )
 
-        return retrieved_documents
+        result = self.retrieve(
+            query, index=index, with_logging=with_logging, answer=answer, previous_documents=documents_from_fact)
+
+        return result
         
     def retrieve(self,
                 original_question: str,
@@ -65,6 +70,20 @@ class MultistepRetrieval(BaseMethod):
             index=index,
             answer=answer
         )
+
+    def gather_documents_by_supporting_facts(self,
+                                             supporting_facts: list[str],
+                                             index: str):
+        final_documents = []
+        for fact in supporting_facts:
+            documents = self.retrieve_document(
+                query=fact,
+                total_result=3,
+                index=index
+            )
+            final_documents += documents
+
+        return final_documents
 
     def reasoning(self,
                 question: str,

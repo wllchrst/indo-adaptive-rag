@@ -106,7 +106,15 @@ def classify_indo_qa(testing: bool,
         print(f"Error classifying indoqa: {e}")
         return False
 
-def run_classification_on_musique(df, model_type, dataset_partition, testing, logging_classification, log_method, index):
+def run_classification_on_musique(df,
+                                  model_type: str,
+                                  dataset_partition: str,
+                                  testing: bool,
+                                  logging_classification: bool,
+                                  log_method: bool,
+                                  index: str,
+                                  supporting_facts: list[str] = [],
+                                  uses_context: bool= False):
     """
     Helper function to classify rows in a dataframe and save the result.
     """
@@ -122,7 +130,8 @@ def run_classification_on_musique(df, model_type, dataset_partition, testing, lo
                 answer=answer,
                 logging_classification=logging_classification,
                 log_method=log_method,
-                index=index
+                index=index,
+                supporting_facts=supporting_facts if uses_context else []
             )
             classifications.append(classification_result)
 
@@ -148,23 +157,21 @@ def classify_musique(testing: bool,
                      partition: str = 'all',
                      uses_context: bool = True,
                      logging_classification: bool = False,
-                     log_method: bool = False,
-                     index: str = '',
                      model_type: str = 'default'):
     """
     Main function to classify musique dataset.
     """
     train_df, validation_df = gather_musique_data(partition)
+    index = 'musique'
 
     if validation_df is not None:
-        print(validation_df.info())
         run_classification_on_musique(
             df=validation_df,
             model_type=model_type,
             dataset_partition='validation',
             testing=testing,
             logging_classification=logging_classification,
-            log_method=log_method,
+            log_method=logging_classification,
             index=index
         )
 
@@ -175,7 +182,7 @@ def classify_musique(testing: bool,
             dataset_partition='train',
             testing=testing,
             logging_classification=logging_classification,
-            log_method=log_method,
+            log_method=logging_classification,
             index=index
         )
 
@@ -183,7 +190,8 @@ def classify(question: str,
                 answer: str,
                 logging_classification: bool = False,
                 log_method: bool = False,
-                index: str = '') -> str:
+                index: str = '',
+                supporting_facts: list[str] = []) -> str:
     non_retrieval_prediction = get_answer(question, non_retrieval, log_method, index)
     if WordHelper.contains(answer, non_retrieval_prediction):
         return 'A'
@@ -226,7 +234,7 @@ def classify(question: str,
     else:
         return 'C'
     
-def get_answer(question: str, mode: str, log_method: bool, index: str, answer: Optional[str] = None) -> str:
+def get_answer(question: str, mode: str, log_method: bool, index: str, answer: Optional[str] = None, supporting_facts: list[str] = []) -> str:
     if mode not in methods:
         raise ValueError(f"Invalid mode: {mode}. Available modes: {', '.join(methods.keys())}")
-    return methods[mode].answer(question, log_method, index, answer)
+    return methods[mode].answer(question, log_method, index, answer, supporting_facts)
