@@ -37,23 +37,29 @@ def make_indoqa_context() -> List[Document]:
 def make_musique_context(path: str):
     file_names = os.listdir(path)
     docs: List[Document] = []
-
     for file_name in file_names:
         file_path = os.path.join(path, file_name)
         df = pd.read_csv(file_path)
 
         for _, row in df.iterrows():
-            contexts = row['contexts']
-            context = ast.literal_eval(contexts)[0]
-            for sentence in context['sentences']:
-                doc: Document = {
-                    'id':row['id'],
-                    'answer': row['answer'],
-                    'question': row['question'],
-                    'text': sentence
-                }
+            try:
+                contexts = row['contexts']
+                literal_eval = ast.literal_eval(contexts)
+                if len(literal_eval) == 0:
+                    continue
 
-                docs.append(doc)
+                context = literal_eval[0]
+                for sentence in context['sentences']:
+                    doc: Document = {
+                        'id':row['id'],
+                        'answer': row['answer'],
+                        'question': row['question'],
+                        'text': sentence
+                    }
+
+                    docs.append(doc)
+            except Exception as exception:
+                raise exception
 
     return docs
 
