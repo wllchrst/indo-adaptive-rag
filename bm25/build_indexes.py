@@ -55,8 +55,10 @@ def make_musique_context(path: str):
 
                 docs.append(doc)
 
-    return docs 
+    return docs
 
+def check_index_exists(index_name: str) -> bool:
+    return es.indices.exists(index=index_name)
 def insert_documents(index: str, documents: List[Document]):
     operations = []
     for document in documents:
@@ -68,20 +70,29 @@ def insert_documents(index: str, documents: List[Document]):
 def build_all_index():
     try:
         print(f"Elasticsearch information: {es.info()}")
-        # index names
         indoqa_index = 'indoqa'
         musique_index = 'musique'
 
         # INDOQA
-        indoqa_docs = make_indoqa_context()
-        es.indices.delete(index=indoqa_index, ignore_unavailable=True)
-        es.indices.create(index=indoqa_index)
-        insert_documents(indoqa_index, indoqa_docs)
-        
-        musique_docs = make_musique_context("musique")
-        es.indices.delete(index=musique_index, ignore_unavailable=True)
-        es.indices.create(index=musique_index)
-        insert_documents(musique_index, musique_docs)
+        if not check_index_exists(indoqa_index):
+            print("Inserting indoqa context")
+            indoqa_docs = make_indoqa_context()
+            es.indices.delete(index=indoqa_index, ignore_unavailable=True)
+            es.indices.create(index=indoqa_index)
+            insert_documents(indoqa_index, indoqa_docs)
+        else:
+            print("Indoqa index already exists")
+
+
+        if not check_index_exists(musique_index):
+            print("Inserting musique dataset context")
+            musique_docs = make_musique_context("musique")
+            es.indices.delete(index=musique_index, ignore_unavailable=True)
+            es.indices.create(index=musique_index)
+            insert_documents(musique_index, musique_docs)
+        else:
+            print("Musique index already exists")
+
     except Exception as e:
         print(f"Error while building all index: {e}")
         traceback.print_exc()
