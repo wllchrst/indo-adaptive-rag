@@ -9,7 +9,7 @@ from llm.ollama_llm import OLLAMA_MODEL_LIST
 model_type_list = ['gemini', 'hugging_face']
 
 class BaseMethod(ABC):
-    def __init__(self, model_type='gemini', supporting_facts: list[str] = []):
+    def __init__(self, model_type='gemini'):
         super().__init__()
         self.assign_llm(model_type=model_type)
         self.database_handler = DatabaseHandler()
@@ -28,7 +28,7 @@ class BaseMethod(ABC):
             self.llm = OllamaLLM(model_name=model_type)
 
     @abstractmethod
-    def answer(self, query: str, with_logging: bool, index: str, answer: Optional[str] = None):
+    def answer(self, query: str, with_logging: bool, index: str, answer: Optional[str] = None, supporting_facts: list[str] = []):
         pass
 
     def retrieve_document(self,

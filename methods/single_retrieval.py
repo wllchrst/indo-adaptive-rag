@@ -3,14 +3,15 @@ from helpers import WordHelper
 from typing import Optional
 
 class SingleRetrieval(BaseMethod):
-    def __init__(self, model_type: str, supporting_facts: list[str] = []):
+    def __init__(self, model_type: str):
         super().__init__(model_type)
     
     def answer(self,
                query: str,
                with_logging: bool = False, 
                index: str = '',
-               answer: Optional[str] = None) -> str:
+               answer: Optional[str] = None,
+               supporting_facts: list[str] = []) -> str:
         """
         This method retrieves a single relevant document from the vector database
         and uses it to answer the query.
