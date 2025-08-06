@@ -71,6 +71,7 @@ def clear_cache() -> bool:
         return False
 
 def run_classification_indoqa(partition: str):
+    print(f'Running classification for indoqa dataset {partition}')
     from classification import classify_indo_qa
     classify_indo_qa(
         testing=False,
@@ -80,6 +81,7 @@ def run_classification_indoqa(partition: str):
 def run_classification_musique(partition: str,
                                context: bool,
                                testing: bool = False):
+    print(f'Running classification for musique dataset {partition}')
     from classification import classify_musique
     classify_musique(
         testing=testing,
@@ -89,6 +91,7 @@ def run_classification_musique(partition: str,
     )
 
 def run_translation_script(partition: str, testing: bool):
+    print(f'Running translation script for musique dataset {partition}')
     from translation_script import translate_multihop
 
     translate_multihop(
