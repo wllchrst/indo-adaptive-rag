@@ -9,7 +9,7 @@ from llm.ollama_llm import OLLAMA_MODEL_LIST
 model_type_list = ['gemini', 'hugging_face']
 
 class BaseMethod(ABC):
-    def __init__(self, model_type='gemini'):
+    def __init__(self, model_type='gemini', supporting_facts: list[str] = []):
         super().__init__()
         self.assign_llm(model_type=model_type)
         self.database_handler = DatabaseHandler()

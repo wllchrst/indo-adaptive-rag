@@ -3,7 +3,7 @@ from helpers import WordHelper
 from typing import Optional
 
 class SingleRetrieval(BaseMethod):
-    def __init__(self, model_type: str):
+    def __init__(self, model_type: str, supporting_facts: list[str] = []):
         super().__init__(model_type)
     
     def answer(self,
