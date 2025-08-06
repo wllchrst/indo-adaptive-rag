@@ -5,3 +5,4 @@ chroma_db
 .venv/
 cache_dir
 test.py
+.idea
