@@ -58,6 +58,7 @@ def save_classification_result(model_type: str,
 
 def classify_indo_qa(testing: bool,
                     log_classification: bool,
+                    log_method: bool,
                     partition: str = 'full'):
     try: 
         train_df, test_df = gather_indo_qa()
@@ -81,7 +82,7 @@ def classify_indo_qa(testing: bool,
                 question=question,
                 answer=answer,
                 logging_classification=log_classification,
-                log_method=False,
+                log_method=log_method,
                 index='indoqa'
             )
 
@@ -157,6 +158,7 @@ def classify_musique(testing: bool,
                      partition: str = 'all',
                      uses_context: bool = True,
                      logging_classification: bool = False,
+                     log_method: bool = False,
                      model_type: str = 'default'):
     """
     Main function to classify musique dataset.
@@ -171,7 +173,7 @@ def classify_musique(testing: bool,
             dataset_partition='validation',
             testing=testing,
             logging_classification=logging_classification,
-            log_method=logging_classification,
+            log_method=log_method,
             index=index
         )
 
@@ -182,7 +184,7 @@ def classify_musique(testing: bool,
             dataset_partition='train',
             testing=testing,
             logging_classification=logging_classification,
-            log_method=logging_classification,
+            log_method=log_method,
             index=index
         )
 
