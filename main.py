@@ -1,5 +1,16 @@
 from helpers import env_helper
-from classification.build_cache import build_cache_elastic
+import argparse
+
+parser = argparse.ArgumentParser(description="Python script that is used for indo adaptive rag experiments")
+
+def parse_all_args():
+    parser.add_argument("--action", help="Action that is going to be done")
+    parser.add_argument("--dataset", help="Dataset name that is going to be classify")
+    parser.add_argument("--partition", help="Partition that is going to be run", default='full')
+    parser.add_argument("--testing", help="Is the script going to be run for only testing?", type=bool, default=False)
+    parser.add_argument("--context", help="Supporting facts to be used for retrieving", type=bool, default=False)
+
+    return parser.parse_args()
 
 def seed_data():
     from vector_database import SeedHandler
@@ -59,15 +70,48 @@ def clear_cache() -> bool:
         print(f"Error clearing cache: {e}")
         return False
 
-def run_classification_indoqa():
-    from classification import classify_indo_qa, build_cache_elastic
-    classify_indo_qa(False, True, 'test')
+def run_classification_indoqa(partition: str):
+    from classification import classify_indo_qa
+    classify_indo_qa(
+        testing=False,
+        log_classification=True,
+        partition=partition)
 
+def run_classification_musique(partition: str,
+                               context: bool,
+                               testing: bool = False):
+    from classification import classify_musique
+    classify_musique(
+        testing=testing,
+        partition=partition,
+        logging_classification=False,
+        uses_context=context,
+    )
+
+def run_translation_script(partition: str, testing: bool):
+    from translation_script import translate_multihop
+
+    translate_multihop(
+        partition=[partition],
+        testing=testing
+    )
 def main():
-    #run_classification_indoqa()
-    test_querying_elastic("Testing", "musique")
-    #build_elasticsearch_index()
+    arguments = parse_all_args()
+
+    if arguments.dataset is None or arguments.action is None:
+        raise ValueError("Arguments for dataset and action is mandatory")
+
+    elif arguments.action == 'classification':
+
+        if arguments.dataset == 'musique':
+            run_classification_musique(arguments.partition, arguments.context, arguments.testing)
+        elif arguments.dataset == 'indoqa':
+            run_classification_indoqa(arguments.partition)
+
+    elif arguments.action == 'translation':
+        run_translation_script(arguments.partition, arguments.testing)
+
+    raise ValueError(f"Nothing can be run from your arguments {arguments}")
 
 if __name__ == "__main__":
-    print("Script main.py is being run")
     main()
