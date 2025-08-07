@@ -83,6 +83,7 @@ def run_classification_musique(partition: str,
                                context: bool,
                                testing: bool = False):
     print(f'Running classification for musique dataset {partition}')
+    print(f'Testing: {testing}')
     from classification import classify_musique
     classify_musique(
         testing=testing,
@@ -102,6 +103,8 @@ def run_translation_script(partition: str, testing: bool):
     )
 def main():
     arguments = parse_all_args()
+    print(arguments)
+    return
 
     if arguments.dataset is None or arguments.action is None:
         raise ValueError("Arguments for dataset and action is mandatory")
