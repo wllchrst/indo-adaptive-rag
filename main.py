@@ -103,8 +103,6 @@ def run_translation_script(partition: str, testing: bool):
     )
 def main():
     arguments = parse_all_args()
-    print(arguments)
-    return
 
     if arguments.dataset is None or arguments.action is None:
         raise ValueError("Arguments for dataset and action is mandatory")
