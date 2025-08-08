@@ -7,8 +7,8 @@ def parse_all_args():
     parser.add_argument("--action", help="Action that is going to be done")
     parser.add_argument("--dataset", help="Dataset name that is going to be classify")
     parser.add_argument("--partition", help="Partition that is going to be run", default='full')
-    parser.add_argument("--testing", help="Is the script going to be run for only testing?", type=bool, default=False)
-    parser.add_argument("--context", help="Supporting facts to be used for retrieving", type=bool, default=False)
+    parser.add_argument("--testing", help="Is the script going to be run for only testing?", action='store_true')
+    parser.add_argument("--context", help="Supporting facts to be used for retrieving", action='store_true')
 
     return parser.parse_args()
 
