@@ -151,6 +151,7 @@ def run_classification_on_musique(df,
 
         ids = [] if previous_result is None else previous_result['id'].values
         classifications = []
+        classified_index = []
         for i, row in df.iterrows():
             try:
                 id = row['id']
@@ -173,6 +174,7 @@ def run_classification_on_musique(df,
                 )
 
                 classifications.append(classification_result)
+                classified_index.append(i)
 
                 if testing and len(classifications) > 5:
                     break
@@ -181,7 +183,8 @@ def run_classification_on_musique(df,
                 traceback.print_exc()
                 break
 
-        df.loc[:len(classifications) - 1, 'classification'] = classifications
+        df = df.loc[classified_index].copy()
+        df['classifications'] = classifications
 
         save_classification_result(
             model_type=model_type,
