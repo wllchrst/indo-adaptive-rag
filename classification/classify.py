@@ -61,9 +61,11 @@ def save_classification_result(model_type: str,
 
         if old_dataset is None:
             dataset.to_csv(file_path, index=False)
+            print(f'Saved Total Row: {len(dataset)}')
         else:
             full_dataset = pd.concat([old_dataset, dataset])
             full_dataset.to_csv(file_path, index=False)
+            print(f'Saved Total Row: {len(full_dataset)}')
 
         print(f'Classification result saved at {file_path}')
         return True
@@ -171,6 +173,7 @@ def run_classification_on_musique(df,
                     break
             except Exception as e:
                 print(f'Classification failed on index {index}: {e}')
+                traceback.print_exc()
                 break
 
         df.loc[:len(classifications) - 1, 'classification'] = classifications
