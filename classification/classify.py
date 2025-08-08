@@ -110,7 +110,8 @@ def classify_indo_qa(testing: bool,
             if len(classifications) == 3 and testing:
                 break
 
-        full_df.loc[:len(classifications) - 1, 'classification'] = classifications
+        full_df = full_df.head(len(classifications))
+        full_df['classification'] = classifications
 
         save_classification_result(
             dataset=full_df,
