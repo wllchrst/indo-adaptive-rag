@@ -2,6 +2,7 @@ import pandas as pd
 import traceback
 import os
 import re
+import ast
 from classification.gather_data import gather_indo_qa, gather_musique_data
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
 from helpers import EvaluationHelper
@@ -23,6 +24,7 @@ methods = {
     multistep_retrieval: MultistepRetrieval(model_type)
 }
 
+
 def sanitize_filename(name: str) -> str:
     """
     Replace characters that are invalid in filenames with underscores.
@@ -32,22 +34,36 @@ def sanitize_filename(name: str) -> str:
     return re.sub(r'[\\/*?:"<>|\x00-\x1F]', '_', name)
 
 
+def generate_file_path(model_type: str,
+                       dataset_name: str,
+                       dataset_partition: str,
+                       testing: bool) -> str:
+    # Sanitize components
+    model_type_sanitized = sanitize_filename(model_type)
+    dataset_name_sanitized = sanitize_filename(f'{dataset_name}_{'testing' if testing else ""}')
+    dataset_partition_sanitized = sanitize_filename(dataset_partition)
+    folder_path = f'{save_path}/{model_type_sanitized}'
+
+    os.makedirs(folder_path, exist_ok=True)
+    file_path = f'{folder_path}/{dataset_name_sanitized}_{dataset_partition_sanitized}.csv'
+
+    return file_path
+
+
 def save_classification_result(model_type: str,
                                dataset_name: str,
                                dataset_partition: str,
                                testing: bool,
-                               dataset: pd.DataFrame) -> bool:
+                               dataset: pd.DataFrame,
+                               old_dataset: Optional[pd.DataFrame]) -> bool:
     try:
-        # Sanitize components
-        model_type_sanitized = sanitize_filename(model_type)
-        dataset_name_sanitized = sanitize_filename(f'{dataset_name}_{testing}')
-        dataset_partition_sanitized = sanitize_filename(dataset_partition)
+        file_path = generate_file_path(model_type, dataset_name, dataset_partition, testing)
 
-        folder_path = f'{save_path}/{model_type_sanitized}'
-        file_path = f'{folder_path}/{dataset_name_sanitized}_{dataset_partition_sanitized}.csv'
-
-        os.makedirs(folder_path, exist_ok=True)
-        dataset.to_csv(file_path, index=False)
+        if old_dataset is None:
+            dataset.to_csv(file_path, index=False)
+        else:
+            full_dataset = pd.concat([old_dataset, dataset])
+            full_dataset.to_csv(file_path, index=False)
 
         print(f'Classification result saved at {file_path}')
         return True
@@ -56,11 +72,12 @@ def save_classification_result(model_type: str,
         print(f"Error saving classification result: {e}")
         return False
 
+
 def classify_indo_qa(testing: bool,
-                    log_classification: bool,
-                    log_method: bool,
-                    partition: str = 'full'):
-    try: 
+                     log_classification: bool,
+                     log_method: bool,
+                     partition: str = 'full'):
+    try:
         train_df, test_df = gather_indo_qa()
         full_df = pd.concat([train_df, test_df]).reset_index(drop=True)
         classifications = []
@@ -91,7 +108,7 @@ def classify_indo_qa(testing: bool,
             if len(classifications) == 3 and testing:
                 break
 
-        full_df.loc[:len(classifications)-1, 'classification'] = classifications
+        full_df.loc[:len(classifications) - 1, 'classification'] = classifications
 
         save_classification_result(
             dataset=full_df,
@@ -100,12 +117,13 @@ def classify_indo_qa(testing: bool,
             dataset_partition=partition,
             model_type=model_type
         )
-        
+
         return True
     except Exception as e:
         traceback.print_exc()
         print(f"Error classifying indoqa: {e}")
         return False
+
 
 def run_classification_on_musique(df,
                                   model_type: str,
@@ -114,29 +132,45 @@ def run_classification_on_musique(df,
                                   logging_classification: bool,
                                   log_method: bool,
                                   index: str,
-                                  supporting_facts: list[str] = [],
-                                  uses_context: bool= False):
+                                  uses_context: bool = False):
     """
     Helper function to classify rows in a dataframe and save the result.
     """
     try:
+        previous_result: Optional[pd.DataFrame] = None
+        file_path = generate_file_path(model_type, 'musique', dataset_partition, testing)
+        if os.path.exists(file_path):
+            previous_result = pd.read_csv(file_path)
+
+        ids = [] if previous_result is None else previous_result['id'].values
         classifications = []
+        for index, row in df.iterrows():
+            try:
+                id = row['id']
+                question = row['question']
+                answer = row['answer']
+                sf_as_string = row['supporting_facts']
+                supporting_facts = ast.literal_eval(sf_as_string)
 
-        for _, row in df.iterrows():
-            question = row['question']
-            answer = row['answer']
+                if id in ids:
+                    print(f'Skipping ID {id}')
+                    continue
 
-            classification_result = classify(
-                question=question,
-                answer=answer,
-                logging_classification=logging_classification,
-                log_method=log_method,
-                index=index,
-                supporting_facts=supporting_facts if uses_context else []
-            )
-            classifications.append(classification_result)
+                classification_result = classify(
+                    question=question,
+                    answer=answer,
+                    logging_classification=logging_classification,
+                    log_method=log_method,
+                    index=index,
+                    supporting_facts=supporting_facts if uses_context else []
+                )
 
-            if testing and len(classifications) > 5:
+                classifications.append(classification_result)
+
+                if testing and len(classifications) > 5:
+                    break
+            except Exception as e:
+                print(f'Classification failed on index {index}: {e}')
                 break
 
         df.loc[:len(classifications) - 1, 'classification'] = classifications
@@ -146,20 +180,22 @@ def run_classification_on_musique(df,
             testing=testing,
             dataset_partition=dataset_partition,
             dataset=df,
-            dataset_name='musique'
+            dataset_name='musique',
+            old_dataset=previous_result
         )
 
         return True
     except Exception as e:
         print(f"Error while classifying musique: {e}")
+        traceback.print_exc()
         return False
+
 
 def classify_musique(testing: bool,
                      partition: str = 'all',
                      uses_context: bool = True,
                      logging_classification: bool = False,
-                     log_method: bool = False,
-                     model_type: str = 'default'):
+                     log_method: bool = False):
     """
     Main function to classify musique dataset.
     """
@@ -174,7 +210,8 @@ def classify_musique(testing: bool,
             testing=testing,
             logging_classification=logging_classification,
             log_method=log_method,
-            index=index
+            index=index,
+            uses_context=uses_context
         )
 
     if train_df is not None:
@@ -185,15 +222,17 @@ def classify_musique(testing: bool,
             testing=testing,
             logging_classification=logging_classification,
             log_method=log_method,
-            index=index
+            index=index,
+            uses_context=uses_context
         )
 
+
 def classify(question: str,
-                answer: str,
-                logging_classification: bool = False,
-                log_method: bool = False,
-                index: str = '',
-                supporting_facts: list[str] = []) -> str:
+             answer: str,
+             logging_classification: bool = False,
+             log_method: bool = False,
+             index: str = '',
+             supporting_facts: list[str] = []) -> str:
     non_retrieval_prediction = get_answer(question, non_retrieval, log_method, index)
     if WordHelper.contains(answer, non_retrieval_prediction):
         return 'A'
@@ -204,7 +243,7 @@ def classify(question: str,
 
     non_retrieval_result = EvaluationHelper.compute_scores(answer, non_retrieval_prediction)
     single_retrieval_result = EvaluationHelper.compute_scores(answer, single_retrieval_prediction)
-    
+
     if logging_classification:
         print("*" * 100)
         print(f'Question: {question}')
@@ -218,8 +257,9 @@ def classify(question: str,
         return 'B'
     elif non_retrieval_result['f1_score'] > single_retrieval_result['f1_score']:
         return 'A'
-    
-    multistep_retrieval_prediction = get_answer(question, multistep_retrieval, log_method, index, answer)
+
+    multistep_retrieval_prediction = get_answer(question, multistep_retrieval, log_method, index, answer,
+                                                supporting_facts)
 
     # If multistep method cannot answer the question, return 'C'
     if multistep_retrieval_prediction is None:
@@ -228,15 +268,17 @@ def classify(question: str,
     multi_retrieval_result = EvaluationHelper.compute_scores(answer, multistep_retrieval_prediction)
     if logging_classification:
         print(f'Multistep Retrieval {multi_retrieval_result}: {multistep_retrieval_prediction}')
-    
+
     if multi_retrieval_result['exact_match'] == 1:
         return 'C'
     elif single_retrieval_result['f1_score'] > multi_retrieval_result['f1_score']:
         return 'B'
     else:
         return 'C'
-    
-def get_answer(question: str, mode: str, log_method: bool, index: str, answer: Optional[str] = None, supporting_facts: list[str] = []) -> str:
+
+
+def get_answer(question: str, mode: str, log_method: bool, index: str, answer: Optional[str] = None,
+               supporting_facts: list[str] = []) -> str:
     if mode not in methods:
         raise ValueError(f"Invalid mode: {mode}. Available modes: {', '.join(methods.keys())}")
     return methods[mode].answer(question, log_method, index, answer, supporting_facts)
