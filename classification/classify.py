@@ -110,6 +110,10 @@ def classify_indo_qa(testing: bool,
             if len(classifications) == 3 and testing:
                 break
 
+        if len(classifications) == 0:
+            print("Not saving anything there is no success classification")
+            return True
+
         full_df = full_df.head(len(classifications))
         full_df['classification'] = classifications
 
@@ -147,7 +151,7 @@ def run_classification_on_musique(df,
 
         ids = [] if previous_result is None else previous_result['id'].values
         classifications = []
-        for index, row in df.iterrows():
+        for i, row in df.iterrows():
             try:
                 id = row['id']
                 question = row['question']
@@ -173,7 +177,7 @@ def run_classification_on_musique(df,
                 if testing and len(classifications) > 5:
                     break
             except Exception as e:
-                print(f'Classification failed on index {index}: {e}')
+                print(f'Classification failed on index {i}: {e}')
                 traceback.print_exc()
                 break
 
