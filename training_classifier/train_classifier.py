@@ -4,6 +4,7 @@ import numpy as np
 from training_classifier.data_loader import DataLoader
 from transformers import TrainingArguments, Trainer, AutoModelForSequenceClassification, EarlyStoppingCallback
 from datasets import Dataset
+from typing import Tuple
 
 accuracy_metric = evaluate.load("accuracy")
 precision_metric = evaluate.load("precision")
@@ -31,6 +32,25 @@ def compute_metrics(eval_pred):
 class TrainClassifier:
     def __init__(self):
         self.data_loader = DataLoader()
+        self.train_dataset, self.val_dataset, self.test_dataset = \
+            self.process_dataset(dataset=self.data_loader.dataset)
+
+    def process_dataset(self,
+                        dataset: Dataset,
+                        train_size: float = 0.8,
+                        val_size: float = 0.2,
+                        test_size: float = 0.2,
+                        seed: int = 42) -> Tuple[Dataset, Dataset, Dataset]:
+        train_val_dataset, test_dataset = dataset.train_test_split(
+            test_size=test_size, seed=seed
+        ).values()
+
+        train_dataset, val_dataset = train_val_dataset.train_test_split(
+            test_size=val_size / (train_size + val_size),
+            seed=seed
+        ).values()
+
+        return train_dataset, val_dataset, test_dataset
 
     def train_model(self,
                     training_dataset: Dataset,
