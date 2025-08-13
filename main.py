@@ -3,6 +3,7 @@ import argparse
 
 parser = argparse.ArgumentParser(description="Python script that is used for indo adaptive rag experiments")
 
+
 def parse_all_args():
     parser.add_argument("--action", help="Action that is going to be done")
     parser.add_argument("--dataset", help="Dataset name that is going to be classify")
@@ -11,6 +12,7 @@ def parse_all_args():
     parser.add_argument("--context", help="Supporting facts to be used for retrieving", action='store_true')
 
     return parser.parse_args()
+
 
 def seed_data():
     from vector_database import SeedHandler
@@ -21,14 +23,16 @@ def seed_data():
     except Exception as e:
         print(f"Error seeding data: {e}")
 
+
 def build_elasticsearch_index():
     from bm25 import build_all_index
     build_all_index()
-    
+
+
 def test_querying_chroma(query: str):
     from vector_database import DatabaseHandler
-    
-    handler = DatabaseHandler()    
+
+    handler = DatabaseHandler()
     result = handler.query(collection_name='indo_qa_context', query=query, total_result=3)
 
     print("*" * 50)
@@ -37,6 +41,7 @@ def test_querying_chroma(query: str):
         print(f'- {doc} - {dist}')
 
     # print(result)
+
 
 def test_querying_elastic(query: str, index: str = 'indoqa'):
     from bm25 import ElasticsearchRetriever
@@ -48,7 +53,8 @@ def test_querying_elastic(query: str, index: str = 'indoqa'):
     print(results)
     for result in results:
         print(result)
-        
+
+
 def test_llm():
     question = "Siapa nama presiden pertama Indonesia"
     try:
@@ -60,6 +66,7 @@ def test_llm():
     except Exception as e:
         print(e)
 
+
 def clear_cache() -> bool:
     try:
         from joblib import Memory
@@ -70,6 +77,7 @@ def clear_cache() -> bool:
         print(f"Error clearing cache: {e}")
         return False
 
+
 def run_classification_indoqa(partition: str):
     print(f'Running classification for indoqa dataset {partition}')
     from classification import classify_indo_qa
@@ -78,6 +86,7 @@ def run_classification_indoqa(partition: str):
         log_classification=True,
         log_method=False,
         partition=partition)
+
 
 def run_classification_musique(partition: str,
                                context: bool,
@@ -93,6 +102,7 @@ def run_classification_musique(partition: str,
         uses_context=context,
     )
 
+
 def run_translation_script(partition: str, testing: bool):
     print(f'Running translation script for musique dataset {partition}')
     from translation_script import translate_multihop
@@ -101,8 +111,25 @@ def run_translation_script(partition: str, testing: bool):
         partition=[partition],
         testing=testing
     )
+
+
+def run_train_classifier():
+    from training_classifier import TrainClassifier
+    train_classifier = TrainClassifier()
+
+    train_classifier.train_model(
+        training_dataset=train_classifier.train_dataset,
+        validation_dataset=train_classifier.val_dataset,
+        testing_dataset=train_classifier.test_dataset,
+        model_path='indobenchmark/indobert-base-p1'
+    )
+
+
 def main():
     arguments = parse_all_args()
+
+    if arguments.action == 'train':
+        run_train_classifier()
 
     if arguments.dataset is None or arguments.action is None:
         raise ValueError("Arguments for dataset and action is mandatory")
@@ -118,6 +145,7 @@ def main():
         run_translation_script(arguments.partition, arguments.testing)
     else:
         raise ValueError(f"Nothing can be run from your arguments {arguments}")
+
 
 if __name__ == "__main__":
     main()
