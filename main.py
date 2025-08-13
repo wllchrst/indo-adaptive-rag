@@ -1,5 +1,6 @@
 from helpers import env_helper
 import argparse
+from bm25.build_indexes import build_all_index
 
 parser = argparse.ArgumentParser(description="Python script that is used for indo adaptive rag experiments")
 
@@ -43,16 +44,14 @@ def test_querying_chroma(query: str):
     # print(result)
 
 
-def test_querying_elastic(query: str, index: str = 'indoqa'):
+def test_querying_elastic(index: str = 'indoqa'):
     from bm25 import ElasticsearchRetriever
     retriever = ElasticsearchRetriever()
 
-    # results = retriever.search( index=index, query=query, total_result=5)
+    print(f"Testing querying elasticsearch index: {index}")
     results = retriever.search_all(index)
 
     print(results)
-    for result in results:
-        print(result)
 
 
 def test_llm():
@@ -130,6 +129,13 @@ def main():
 
     if arguments.action == 'train':
         run_train_classifier()
+        return
+    elif arguments.action == 'seed_context':
+        build_elasticsearch_index()
+        return
+    elif arguments.action == 'test_context':
+        test_querying_elastic(index=arguments.dataset)
+        return
 
     if arguments.dataset is None or arguments.action is None:
         raise ValueError("Arguments for dataset and action is mandatory")
