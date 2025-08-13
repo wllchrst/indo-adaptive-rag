@@ -3,7 +3,7 @@ import traceback
 import os
 import re
 import ast
-from classification.gather_data import gather_indo_qa, gather_musique_data
+from classification.gather_data import gather_indo_qa, gather_musique_data, gather_qasina_data
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
 from helpers import EvaluationHelper
 from typing import Optional, List
@@ -72,6 +72,73 @@ def save_classification_result(model_type: str,
     except Exception as e:
         traceback.print_exc()
         print(f"Error saving classification result: {e}")
+        return False
+
+def classify_qasina(testing: bool,
+                     log_classification: bool,
+                     log_method: bool):
+    try:
+        dataset_name = 'qasina'
+        partition = 'full'
+        previous_result: Optional[pd.DataFrame] = None
+        df = gather_qasina_data()
+        file_path = generate_file_path(model_type, dataset_name, partition, testing)
+
+        if os.path.exists(file_path):
+            previous_result = pd.read_csv(file_path)
+
+        classifications = []
+        classified_index = []
+        ids = [] if previous_result is None else previous_result['ID'].values
+
+        for index, row in df.iterrows():
+            try:
+                id = row['ID']
+                question = row['question']
+                answer = row['answer']
+
+                if id in ids:
+                    print(f'Skipping ID {id}')
+                    continue
+
+                if question is None or answer is None:
+                    print(f"Skipping row {index} due to missing question or answer.")
+                    continue
+
+                classification_result = classify(
+                    question=question,
+                    answer=answer,
+                    logging_classification=log_classification,
+                    log_method=log_method,
+                    index='qasina'
+                )
+
+                classified_index.append(index)
+                classifications.append(classification_result)
+
+                if len(classifications) == 3 and testing:
+                    break
+            except Exception as e:
+                print(f'Classification failed on index {index}: {e}')
+                traceback.print_exc()
+                break
+        
+        df = df.loc[classified_index].copy()
+        df['classifications'] = classifications
+
+        save_classification_result(
+            model_type=model_type,
+            testing=testing,
+            dataset_partition=partition,
+            dataset=df,
+            dataset_name=dataset_name,
+            old_dataset=previous_result
+        )
+
+        return True
+    except Exception as e:
+        traceback.print_exc()
+        print(f"Error classifying qasina: {e}")
         return False
 
 

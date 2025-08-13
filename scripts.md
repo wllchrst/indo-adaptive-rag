@@ -10,6 +10,8 @@ python -m main --action classification --dataset indoqa --partition test
 ### Running train partition
 python -m main --action classification --dataset indoqa --partition train
 
+python -m main --action classification --dataset qasina
+
 ### Build context
 python -m main --action seed_context
 

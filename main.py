@@ -101,6 +101,15 @@ def run_classification_musique(partition: str,
         uses_context=context,
     )
 
+def run_classification_qasina(testing: bool = False, context: bool = False):
+    print(f'Running classification for qasina dataset')
+    print(f'Testing: {testing}')
+    from classification import classify_qasina
+    classify_qasina(
+        testing=testing,
+        log_classification=True,
+        log_method=False,
+    )
 
 def run_translation_script(partition: str, testing: bool):
     print(f'Running translation script for musique dataset {partition}')
@@ -146,6 +155,8 @@ def main():
             run_classification_musique(arguments.partition, arguments.context, arguments.testing)
         elif arguments.dataset == 'indoqa':
             run_classification_indoqa(arguments.partition)
+        elif arguments.dataset == 'qasina':
+            run_classification_qasina(testing=arguments.testing, context=arguments.context)
 
     elif arguments.action == 'translation':
         run_translation_script(arguments.partition, arguments.testing)
