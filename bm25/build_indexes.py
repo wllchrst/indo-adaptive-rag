@@ -63,8 +63,27 @@ def make_musique_context(path: str):
 
     return docs
 
+def make_qasina_context() -> List[Document]:
+    from classification import gather_qasina_data
+    df = gather_qasina_data()
+    df = df.drop_duplicates(subset=['context'])
+
+    docs: List[Document] = []
+    for _, row in df.iterrows():
+        doc: Document = {
+            'id': row['ID'],
+            'answer': row['answer'],
+            'question': row['question'],
+            'text': row['context']
+        }
+
+        docs.append(doc)
+
+    return docs
+
 def check_index_exists(index_name: str) -> bool:
     return es.indices.exists(index=index_name)
+
 def insert_documents(index: str, documents: List[Document]):
     operations = []
     for document in documents:
@@ -78,6 +97,7 @@ def build_all_index():
         print(f"Elasticsearch information: {es.info()}")
         indoqa_index = 'indoqa'
         musique_index = 'musique'
+        qasina_index = 'qasina'
 
         # INDOQA
         if not check_index_exists(indoqa_index):
@@ -98,6 +118,15 @@ def build_all_index():
             insert_documents(musique_index, musique_docs)
         else:
             print("Musique index already exists")
+        
+        if not check_index_exists(qasina_index):
+            print("Inserting qasina dataset context")
+            qasina_docs = make_qasina_context()
+            es.indices.delete(index=qasina_index, ignore_unavailable=True)
+            es.indices.create(index=qasina_index)
+            insert_documents(qasina_index, qasina_docs)
+        else:
+            print("Qasina index already exists")
 
     except Exception as e:
         print(f"Error while building all index: {e}")

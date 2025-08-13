@@ -26,7 +26,6 @@ class ElasticsearchRetriever:
         return hits
     
     @staticmethod
-    @memory.cache
     def search_all(index: str):
         res = es.search(
             index=index,
