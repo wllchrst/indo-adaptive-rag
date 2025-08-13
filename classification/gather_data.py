@@ -45,3 +45,12 @@ def gather_musique_data(partition: str = 'all') -> tuple[pd.DataFrame, pd.DataFr
     else:
         validation_df = pd.read_csv(validation_filepath)
         return None, validation_df
+
+def gather_qasina_data() -> pd.DataFrame:
+    file_exists = os.path.exists('QASiNa.csv')
+
+    if not file_exists:
+        raise FileNotFoundError("QASiNa.csv doesn't exists in the current directory")
+    
+    df = pd.read_csv('QASiNa.csv')
+    return df
