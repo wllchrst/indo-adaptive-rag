@@ -14,9 +14,9 @@ single_retrieval = 'single-retrieval'
 multistep_retrieval = 'multistep-retrieval'
 save_path = 'classification_result'
 
-#model_type = 'hugging_face'
-#model_type = 'gemini'
-model_type = 'gemma3:latest'
+# model_type = 'hugging_face'
+model_type = 'gemini'
+# model_type = 'gemma3:latest'
 
 methods = {
     non_retrieval: NonRetrieval(model_type),
@@ -74,9 +74,10 @@ def save_classification_result(model_type: str,
         print(f"Error saving classification result: {e}")
         return False
 
+
 def classify_qasina(testing: bool,
-                     log_classification: bool,
-                     log_method: bool):
+                    log_classification: bool,
+                    log_method: bool):
     try:
         dataset_name = 'qasina'
         partition = 'full'
@@ -122,7 +123,7 @@ def classify_qasina(testing: bool,
                 print(f'Classification failed on index {index}: {e}')
                 traceback.print_exc()
                 break
-        
+
         df = df.loc[classified_index].copy()
         df['classifications'] = classifications
 
@@ -145,54 +146,83 @@ def classify_qasina(testing: bool,
 def classify_indo_qa(testing: bool,
                      log_classification: bool,
                      log_method: bool,
-                     partition: str = 'full'):
+                     partition: str = 'full',
+                     model_type: str = 'default'):
     try:
         train_df, test_df = gather_indo_qa()
         full_df = pd.concat([train_df, test_df]).reset_index(drop=True)
-        classifications = []
 
         if partition == 'train':
+            print(f"Training Length: {len(train_df)}")
             full_df = train_df
         elif partition == 'test':
             full_df = test_df
 
-        for index, row in full_df.iterrows():
-            question = row['question']
-            answer = row['answer']
+        file_path = generate_file_path(model_type, 'indoqa', partition, testing)
+        previous_result: Optional[pd.DataFrame] = None
+        if os.path.exists(file_path):
+            previous_result = pd.read_csv(file_path)
 
-            if question is None or answer is None:
-                print(f"Skipping row {index} due to missing question or answer.")
-                continue
+        ids = [] if previous_result is None else previous_result['id'].values
 
-            classification_result = classify(
-                question=question,
-                answer=answer,
-                logging_classification=log_classification,
-                log_method=log_method,
-                index='indoqa'
-            )
+        classifications = []
+        classified_index = []
 
-            classifications.append(classification_result)
+        for i, row in full_df.iterrows():
+            try:
+                qid = row['id'] if 'id' in row else i  # fallback if no 'id' column
+                question = row['question']
+                answer = row['answer']
 
-            if len(classifications) == 3 and testing:
+                if question is None or answer is None:
+                    print(f"Skipping row {i} due to missing question or answer.")
+                    continue
+
+                if qid in ids:
+                    print(f"Skipping ID {qid}")
+                    continue
+
+                classification_result = classify(
+                    question=question,
+                    answer=answer,
+                    logging_classification=log_classification,
+                    log_method=log_method,
+                    index='indoqa'
+                )
+
+                classifications.append(classification_result)
+                classified_index.append(i)
+
+                # Early stop if testing
+                if testing and len(classifications) >= 3:
+                    break
+
+            except Exception as e:
+                print(f"Classification failed on index {i}: {e}")
+                traceback.print_exc()
                 break
 
-        if len(classifications) == 0:
-            print("Not saving anything there is no success classification")
+        # If nothing classified, skip saving
+        if not classifications:
+            print("Not saving anything — no successful classifications.")
             return True
 
-        full_df = full_df.head(len(classifications))
-        full_df['classification'] = classifications
+        # Prepare dataframe for saving
+        result_df = full_df.loc[classified_index].copy()
+        result_df['classification'] = classifications
 
+        # Save results incrementally
         save_classification_result(
-            dataset=full_df,
-            dataset_name='indoqa',
+            model_type=model_type,
             testing=testing,
             dataset_partition=partition,
-            model_type=model_type
+            dataset=result_df,
+            dataset_name='indoqa',
+            old_dataset=previous_result
         )
 
         return True
+
     except Exception as e:
         traceback.print_exc()
         print(f"Error classifying indoqa: {e}")
