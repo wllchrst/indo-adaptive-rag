@@ -10,9 +10,8 @@ timeout_seconds = 180
 class OllamaLLM(BaseLLM):
     def __init__(self, model_name='bangundwir/bahasa-4b-chat'):
         super().__init__()
-        transport = httpx.Client(timeout=timeout_seconds)
         self.API_KEY = env_helper.GEMINI_API_KEY
-        self.client = Client(host=env_helper.OLLAMA_HOST, client=transport)
+        self.client = Client(host=env_helper.OLLAMA_HOST, timeout=timeout_seconds)
         self.model_name = model_name
 
     def answer(self, prompt: str) -> str:
