@@ -1,4 +1,3 @@
-version: "3"
 services:
   elasticsearch:
     image: elasticsearch:9.0.2
@@ -14,6 +13,15 @@ services:
       interval: 5s
       retries: 10
 
+  kibana:
+    image: kibana:9.0.2
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_HOSTS: "http://elasticsearch:9200"
+    depends_on:
+      - elasticsearch
+
   project_run:
     build: .
     container_name: my-python-app
@@ -25,11 +33,9 @@ services:
       - ELASTIC_HOST=${ELASTIC_HOST}
       - CACHE_DIRECTORY=${CACHE_DIRECTORY}
     volumes:
-      - .:/app 
+      - .:/app
     depends_on:
       - elasticsearch
 
 volumes:
   joblib-cache:
-
-    
