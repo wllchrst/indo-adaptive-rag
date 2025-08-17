@@ -17,10 +17,6 @@ def gather_indo_qa(index_from: Optional[int] = None,
     train_df = pd.DataFrame(ds['train'])
     test_df = pd.DataFrame(ds['validation'])
 
-    keep_column = ['id', 'question', 'answer', 'category']
-    train_df = train_df[keep_column]
-    test_df = test_df[keep_column]
-
     # Apply slicing
     if index_from is None and index_to is None:
         return train_df, test_df
