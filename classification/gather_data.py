@@ -1,3 +1,5 @@
+from typing import Optional
+
 import pandas as pd
 import os
 from datasets import load_dataset
@@ -7,19 +9,31 @@ musique_folder_path = "musique"
 validation_filename = "validation.csv"
 train_filename = "train.csv"
 
-def gather_indo_qa(remove_column: bool = True) -> tuple[pd.DataFrame, pd.DataFrame]:
+
+def gather_indo_qa(index_from: Optional[int] = None,
+                   index_to: Optional[int] = None) -> tuple[pd.DataFrame, pd.DataFrame]:
     ds = load_dataset(indo_qa_path)
 
     train_df = pd.DataFrame(ds['train'])
     test_df = pd.DataFrame(ds['validation'])
-    
+
     keep_column = ['id', 'question', 'answer', 'category']
+    train_df = train_df[keep_column]
+    test_df = test_df[keep_column]
 
-    if remove_column:
-        test_df = test_df[keep_column]
-        train_df = train_df[keep_column]
+    # Apply slicing
+    if index_from is None and index_to is None:
+        return train_df, test_df
 
-    return train_df, test_df
+    if index_from is None:  # take from start until index_to
+        return train_df.iloc[:index_to], test_df.iloc[:index_to]
+
+    if index_to is None:  # take from index_from until end
+        return train_df.iloc[index_from:], test_df.iloc[index_from:]
+
+    # take from index_from until index_to
+    return train_df.iloc[index_from:index_to], test_df.iloc[index_from:index_to]
+
 
 def gather_musique_data(partition: str = 'all') -> tuple[pd.DataFrame, pd.DataFrame]:
     folder_exists = os.path.exists(musique_folder_path)
@@ -46,11 +60,12 @@ def gather_musique_data(partition: str = 'all') -> tuple[pd.DataFrame, pd.DataFr
         validation_df = pd.read_csv(validation_filepath)
         return None, validation_df
 
+
 def gather_qasina_data() -> pd.DataFrame:
     file_exists = os.path.exists('QASiNa.csv')
 
     if not file_exists:
         raise FileNotFoundError("QASiNa.csv doesn't exists in the current directory")
-    
+
     df = pd.read_csv('QASiNa.csv')
     return df

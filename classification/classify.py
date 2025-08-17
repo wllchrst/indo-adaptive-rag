@@ -6,7 +6,7 @@ import ast
 from classification.gather_data import gather_indo_qa, gather_musique_data, gather_qasina_data
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
 from helpers import EvaluationHelper
-from typing import Optional, List
+from typing import Optional
 from helpers.word_helper import WordHelper
 
 non_retrieval = 'non-retrieval'
@@ -147,9 +147,11 @@ def classify_indo_qa(testing: bool,
                      log_classification: bool,
                      log_method: bool,
                      partition: str = 'full',
-                     model_type: str = 'default'):
+                     model_type: str = 'default',
+                     index_from: Optional[int] = None,
+                     index_to: Optional[int] = None):
     try:
-        train_df, test_df = gather_indo_qa()
+        train_df, test_df = gather_indo_qa(index_from=index_from, index_to=index_to)
         full_df = pd.concat([train_df, test_df]).reset_index(drop=True)
 
         if partition == 'train':
