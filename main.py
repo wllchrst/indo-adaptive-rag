@@ -1,6 +1,6 @@
 from helpers import env_helper
 import argparse
-from bm25.build_indexes import build_all_index
+from typing import Optional
 
 parser = argparse.ArgumentParser(description="Python script that is used for indo adaptive rag experiments")
 
@@ -9,6 +9,10 @@ def parse_all_args():
     parser.add_argument("--action", help="Action that is going to be done")
     parser.add_argument("--dataset", help="Dataset name that is going to be classify")
     parser.add_argument("--partition", help="Partition that is going to be run", default='full')
+    parser.add_argument("--from", dest="index_from", type=int, default=None,
+                        help="Start index for slicing (default: None, meaning start from the beginning)")
+    parser.add_argument("--to", dest="index_to", type=int, default=None,
+                        help="End index for slicing (default: None, meaning until the end)")
     parser.add_argument("--testing", help="Is the script going to be run for only testing?", action='store_true')
     parser.add_argument("--context", help="Supporting facts to be used for retrieving", action='store_true')
 
@@ -77,14 +81,18 @@ def clear_cache() -> bool:
         return False
 
 
-def run_classification_indoqa(partition: str):
+def run_classification_indoqa(partition: str,
+                              index_from: Optional[int],
+                              index_to: Optional[int]):
     print(f'Running classification for indoqa dataset {partition}')
     from classification import classify_indo_qa
     classify_indo_qa(
         testing=False,
         log_classification=True,
         log_method=False,
-        partition=partition)
+        partition=partition,
+        index_from=index_from,
+        index_to=index_to)
 
 
 def run_classification_musique(partition: str,
@@ -101,6 +109,7 @@ def run_classification_musique(partition: str,
         uses_context=context,
     )
 
+
 def run_classification_qasina(testing: bool = False, context: bool = False):
     print(f'Running classification for qasina dataset')
     print(f'Testing: {testing}')
@@ -110,6 +119,7 @@ def run_classification_qasina(testing: bool = False, context: bool = False):
         log_classification=True,
         log_method=False,
     )
+
 
 def run_translation_script(partition: str, testing: bool):
     print(f'Running translation script for musique dataset {partition}')
@@ -154,7 +164,7 @@ def main():
         if arguments.dataset == 'musique':
             run_classification_musique(arguments.partition, arguments.context, arguments.testing)
         elif arguments.dataset == 'indoqa':
-            run_classification_indoqa(arguments.partition)
+            run_classification_indoqa(arguments.partition, arguments.index_from, arguments.index_to)
         elif arguments.dataset == 'qasina':
             run_classification_qasina(testing=arguments.testing, context=arguments.context)
 
