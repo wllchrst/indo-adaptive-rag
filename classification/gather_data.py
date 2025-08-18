@@ -17,6 +17,9 @@ def gather_indo_qa(index_from: Optional[int] = None,
     train_df = pd.DataFrame(ds['train'])
     test_df = pd.DataFrame(ds['validation'])
 
+    train_df["answer"] = train_df["answer"].replace({"No": "Tidak", "Yes": "Ya"})
+    test_df["answer"] = test_df["answer"].replace({"No": "Tidak", "Yes": "Ya"})
+
     # Apply slicing
     if index_from is None and index_to is None:
         return train_df, test_df
