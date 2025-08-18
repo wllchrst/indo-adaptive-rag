@@ -143,6 +143,18 @@ def run_train_classifier():
     )
 
 
+def merge_dataset():
+    import os
+    from classification import merge_indoqa_dataset
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    folder_path = os.path.join(base_dir, "classification_result", "default")
+
+    merge_indoqa_dataset(folder_path,
+                         first_file='indoqa__train_101.csv',
+                         second_file='indoqa__train_102.csv')
+
+
 def main():
     arguments = parse_all_args()
 

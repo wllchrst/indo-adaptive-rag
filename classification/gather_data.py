@@ -68,3 +68,35 @@ def gather_qasina_data() -> pd.DataFrame:
 
     df = pd.read_csv('QASiNa.csv')
     return df
+
+
+def merge_indoqa_dataset(folder: str,
+                         first_file: str,
+                         second_file: str,
+                         output_file: str = "indoqa_merged.csv") -> pd.DataFrame:
+    first_file_path = os.path.join(folder, first_file)
+    second_file_path = os.path.join(folder, second_file)
+
+    print("First file:", first_file_path)
+    print("Second file:", second_file_path)
+
+    # Load files (auto-detect CSV or JSON)
+    if first_file.endswith(".csv"):
+        df1 = pd.read_csv(first_file_path)
+    else:
+        df1 = pd.read_json(first_file_path)
+
+    if second_file.endswith(".csv"):
+        df2 = pd.read_csv(second_file_path)
+    else:
+        df2 = pd.read_json(second_file_path)
+
+    # Concatenate and drop duplicates by id
+    merged_df = pd.concat([df1, df2], ignore_index=True)
+    merged_df = merged_df.drop_duplicates(subset=["id"], keep="first")
+
+    # Save to output file in the same folder
+    output_path = os.path.join(folder, output_file)
+    merged_df.to_csv(output_path, index=False)
+
+    return merged_df

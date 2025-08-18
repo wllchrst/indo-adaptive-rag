@@ -1,3 +1,3 @@
-from classification.gather_data import gather_indo_qa, gather_musique_data, gather_qasina_data
+from classification.gather_data import gather_indo_qa, gather_musique_data, gather_qasina_data, merge_indoqa_dataset
 from classification.classify import classify_indo_qa, classify_musique, classify_qasina
 from classification.build_cache import build_cache_elastic
