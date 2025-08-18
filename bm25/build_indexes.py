@@ -17,7 +17,7 @@ class Document(TypedDict):
 
 def make_indoqa_context() -> List[Document]:
     from classification import gather_indo_qa
-    train_df, test_df = gather_indo_qa(remove_column=False)
+    train_df, test_df = gather_indo_qa()
     full_df = pd.concat([train_df, test_df])
     full_df = full_df.drop_duplicates(subset=['context'])
 
