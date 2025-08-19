@@ -129,3 +129,7 @@ class TrainClassifier:
 
         evaluation_result = trainer.evaluate(testing_dataset)
         print(f'Evaluation result: {evaluation_result}')
+
+        output_dir = 'saved_model'
+        trainer.save_model(output_dir)
+        self.tokenizer.save_pretrained(output_dir)
