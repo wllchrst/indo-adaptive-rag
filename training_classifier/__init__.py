@@ -1,2 +1,3 @@
 ﻿from training_classifier.data_loader import DataLoader
 from training_classifier.train_classifier import TrainClassifier
+from training_classifier.eda import indonesia_eda

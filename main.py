@@ -15,6 +15,7 @@ def parse_all_args():
                         help="End index for slicing (default: None, meaning until the end)")
     parser.add_argument("--testing", help="Is the script going to be run for only testing?", action='store_true')
     parser.add_argument("--context", help="Supporting facts to be used for retrieving", action='store_true')
+    parser.add_argument("--undersample", help="Undersample the dataset for training", action='store_true')
 
     return parser.parse_args()
 
@@ -131,15 +132,18 @@ def run_translation_script(partition: str, testing: bool):
     )
 
 
-def run_train_classifier():
+def run_train_classifier(undersample: bool):
     from training_classifier import TrainClassifier
-    train_classifier = TrainClassifier()
+    filepath = 'classification_result/final_dataset_augmented.csv'
+
+    train_classifier = TrainClassifier(undersample, filepath)
+    model_path = 'indobenchmark/indobert-base-p1'
 
     train_classifier.train_model(
         training_dataset=train_classifier.train_dataset,
         validation_dataset=train_classifier.val_dataset,
         testing_dataset=train_classifier.test_dataset,
-        model_path='indobenchmark/indobert-base-p1'
+        model_path=model_path
     )
 
 
@@ -155,17 +159,35 @@ def merge_dataset():
                          second_file='indoqa__train_102.csv')
 
 
+def augment_dataset():
+    import asyncio
+    from training_classifier import DataLoader
+    loader = DataLoader(undersample=False)
+
+    augment_task = loader.augment_dataset(
+        dataset=loader.dataset,
+        classname='A'
+    )
+
+    result = asyncio.run(augment_task)
+    print(result['classification'].value_counts())
+    result.to_csv('augmented_dataset.csv')
+
+
 def main():
     arguments = parse_all_args()
 
-    if arguments.action == 'train':
-        run_train_classifier()
+    if arguments.action == 'train-classifier':
+        run_train_classifier(arguments.undersample)
         return
     elif arguments.action == 'seed_context':
         build_elasticsearch_index()
         return
     elif arguments.action == 'test_context':
         test_querying_elastic(index=arguments.dataset)
+        return
+    elif arguments.action == 'augment_dataset':
+        augment_dataset()
         return
 
     if arguments.dataset is None or arguments.action is None:

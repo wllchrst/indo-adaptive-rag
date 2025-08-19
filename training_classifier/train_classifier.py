@@ -2,9 +2,9 @@
 import evaluate
 import numpy as np
 from training_classifier.data_loader import DataLoader
-from transformers import TrainingArguments, Trainer, AutoModelForSequenceClassification, EarlyStoppingCallback
+from transformers import TrainingArguments, Trainer, AutoModelForSequenceClassification, AutoTokenizer
 from datasets import Dataset
-from typing import Tuple
+from typing import Tuple, Optional
 
 accuracy_metric = evaluate.load("accuracy")
 precision_metric = evaluate.load("precision")
@@ -30,17 +30,44 @@ def compute_metrics(eval_pred):
 
 
 class TrainClassifier:
-    def __init__(self):
-        self.data_loader = DataLoader()
+    def __init__(self, undersample: bool, file_path: Optional[str] = None,
+                 model_path: str = 'indobenchmark/indobert-base-p1'):
+        self.data_loader = DataLoader(undersample=undersample, file_path=file_path)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+        self.label2id = {"A": 0, "B": 1, "C": 2}
+        self.id2label = {v: k for k, v in self.label2id.items()}
+        self.max_length = 512
+
         self.train_dataset, self.val_dataset, self.test_dataset = \
             self.process_dataset(dataset=self.data_loader.dataset)
 
-    def process_dataset(self,
-                        dataset: Dataset,
-                        train_size: float = 0.8,
-                        val_size: float = 0.2,
-                        test_size: float = 0.2,
-                        seed: int = 42) -> Tuple[Dataset, Dataset, Dataset]:
+    def process_dataset(
+            self,
+            dataset: Dataset,
+            train_size: float = 0.8,
+            val_size: float = 0.2,
+            test_size: float = 0.2,
+            seed: int = 42,
+    ) -> Tuple[Dataset, Dataset, Dataset]:
+
+        # add numeric labels
+        def encode_labels(example):
+            example["label"] = self.label2id[example["classification"]]
+            return example
+
+        dataset = dataset.map(encode_labels)
+
+        # tokenize
+        def tokenize_function(example):
+            return self.tokenizer(
+                example["question"],
+                padding="max_length",
+                truncation=True,
+                max_length=self.max_length,
+            )
+
+        dataset = dataset.map(tokenize_function, batched=True)
+
         train_val_dataset, test_dataset = dataset.train_test_split(
             test_size=test_size, seed=seed
         ).values()

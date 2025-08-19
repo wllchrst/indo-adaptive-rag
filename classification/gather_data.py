@@ -73,7 +73,7 @@ def gather_qasina_data() -> pd.DataFrame:
 def merge_indoqa_dataset(folder: str,
                          first_file: str,
                          second_file: str,
-                         output_file: str = "indoqa_merged.csv") -> pd.DataFrame:
+                         output_file: str = "indoqa.csv") -> pd.DataFrame:
     first_file_path = os.path.join(folder, first_file)
     second_file_path = os.path.join(folder, second_file)
 
