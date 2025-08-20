@@ -117,7 +117,8 @@ class TrainClassifier:
             logging_steps=10,
             eval_strategy="epoch",
             logging_strategy="epoch",
-            save_strategy="epoch",
+            save_strategy="no",
+            save_total_limit=1,
             report_to="none",
             learning_rate=2e-5,
             gradient_accumulation_steps=2,
@@ -139,7 +140,7 @@ class TrainClassifier:
 
         model_name = model_path.replace("/", "_")
         model_save_path = os.path.join(output_dir, model_name)
-        confusion_save_path = os.path.join(output_confusion_matrix, model_name)
+        confusion_save_path = os.path.join(output_confusion_matrix, f'{model_name}.jpg')
 
         trainer.save_model(model_save_path)
         self.tokenizer.save_pretrained(model_save_path)
@@ -179,6 +180,8 @@ class TrainClassifier:
         plt.xlabel("Predicted")
         plt.ylabel("Actual")
         plt.title("Confusion Matrix")
+
+        os.makedirs(os.path.dirname(save_path), exist_ok=True)
 
         plt.savefig(save_path, format="jpg", dpi=300)
         plt.close()
