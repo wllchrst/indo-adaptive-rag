@@ -1,6 +1,10 @@
 ﻿import torch
 import evaluate
 import numpy as np
+import os
+import seaborn as sns
+from sklearn.metrics import confusion_matrix
+from matplotlib import pyplot as plt
 from training_classifier.data_loader import DataLoader
 from transformers import TrainingArguments, Trainer, AutoModelForSequenceClassification, AutoTokenizer
 from datasets import Dataset
@@ -36,6 +40,7 @@ class TrainClassifier:
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
         self.label2id = {"A": 0, "B": 1, "C": 2}
         self.id2label = {v: k for k, v in self.label2id.items()}
+        self.class_names = [self.id2label[i] for i in range(len(self.label2id))]
         self.max_length = 512
 
         self.train_dataset, self.val_dataset, self.test_dataset = \
@@ -83,7 +88,9 @@ class TrainClassifier:
                     training_dataset: Dataset,
                     validation_dataset: Dataset,
                     testing_dataset: Dataset,
-                    model_path: str):
+                    model_path: str,
+                    output_dir='saved_model',
+                    output_confusion_matrix='confusion_matrixes'):
         torch.cuda.empty_cache()
         model = AutoModelForSequenceClassification.from_pretrained(
             model_path, num_labels=3
@@ -130,6 +137,49 @@ class TrainClassifier:
         evaluation_result = trainer.evaluate(testing_dataset)
         print(f'Evaluation result: {evaluation_result}')
 
-        output_dir = 'saved_model'
-        trainer.save_model(output_dir)
-        self.tokenizer.save_pretrained(output_dir)
+        model_name = model_path.replace("/", "_")
+        model_save_path = os.path.join(output_dir, model_name)
+        confusion_save_path = os.path.join(output_confusion_matrix, model_name)
+
+        trainer.save_model(model_save_path)
+        self.tokenizer.save_pretrained(model_save_path)
+
+        predictions = trainer.predict(testing_dataset)
+
+        self.generate_confusion_matrix(
+            eval_pred=(predictions.predictions, predictions.label_ids),
+            labels=list(self.label2id.values()),
+            class_names=self.class_names,
+            save_path=confusion_save_path
+        )
+
+    def generate_confusion_matrix(
+            self,
+            eval_pred,
+            labels: list[int],
+            save_path: str,
+            class_names=None,
+    ):
+        """
+        Generates and saves the confusion matrix as a .jpg file.
+
+        Args:
+        - eval_pred: Tuple containing (logits, labels).
+        - labels: List of unique labels.
+        - class_names: List of class names (optional).
+        - save_path: File path to save the confusion matrix image.
+        """
+        logits, true_labels = eval_pred
+        predictions = np.argmax(logits, axis=-1)
+
+        cm = confusion_matrix(true_labels, predictions, labels=labels)
+
+        plt.figure(figsize=(8, 6))
+        sns.heatmap(cm, annot=True, fmt="d", cmap="Blues", xticklabels=class_names, yticklabels=class_names)
+        plt.xlabel("Predicted")
+        plt.ylabel("Actual")
+        plt.title("Confusion Matrix")
+
+        plt.savefig(save_path, format="jpg", dpi=300)
+        plt.close()
+        print(f"Confusion matrix saved to {save_path}")
