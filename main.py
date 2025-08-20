@@ -137,14 +137,20 @@ def run_train_classifier(undersample: bool):
     filepath = 'classification_result/final_dataset_augmented.csv'
 
     train_classifier = TrainClassifier(undersample, filepath)
-    model_path = 'indobenchmark/indobert-base-p1'
+    model_paths = [
+        'indobenchmark/indobert-base-p1',
+        'indobenchmark/indobert-base-p2',
+        'indobenchmark/indobert-large-p1',
+        'indobenchmark/indobert-large-p2',
+    ]
 
-    train_classifier.train_model(
-        training_dataset=train_classifier.train_dataset,
-        validation_dataset=train_classifier.val_dataset,
-        testing_dataset=train_classifier.test_dataset,
-        model_path=model_path
-    )
+    for model_path in model_paths:
+        train_classifier.train_model(
+            training_dataset=train_classifier.train_dataset,
+            validation_dataset=train_classifier.val_dataset,
+            testing_dataset=train_classifier.test_dataset,
+            model_path=model_path
+        )
 
 
 def merge_dataset():
