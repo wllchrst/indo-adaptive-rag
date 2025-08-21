@@ -195,21 +195,39 @@ def run_experiment(system_type: str,
     BEST_MODEL_PATH = 'saved_model/indobenchmark_indobert-large-p1'
     MODEL_TYPE = 'gemma3:latest'
 
-    system = System(
-        classifier_model_path=BEST_MODEL_PATH,
-        dataset_path=config.dataset_path,
-        dataset_index=config.dataset_index,
-        dataset_name=config.dataset_name,
-        dataset_part=dataset_part,
-        keep_column=config.keep_column,
-        model_type=MODEL_TYPE,
-        question_column=config.question_column,
-        answer_column=config.answer_column,
-        id_column=config.id_column,
-        experiment_result_folder=config.experiment_result_folder,
-    )
+    if system_type == 'all':
+        for type in system_type_mapping.values():
+            system = System(
+                classifier_model_path=BEST_MODEL_PATH,
+                dataset_path=config.dataset_path,
+                dataset_index=config.dataset_index,
+                dataset_name=config.dataset_name,
+                dataset_part=dataset_part,
+                keep_column=config.keep_column,
+                model_type=MODEL_TYPE,
+                question_column=config.question_column,
+                answer_column=config.answer_column,
+                id_column=config.id_column,
+                experiment_result_folder=config.experiment_result_folder,
+            )
 
-    system.process(system_type_mapping[system_type])
+            system.process(type)
+    else:
+        system = System(
+            classifier_model_path=BEST_MODEL_PATH,
+            dataset_path=config.dataset_path,
+            dataset_index=config.dataset_index,
+            dataset_name=config.dataset_name,
+            dataset_part=dataset_part,
+            keep_column=config.keep_column,
+            model_type=MODEL_TYPE,
+            question_column=config.question_column,
+            answer_column=config.answer_column,
+            id_column=config.id_column,
+            experiment_result_folder=config.experiment_result_folder,
+        )
+
+        system.process(system_type_mapping[system_type])
 
 
 def main():
