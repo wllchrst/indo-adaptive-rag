@@ -99,6 +99,7 @@ class System:
 
     def process(self, system_type: SystemType):
         try:
+            print(f"🥸 Running process using type: {system_type}")
             experiment_result: List[Dict] = []
             file_save_path = self.generate_file_name(system_type)
             existing_result = None
