@@ -9,6 +9,7 @@ def parse_all_args():
     parser.add_argument("--action", help="Action that is going to be done")
     parser.add_argument("--dataset", help="Dataset name that is going to be classify")
     parser.add_argument("--partition", help="Partition that is going to be run", default='full')
+    parser.add_argument("--experiment_type", help="Experiment type that is going to be run", default='all')
     parser.add_argument("--from", dest="index_from", type=int, default=None,
                         help="Start index for slicing (default: None, meaning start from the beginning)")
     parser.add_argument("--to", dest="index_to", type=int, default=None,
@@ -180,6 +181,30 @@ def augment_dataset():
     result.to_csv('augmented_dataset.csv')
 
 
+def run_experiment(system_type: str,
+                   dataset: str):
+    from final_experiment import System, configs, system_type_mapping
+    config = configs[dataset]
+    BEST_MODEL_PATH = 'saved_model/indobenchmark_indobert-large-p1'
+    MODEL_TYPE = 'gemma3:latest'
+
+    system = System(
+        classifier_model_path=BEST_MODEL_PATH,
+        dataset_path=config.dataset_path,
+        dataset_index=config.dataset_index,
+        dataset_name=config.dataset_name,
+        dataset_part=config.dataset_part,
+        keep_column=config.keep_column,
+        model_type=MODEL_TYPE,
+        question_column=config.question_column,
+        answer_column=config.answer_column,
+        id_column=config.id_column,
+        experiment_result_folder=config.experiment_result_folder,
+    )
+
+    system.process(system_type_mapping[system_type])
+
+
 def main():
     arguments = parse_all_args()
 
@@ -195,6 +220,11 @@ def main():
     elif arguments.action == 'augment_dataset':
         augment_dataset()
         return
+    elif arguments.action == 'experiment':
+        run_experiment(
+            system_type=arguments.experiment_type,
+            dataset=arguments.dataset
+        )
 
     if arguments.dataset is None or arguments.action is None:
         raise ValueError("Arguments for dataset and action is mandatory")
