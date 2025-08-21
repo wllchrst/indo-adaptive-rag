@@ -31,7 +31,7 @@ configs: Dict[str, Config] = {
         id_column='id',
         experiment_result_folder='experiment_results'
     ),
-    'musique': Config(
+    'qasina': Config(
         classifier_model_path='',
         dataset_path='classification_result/default/final_dataset/qasina__full.csv',
         dataset_index='qasina',

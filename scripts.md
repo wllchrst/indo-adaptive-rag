@@ -33,3 +33,9 @@ python -m main --action test_context --dataset qasina
 python -m main --action train-classifier
 
 python -m main --action train-classifier --undersample
+
+## FINAL EXPERIMENT
+
+python -m main --action experiment --experiment_type non-retrieval --dataset indoqa
+
+python -m main --action experiment --experiment_type non-retrieval --dataset qasina
