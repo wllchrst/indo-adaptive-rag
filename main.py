@@ -17,6 +17,12 @@ def parse_all_args():
     parser.add_argument("--testing", help="Is the script going to be run for only testing?", action='store_true')
     parser.add_argument("--context", help="Supporting facts to be used for retrieving", action='store_true')
     parser.add_argument("--undersample", help="Undersample the dataset for training", action='store_true')
+    parser.add_argument(
+        "--dataset_part",
+        type=float,
+        default=1.0,
+        help="Fraction of the dataset to use (e.g., 0.5 for 50%)"
+    )
 
     return parser.parse_args()
 
@@ -182,7 +188,8 @@ def augment_dataset():
 
 
 def run_experiment(system_type: str,
-                   dataset: str):
+                   dataset: str,
+                   dataset_part: float):
     from final_experiment import System, configs, system_type_mapping
     config = configs[dataset]
     BEST_MODEL_PATH = 'saved_model/indobenchmark_indobert-large-p1'
@@ -193,7 +200,7 @@ def run_experiment(system_type: str,
         dataset_path=config.dataset_path,
         dataset_index=config.dataset_index,
         dataset_name=config.dataset_name,
-        dataset_part=config.dataset_part,
+        dataset_part=dataset_part,
         keep_column=config.keep_column,
         model_type=MODEL_TYPE,
         question_column=config.question_column,
@@ -223,7 +230,8 @@ def main():
     elif arguments.action == 'experiment':
         run_experiment(
             system_type=arguments.experiment_type,
-            dataset=arguments.dataset
+            dataset=arguments.dataset,
+            dataset_part=arguments.dataset_part
         )
 
         return
