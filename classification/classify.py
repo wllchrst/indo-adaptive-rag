@@ -391,4 +391,5 @@ def get_answer(question: str, mode: str, log_method: bool, index: str, answer: O
                supporting_facts: list[str] = []) -> str:
     if mode not in methods:
         raise ValueError(f"Invalid mode: {mode}. Available modes: {', '.join(methods.keys())}")
-    return methods[mode].answer(question, log_method, index, answer, supporting_facts)
+    answer, retrieve_count = methods[mode].answer(question, log_method, index, answer, supporting_facts)
+    return answer
