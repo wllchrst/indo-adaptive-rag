@@ -18,8 +18,8 @@ class SystemType(Enum):
 
 system_type_mapping = {
     'non-retrieval': SystemType.NON,
-    'single-retrieval': SystemType.NON,
-    'multi-retrieval': SystemType.NON,
+    'single-retrieval': SystemType.SINGLE,
+    'multi-retrieval': SystemType.MULTI,
     'adaptive': SystemType.ADAPTIVE,
 }
 
