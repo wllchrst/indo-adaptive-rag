@@ -25,6 +25,13 @@ system_type_mapping = {
     'adaptive': SystemType.ADAPTIVE,
 }
 
+reverse_mapping = {
+    SystemType.NON: 'non-retrieval',
+    SystemType.SINGLE: 'single-retrieval',
+    SystemType.MULTI: 'multi-retrieval',
+    SystemType.ADAPTIVE: 'adaptive',
+}
+
 
 class System:
     def __init__(self,
@@ -185,7 +192,7 @@ class System:
     def generate_file_name(self, system_type: SystemType) -> str:
         folder = f'{self.experiment_result_folder}/{self.dataset_name}'
         os.makedirs(folder, exist_ok=True)
-        file_save_path = f'{folder}/{self.model_type}_{system_type}.csv'
+        file_save_path = f'{folder}/{self.model_type}_{reverse_mapping[system_type]}.csv'
         sanitized_path = re.sub(r'[^A-Za-z0-9/_]', '_', file_save_path)
 
         return sanitized_path
