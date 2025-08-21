@@ -98,7 +98,10 @@ class System:
             raise FileNotFoundError(f"{dataset_path} is not a .csv file")
 
         df = pd.read_csv(dataset_path)
-        df = df.dropna(subset=keep_column)
+        df[self.id_column] = pd.to_numeric(df[self.id_column], errors="coerce")
+        df = df.dropna(subset=[self.id_column])
+        df[self.id_column] = df[self.id_column].astype(int)
+
         df = df[keep_column]
 
         if 0 < dataset_part < 1:
@@ -131,7 +134,9 @@ class System:
                     if len(ids) > 0 and int(dataset_id) in ids.astype(int):
                         print(f"Skipping row with dataset id: {dataset_id}")
                         continue
-
+                    elif row[self.question_column] is None or row[self.answer_column] is None:
+                        print(f'Skipping row because answer or question is None index: {index}')
+                        continue
                     start_time = time.time()
                     answer, retrieve_count = self.answer_question(
                         question=row[self.question_column],
