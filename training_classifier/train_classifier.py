@@ -3,6 +3,7 @@ import evaluate
 import numpy as np
 import os
 import seaborn as sns
+import json
 from sklearn.metrics import confusion_matrix
 from matplotlib import pyplot as plt
 from training_classifier.data_loader import DataLoader
@@ -141,9 +142,16 @@ class TrainClassifier:
         model_name = model_path.replace("/", "_")
         model_save_path = os.path.join(output_dir, model_name)
         confusion_save_path = os.path.join(output_confusion_matrix, f'{model_name}.jpg')
+        eval_result_path = os.path.join(model_save_path, "evaluation_result.json")
+
+        os.makedirs(model_save_path, exist_ok=True)
+        os.makedirs(output_confusion_matrix, exist_ok=True)
 
         trainer.save_model(model_save_path)
         self.tokenizer.save_pretrained(model_save_path)
+
+        with open(eval_result_path, "w") as f:
+            json.dump(evaluation_result, f, indent=4)
 
         predictions = trainer.predict(testing_dataset)
 
