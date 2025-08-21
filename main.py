@@ -226,6 +226,8 @@ def main():
             dataset=arguments.dataset
         )
 
+        return
+
     if arguments.dataset is None or arguments.action is None:
         raise ValueError("Arguments for dataset and action is mandatory")
 

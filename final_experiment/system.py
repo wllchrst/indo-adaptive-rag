@@ -108,7 +108,7 @@ class System:
                 existing_result = pd.read_csv(file_save_path)
                 ids = existing_result[self.id_column].values
 
-            for index, row in self.dataset.itterows():
+            for index, row in self.dataset.iterrows():
                 try:
                     dataset_id = row[self.id_column]
                     if dataset_id in ids:
