@@ -4,6 +4,9 @@ import os
 import traceback
 import re
 from pprint import pprint
+
+from fontTools.subset import subset
+
 from final_experiment.classifier import Classifier
 from typing import List, Tuple, Dict
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
@@ -95,6 +98,7 @@ class System:
             raise FileNotFoundError(f"{dataset_path} is not a .csv file")
 
         df = pd.read_csv(dataset_path)
+        df = df.dropna(subset=keep_column)
         df = df[keep_column]
 
         if 0 < dataset_part < 1:
