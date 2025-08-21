@@ -95,6 +95,8 @@ class System:
         else:
             raise ValueError("dataset_part must be between 0 and 1")
 
+        print(f'✅ Dataset total row: {len(df)}')
+
         return df
 
     def process(self, system_type: SystemType):
@@ -107,13 +109,14 @@ class System:
 
             if os.path.exists(file_save_path):
                 existing_result = pd.read_csv(file_save_path)
-                ids = existing_result[self.id_column].values
+                ids = existing_result['dataset_id'].values
 
             for index, row in self.dataset.iterrows():
                 try:
                     dataset_id = row[self.id_column]
-                    if dataset_id in ids:
-                        print(f'Skipping row with dataset id: {dataset_id}')
+
+                    if int(dataset_id) in ids.astype(int):
+                        print(f"Skipping row with dataset id: {dataset_id}")
                         continue
 
                     start_time = time.time()
@@ -153,7 +156,7 @@ class System:
 
             if existing_result is not None:
                 combined_dataset = pd.concat([existing_result, experiment_result_df], ignore_index=True)
-                combined_dataset.drop_duplicates(subset=[self.id_column], inplace=True)
+                combined_dataset.drop_duplicates(subset=['dataset_id'], inplace=True)
                 combined_dataset.to_csv(file_save_path, index=False)
 
             print(f"Final experiment done: {file_save_path}")
