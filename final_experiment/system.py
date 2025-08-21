@@ -97,11 +97,15 @@ class System:
         elif "csv" not in dataset_path:
             raise FileNotFoundError(f"{dataset_path} is not a .csv file")
 
-        df = pd.read_csv(dataset_path)
-        df[self.id_column] = pd.to_numeric(df[self.id_column], errors="coerce")
-        df = df.dropna(subset=[self.id_column])
-        df[self.id_column] = df[self.id_column].astype(int)
-
+        try:
+            df = pd.read_csv(dataset_path)
+            df[self.id_column] = pd.to_numeric(df[self.id_column], errors="coerce")
+            df = df.dropna(subset=[self.id_column])
+            df[self.id_column] = df[self.id_column].astype(int)
+        except Exception as e:
+            print(f'Error when trying to fix id_column: {self.id_column}')
+            traceback.print_exc()
+            raise e
         df = df[keep_column]
 
         if 0 < dataset_part < 1:
