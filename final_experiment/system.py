@@ -133,6 +133,15 @@ class System:
                     result['step'] = retrieve_count
                     result['dataset_id'] = dataset_id
                     experiment_result.append(result)
+
+                    # 🖨️ Print nicely
+                    print("\n===============================")
+                    print(f"ID       : {dataset_id}")
+                    print(f"Question : {row[self.question_column]}")
+                    print(f"Gold Ans : {row[self.answer_column]}")
+                    print(f"Pred Ans : {answer}")
+                    print(f"Scores   : {result}")
+                    print("===============================\n")
                 except Exception as e:
                     traceback.print_exc()
                     print(f'Error when trying to answer index: {index}')
