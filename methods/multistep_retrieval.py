@@ -2,13 +2,15 @@ from typing import List
 from methods.base_method import BaseMethod
 from interfaces import IDocument
 from helpers import WordHelper
-from typing import Optional
+from typing import Optional, Tuple
+
 
 class MultistepRetrieval(BaseMethod):
     def __init__(self, model_type: str):
         super().__init__(model_type)
 
-    def answer(self, query: str, with_logging: bool = False, index: str='', answer: Optional[str] = None, supporting_facts: list[str] = []):
+    def answer(self, query: str, with_logging: bool = False, index: str = '', answer: Optional[str] = None,
+               supporting_facts: list[str] = []) -> Tuple[str, int]:
         """
         This method retrieves multiple relevant documents from the vector database
         and uses them to answer the query.
@@ -29,18 +31,18 @@ class MultistepRetrieval(BaseMethod):
             query, index=index, with_logging=with_logging, answer=answer, previous_documents=documents_from_fact)
 
         return result
-        
+
     def retrieve(self,
-                original_question: str,
-                answer: str,
-                previous_reasonings: List[str] = [],
-                previous_documents: List[IDocument] = [],
-                query: str = '',
-                current_count: int = 0,
-                limit_count: int = 5,
-                index: str ='',
-                retrieval_count: int = 3,
-                with_logging: bool = False):
+                 original_question: str,
+                 answer: str,
+                 previous_reasonings: List[str] = [],
+                 previous_documents: List[IDocument] = [],
+                 query: str = '',
+                 current_count: int = 0,
+                 limit_count: int = 5,
+                 index: str = '',
+                 retrieval_count: int = 3,
+                 with_logging: bool = False):
         retrieval_query = original_question if query == '' else query
         documents = self.retrieve_document(retrieval_query, total_result=retrieval_count, index=index)
 
@@ -52,13 +54,13 @@ class MultistepRetrieval(BaseMethod):
         )
 
         if is_answered:
-            return result
+            return result, current_count
         elif current_count >= limit_count:
-            return "Tidak dapat menemukan jawaban yang tepat. Silakan coba pertanyaan lain."
+            return "Tidak dapat menemukan jawaban yang tepat. Silakan coba pertanyaan lain.", current_count
 
         previous_reasonings.append(result)
         previous_documents.append(documents)
-        
+
         self.retrieve(
             original_question=original_question,
             query=result,
@@ -86,11 +88,11 @@ class MultistepRetrieval(BaseMethod):
         return final_documents
 
     def reasoning(self,
-                question: str,
-                documents: List[IDocument],
-                previous_reasonings: List[str],
-                actual_answer: str,
-                with_logging: bool = False):
+                  question: str,
+                  documents: List[IDocument],
+                  previous_reasonings: List[str],
+                  actual_answer: str,
+                  with_logging: bool = False):
         context = "\n\n".join(
             [
                 "Context Title: "
@@ -104,12 +106,13 @@ class MultistepRetrieval(BaseMethod):
         qn_pretext = "Q: "
         question_instruction = "Jawablah pertanyaan berikut dengan penalaran langkah demi langkah.\n"
         answer_instruction = "Jika informasi yang diberikan tidak cukup untuk menjawab pertanyaan, berikan saja kata kunci yang dapat digunakan untuk menjawab pertanyaan. Jika informasi yang diberikan cukup, berikan jawaban yang tepat.\n\nJawaban:"
-        
+
         an_pretext = "A: "
         reasoning_joined = " ".join(previous_reasonings)
-        
+
         reasoning_prompt = "\n".join([
-            context, "", f"{qn_pretext} {question_instruction}{question}", f"{an_pretext} {reasoning_joined}", answer_instruction
+            context, "", f"{qn_pretext} {question_instruction}{question}", f"{an_pretext} {reasoning_joined}",
+            answer_instruction
         ])
 
         if with_logging:
@@ -123,5 +126,5 @@ class MultistepRetrieval(BaseMethod):
             return WordHelper.remove_non_alphabetic(answer).strip(), True
         elif actual_answer in answer:
             return WordHelper.remove_non_alphabetic(answer).strip(), True
-        
+
         return answer, False

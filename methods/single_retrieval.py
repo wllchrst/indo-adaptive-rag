@@ -1,17 +1,18 @@
 from methods.base_method import BaseMethod
 from helpers import WordHelper
-from typing import Optional
+from typing import Optional, Tuple
+
 
 class SingleRetrieval(BaseMethod):
     def __init__(self, model_type: str):
         super().__init__(model_type)
-    
+
     def answer(self,
                query: str,
-               with_logging: bool = False, 
+               with_logging: bool = False,
                index: str = '',
                answer: Optional[str] = None,
-               supporting_facts: list[str] = []) -> str:
+               supporting_facts: list[str] = []) -> Tuple[str, int]:
         """
         This method retrieves a single relevant document from the vector database
         and uses it to answer the query.
@@ -33,4 +34,4 @@ class SingleRetrieval(BaseMethod):
             with_logging=with_logging
         )
 
-        return prediction.strip()
+        return prediction.strip(), 1
