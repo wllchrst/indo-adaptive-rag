@@ -124,7 +124,7 @@ class System:
                 try:
                     dataset_id = row[self.id_column]
 
-                    if int(dataset_id) in ids.astype(int):
+                    if len(ids) > 0 and int(dataset_id) in ids.astype(int):
                         print(f"Skipping row with dataset id: {dataset_id}")
                         continue
 
