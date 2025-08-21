@@ -69,12 +69,12 @@ class System:
             "C": SystemType.MULTI,
         }
 
-        self.dataset = self.gather_dataset(dataset_path, keep_column, dataset_part)
         self.dataset_index = dataset_index
         self.dataset_name = dataset_name
         self.question_column = question_column
         self.answer_column = answer_column
         self.id_column = id_column
+        self.dataset = self.gather_dataset(dataset_path, keep_column, dataset_part)
 
         self.model_type = model_type
         self.non_retrieval = NonRetrieval(model_type)
