@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from llm import GeminiLLM, HuggingFaceLLM, OllamaLLM, OLLAMA_MODEL_LIST
-from vector_database import DatabaseHandler
+# from vector_database import DatabaseHandler
 from interfaces import IDocument, IMetadata
 from bm25 import ElasticsearchRetriever
 from typing import List, Optional, Tuple
@@ -13,7 +13,7 @@ class BaseMethod(ABC):
     def __init__(self, model_type='gemini'):
         super().__init__()
         self.assign_llm(model_type=model_type)
-        self.database_handler = DatabaseHandler()
+        # self.database_handler = DatabaseHandler()
         self.elastic_retriever = ElasticsearchRetriever()
 
     def assign_llm(self, model_type: str):
@@ -71,27 +71,28 @@ class BaseMethod(ABC):
         return documents
 
     def retrieve_chromadb(self, query: str, total_result: int = 5) -> List[IDocument]:
-        collections = self.database_handler.get_collections()
-
-        for collection in collections:
-            result = self.database_handler.query(
-                collection_name=collection.name,
-                query=query,
-                total_result=total_result
-            )
-
-            documents: List[IDocument] = []
-
-            if len(result['documents'][0]) > 0:
-                current_document = IDocument(
-                    text=result['documents'][0][0],
-                    distance=result['distances'][0][0],
-                    metadata=IMetadata(**result['metadatas'][0][0])
-                )
-
-                documents.append(current_document)
-
-        return documents
+        return []
+        # collections = self.database_handler.get_collections()
+        #
+        # for collection in collections:
+        #     result = self.database_handler.query(
+        #         collection_name=collection.name,
+        #         query=query,
+        #         total_result=total_result
+        #     )
+        #
+        #     documents: List[IDocument] = []
+        #
+        #     if len(result['documents'][0]) > 0:
+        #         current_document = IDocument(
+        #             text=result['documents'][0][0],
+        #             distance=result['distances'][0][0],
+        #             metadata=IMetadata(**result['metadatas'][0][0])
+        #         )
+        #
+        #         documents.append(current_document)
+        #
+        # return documents
 
     def log_actions(self, method: str, query: str, answer: str, with_logging: bool):
         if not with_logging:
