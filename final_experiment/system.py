@@ -2,6 +2,8 @@
 import time
 import os
 import traceback
+import re
+from pprint import pprint
 from final_experiment.classifier import Classifier
 from typing import List, Tuple, Dict
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
@@ -21,6 +23,13 @@ system_type_mapping = {
     'single-retrieval': SystemType.SINGLE,
     'multi-retrieval': SystemType.MULTI,
     'adaptive': SystemType.ADAPTIVE,
+}
+
+reverse_mapping = {
+    SystemType.NON: 'non-retrieval',
+    SystemType.SINGLE: 'single-retrieval',
+    SystemType.MULTI: 'multi-retrieval',
+    SystemType.ADAPTIVE: 'adaptive',
 }
 
 
@@ -138,14 +147,10 @@ class System:
                     result['dataset_id'] = dataset_id
                     experiment_result.append(result)
 
-                    # 🖨️ Print nicely
-                    print("\n===============================")
-                    print(f"ID       : {dataset_id}")
-                    print(f"Question : {row[self.question_column]}")
-                    print(f"Gold Ans : {row[self.answer_column]}")
-                    print(f"Pred Ans : {answer}")
-                    print(f"Scores   : {result}")
-                    print("===============================\n")
+                    print(f"\n[Q] {row[self.question_column]}")
+                    print(f"[A] {answer}")
+                    print("[Result]:")
+                    pprint(result, width=60)
                 except Exception as e:
                     traceback.print_exc()
                     print(f'Error when trying to answer index: {index}')
@@ -190,6 +195,7 @@ class System:
     def generate_file_name(self, system_type: SystemType) -> str:
         folder = f'{self.experiment_result_folder}/{self.dataset_name}'
         os.makedirs(folder, exist_ok=True)
+        file_save_path = f'{folder}/{self.model_type}_{reverse_mapping[system_type]}.csv'
+        sanitized_path = re.sub(r'[^A-Za-z0-9/_]', '_', file_save_path)
 
-        file_save_path = f'{folder}/{self.model_type}_{system_type}.csv'
-        return file_save_path
+        return sanitized_path
