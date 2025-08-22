@@ -99,13 +99,16 @@ class System:
 
         try:
             df = pd.read_csv(dataset_path)
-            df[self.id_column] = pd.to_numeric(df[self.id_column], errors="coerce")
-            df = df.dropna(subset=[self.id_column])
-            df[self.id_column] = df[self.id_column].astype(int)
+            if self.dataset_name == 'qasina':
+                df[self.id_column] = pd.to_numeric(df[self.id_column], errors="coerce")
+                df = df.dropna(subset=[self.id_column])
+                df[self.id_column] = df[self.id_column].astype(int)
+
         except Exception as e:
             print(f'Error when trying to fix id_column: {self.id_column}')
             traceback.print_exc()
             raise e
+
         df = df[keep_column]
 
         if 0 < dataset_part < 1:
@@ -135,7 +138,10 @@ class System:
                 try:
                     dataset_id = row[self.id_column]
 
-                    if len(ids) > 0 and int(dataset_id) in ids.astype(int):
+                    if len(ids) > 0 and self.dataset_name == 'qasina' and int(dataset_id) in ids.astype(int):
+                        print(f"Skipping row with dataset id: {dataset_id}")
+                        continue
+                    elif len(ids) > 0 and dataset_id in ids:
                         print(f"Skipping row with dataset id: {dataset_id}")
                         continue
                     elif row[self.question_column] is None or row[self.answer_column] is None:
