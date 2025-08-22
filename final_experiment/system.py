@@ -208,7 +208,7 @@ class System:
     def generate_file_name(self, system_type: SystemType) -> str:
         folder = f'{self.experiment_result_folder}/{self.dataset_name}'
         os.makedirs(folder, exist_ok=True)
-        file_save_path = f'{folder}/{self.model_type}_{reverse_mapping[system_type]}.csv'
+        file_save_path = f'{folder}/{self.model_type}_{reverse_mapping[system_type]}'
         sanitized_path = re.sub(r'[^A-Za-z0-9/_]', '_', file_save_path)
 
-        return sanitized_path
+        return f'{sanitized_path}.csv'
