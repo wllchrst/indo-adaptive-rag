@@ -59,7 +59,7 @@ class MultistepRetrieval(BaseMethod):
         previous_reasonings.append(result)
         previous_documents.append(documents)
 
-        self.retrieve(
+        return self.retrieve(
             original_question=original_question,
             query=result,
             limit_count=limit_count,
@@ -125,4 +125,4 @@ class MultistepRetrieval(BaseMethod):
         elif actual_answer is not None and actual_answer in answer:
             return WordHelper.remove_non_alphabetic(answer).strip(), True
 
-        return answer, False
+        return WordHelper.remove_non_alphabetic(answer).strip(), False

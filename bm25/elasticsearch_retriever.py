@@ -8,7 +8,6 @@ es = Elasticsearch(env_helper.ELASTIC_HOST)
 
 class ElasticsearchRetriever:
     @staticmethod
-    @memory.cache
     def search(index: str, query: str, total_result: int):
         print("Searching not from cache")
         query_result = es.search(

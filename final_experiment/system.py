@@ -197,13 +197,15 @@ class System:
         if retriever is None:
             raise ValueError(f"Unsupported system type: {system_type}")
 
-        return retriever.answer(
+        result = retriever.answer(
             query=question,
             with_logging=False,
             index=self.dataset_index,
             answer=None,
             supporting_facts=[]
         )
+
+        return result
 
     def generate_file_name(self, system_type: SystemType) -> str:
         folder = f'{self.experiment_result_folder}/{self.dataset_name}'
