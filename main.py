@@ -230,6 +230,11 @@ def run_experiment(system_type: str,
         system.process(system_type_mapping[system_type])
 
 
+def run_calculation():
+    from final_experiment.calculation import calculate_all_result
+    calculate_all_result(result_folder='experiment_results')
+
+
 def main():
     arguments = parse_all_args()
 
@@ -252,6 +257,9 @@ def main():
             dataset_part=arguments.dataset_part
         )
 
+        return
+    elif arguments.action == 'calculate':
+        run_calculation()
         return
 
     if arguments.dataset is None or arguments.action is None:
