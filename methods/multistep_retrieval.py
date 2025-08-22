@@ -53,15 +53,13 @@ class MultistepRetrieval(BaseMethod):
             actual_answer=answer
         )
 
-        if is_answered:
+        if is_answered or current_count >= limit_count:
             return result, current_count
-        elif current_count >= limit_count:
-            return "Tidak dapat menemukan jawaban yang tepat. Silakan coba pertanyaan lain.", current_count
 
         previous_reasonings.append(result)
         previous_documents.append(documents)
 
-        self.retrieve(
+        return self.retrieve(
             original_question=original_question,
             query=result,
             limit_count=limit_count,
@@ -124,7 +122,7 @@ class MultistepRetrieval(BaseMethod):
         if "Jawaban" in answer:
             answer = answer.split("Jawaban")[1].strip()
             return WordHelper.remove_non_alphabetic(answer).strip(), True
-        elif actual_answer in answer:
+        elif actual_answer is not None and actual_answer in answer:
             return WordHelper.remove_non_alphabetic(answer).strip(), True
 
-        return answer, False
+        return WordHelper.remove_non_alphabetic(answer).strip(), False
