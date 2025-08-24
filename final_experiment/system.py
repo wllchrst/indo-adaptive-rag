@@ -147,7 +147,7 @@ class System:
                     elif row[self.question_column] is None or row[self.answer_column] is None:
                         print(f'Skipping row because answer or question is None index: {index}')
                         continue
-                    elif type(WordHelper.normalize_text(row[self.answer_column])) is not str:
+                    elif not isinstance(row[self.answer_column], str):
                         print(f'Cleaned answer is not string: {row[self.answer_column]}')
                         continue
 
