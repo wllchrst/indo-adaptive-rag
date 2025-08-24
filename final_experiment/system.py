@@ -11,7 +11,7 @@ from final_experiment.classifier import Classifier
 from typing import List, Tuple, Dict
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
 from enum import Enum
-from helpers import EvaluationHelper
+from helpers import EvaluationHelper, WordHelper
 
 
 class SystemType(Enum):
@@ -147,6 +147,10 @@ class System:
                     elif row[self.question_column] is None or row[self.answer_column] is None:
                         print(f'Skipping row because answer or question is None index: {index}')
                         continue
+                    elif type(WordHelper.normalize_text(row[self.answer_column])) is not str:
+                        print(f'Cleaned answer is not string: {row[self.answer_column]}')
+                        continue
+
                     start_time = time.time()
                     answer, retrieve_count = self.answer_question(
                         question=row[self.question_column],
