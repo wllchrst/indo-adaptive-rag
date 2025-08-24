@@ -194,7 +194,7 @@ class System:
         if system_type is SystemType.ADAPTIVE:
             classification = self.classifier.classify(text=question)
             system_type = self.type_mapping.get(classification)
-
+            print(f'Adaptive answering using type {system_type}')
         if system_type is None:
             raise ValueError(f"Unsupported system type: {system_type}")
 
