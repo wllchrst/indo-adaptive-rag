@@ -43,5 +43,18 @@ configs: Dict[str, Config] = {
         answer_column='answer',
         id_column='ID',
         experiment_result_folder='experiment_results'
+    ),
+    'musique': Config(
+        classifier_model_path='',
+        dataset_path='musique/validation.csv',
+        dataset_index='musique',
+        dataset_name='musique',
+        dataset_part=1,
+        keep_column=['id', 'question', 'answer'],
+        model_type='',
+        question_column='question',
+        answer_column='answer',
+        id_column='id',
+        experiment_result_folder='experiment_results'
     )
 }
