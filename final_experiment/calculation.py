@@ -18,7 +18,7 @@ def gather_results(result_folder: str = 'experiment_results') -> List[Experiment
     results: List[ExperimentResult] = []
 
     for dataset_folder in dataset_folders:
-        if os.path.isfile(dataset_folder):
+        if '.csv' in dataset_folder:
             print(f'Not parsing {dataset_folder} because it is not a folder')
             continue
 
