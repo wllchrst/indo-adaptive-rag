@@ -68,6 +68,8 @@ def calculate_all_result(result_folder: str = 'experiment_results') -> bool:
             f1_mean = data['f1_score'].mean()
             step_mean = data['step'].mean()
             time_mean = data['time'].mean()
+            total_data = len(data)
+            accuracy = exact_match_total / len(data)
 
             llm_model = "Gemma 3" if 'gemma3' in info.file_name else "Gemini"
 
@@ -75,7 +77,9 @@ def calculate_all_result(result_folder: str = 'experiment_results') -> bool:
                 "method": get_method_from_filename(info.file_name),
                 "llm_model": llm_model,
                 "dataset": info.dataset_name,
+                "total_data": total_data,
                 "exact_match": exact_match_total,
+                "accuracy": accuracy,
                 "f1_mean": f1_mean,
                 "step_mean": step_mean,
                 "time_mean": time_mean
