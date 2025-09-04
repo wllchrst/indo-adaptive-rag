@@ -119,7 +119,9 @@ class MultistepRetrieval(BaseMethod):
         answer = self.llm.answer(reasoning_prompt)
         answer = WordHelper.clean_sentence(answer)
 
-        if "Jawaban" in answer:
+        print(f'multiretrieval answer\n:{answer}')
+
+        if "Jawaban" in answer and "kunci" not in answer:
             answer = answer.split("Jawaban")[1].strip()
             return WordHelper.remove_non_alphabetic(answer).strip(), True
         elif actual_answer is not None and actual_answer in answer:
