@@ -1,6 +1,7 @@
 from helpers import env_helper
 import argparse
 from typing import Optional
+from classification.classify import multistep_retrieval
 
 parser = argparse.ArgumentParser(description="Python script that is used for indo adaptive rag experiments")
 
@@ -235,6 +236,24 @@ def run_calculation():
     calculate_all_result(result_folder='experiment_results')
 
 
+def output_multiretrieval_issues():
+    from methods import MultistepRetrieval
+
+    models = ['gemma3:latest', 'qwen3:8b']
+
+    for model in models:
+        print("_" * 50)
+        method = MultistepRetrieval(model_type=model)
+        result = method.answer(
+            query="Genealogi adalah supergroup Armenia yang bersaing dalam kontes menyanyi 2015 di kota apa?",
+            with_logging=True,
+            index='musique'
+        )
+
+        print(f"Model: {model}")
+        print(f"Final Result: {result}")
+
+
 def main():
     arguments = parse_all_args()
 
@@ -256,8 +275,9 @@ def main():
             dataset=arguments.dataset,
             dataset_part=arguments.dataset_part
         )
+    elif arguments.action == 'multi-retrieval-issues':
+        output_multiretrieval_issues()
 
-        return
     elif arguments.action == 'calculate':
         run_calculation()
         return
