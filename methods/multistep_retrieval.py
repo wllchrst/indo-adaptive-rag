@@ -50,7 +50,8 @@ class MultistepRetrieval(BaseMethod):
             question=original_question,
             documents=documents,
             previous_reasonings=previous_reasonings,
-            actual_answer=answer
+            actual_answer=answer,
+            with_logging=with_logging
         )
 
         if is_answered or current_count >= limit_count:
@@ -114,12 +115,16 @@ class MultistepRetrieval(BaseMethod):
         ])
 
         if with_logging:
-            print(f'Reasoning prompt: {reasoning_prompt}')
+            print(f'_' * 50)
+            print(f'Reasoning Prompt')
+            print(reasoning_prompt)
 
         answer = self.llm.answer(reasoning_prompt)
         answer = WordHelper.clean_sentence(answer)
 
-        print(f'multiretrieval answer\n:{answer}')
+        print(f'_' * 50)
+        print(f'Multi Retrieval Answer')
+        print(answer)
 
         if "Jawaban" in answer and "kunci" not in answer:
             answer = answer.split("Jawaban")[1].strip()

@@ -239,7 +239,8 @@ def run_calculation():
 def output_multiretrieval_issues():
     from methods import MultistepRetrieval
 
-    models = ['gemma3:latest', 'qwen3:8b']
+    # models = ['gemma3:latest', 'qwen3:8b']
+    models = ['gemini']
 
     for model in models:
         print("_" * 50)
@@ -277,6 +278,7 @@ def main():
         )
     elif arguments.action == 'multi-retrieval-issues':
         output_multiretrieval_issues()
+        return
 
     elif arguments.action == 'calculate':
         run_calculation()
