@@ -54,6 +54,15 @@ def get_method_from_filename(filename: str) -> str:
     return ""
 
 
+def get_llm_model(filename: str):
+    if 'gemma3' in filename:
+        return 'Gemma 3'
+    elif 'qwen' in filename:
+        return 'Qwen 3'
+
+    return 'Gemini'
+
+
 def calculate_all_result(result_folder: str = 'experiment_results') -> bool:
     try:
         conclusions = []
@@ -71,7 +80,7 @@ def calculate_all_result(result_folder: str = 'experiment_results') -> bool:
             total_data = len(data)
             accuracy = exact_match_total / len(data)
 
-            llm_model = "Gemma 3" if 'gemma3' in info.file_name else "Gemini"
+            llm_model = get_llm_model(info.file_name)
 
             conclusion = {
                 "method": get_method_from_filename(info.file_name),
