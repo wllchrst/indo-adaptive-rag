@@ -5,7 +5,7 @@ import os
 from datasets import load_dataset
 
 indo_qa_path = "jakartaresearch/indoqa"
-musique_folder_path = "musique"
+hotpot_folder_path = "hotpot"
 validation_filename = "validation.csv"
 train_filename = "train.csv"
 
@@ -34,19 +34,19 @@ def gather_indo_qa(index_from: Optional[int] = None,
     return train_df.iloc[index_from:index_to], test_df.iloc[index_from:index_to]
 
 
-def gather_musique_data(partition: str = 'all') -> tuple[pd.DataFrame, pd.DataFrame]:
-    folder_exists = os.path.exists(musique_folder_path)
+def gather_hotpot_data(partition: str = 'all') -> tuple[pd.DataFrame, pd.DataFrame]:
+    folder_exists = os.path.exists(hotpot_folder_path)
     if not folder_exists:
-        raise FileNotFoundError(f"{musique_folder_path} doesn't exists in the current directory")
+        raise FileNotFoundError(f"{hotpot_folder_path} doesn't exists in the current directory")
 
-    filenames = os.listdir(musique_folder_path)
+    filenames = os.listdir(hotpot_folder_path)
     csv_file_exists = any("csv" in filename for filename in filenames)
 
     if not csv_file_exists:
-        raise FileNotFoundError(f"There is no csv file in {musique_folder_path}")
+        raise FileNotFoundError(f"There is no csv file in {hotpot_folder_path}")
 
-    validation_filepath = os.path.join(musique_folder_path, validation_filename)
-    train_filepath = os.path.join(musique_folder_path, train_filename)
+    validation_filepath = os.path.join(hotpot_folder_path, validation_filename)
+    train_filepath = os.path.join(hotpot_folder_path, train_filename)
 
     if partition == 'all':
         train_df = pd.read_csv(train_filepath)

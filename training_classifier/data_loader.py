@@ -10,11 +10,11 @@ from training_classifier.eda import indonesia_eda
 class DataLoader:
     def __init__(self,
                  main_folder_dataset: str = 'classification_result/final_dataset',
-                 musique_folder_dataset: str = 'musique',
+                 hotpot_folder_dataset: str = 'hotpot',
                  undersample: bool = True,
                  file_path: Optional[str] = None):
         self.main_folder_dataset = main_folder_dataset
-        self.musique_folder_dataset = musique_folder_dataset
+        self.hotpot_folder_dataset = hotpot_folder_dataset
         self.dataset = self.gather_all_dataset(file_path=file_path)
 
         if undersample:
@@ -80,9 +80,9 @@ class DataLoader:
 
         allowed_classes = ["A", "B", "C"]
         main_dataset = self.gather_dataset_from_folder(self.main_folder_dataset)
-        musique_dataset = self.gather_musique_dataset(self.musique_folder_dataset)
+        hotpot_dataset = self.gather_hotpot_dataset(self.hotpot_folder_dataset)
 
-        dataset = pd.concat([main_dataset, musique_dataset])
+        dataset = pd.concat([main_dataset, hotpot_dataset])
         dataset = dataset[dataset["classification"].isin(allowed_classes)]
         dataset = dataset.reset_index(drop=True)
 
@@ -115,7 +115,7 @@ class DataLoader:
             traceback.print_exc()
             raise e
 
-    def gather_musique_dataset(self, folder_dataset: str) -> pd.DataFrame:
+    def gather_hotpot_dataset(self, folder_dataset: str) -> pd.DataFrame:
         try:
             joined_dataset = None
             files = os.listdir(folder_dataset)

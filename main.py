@@ -104,13 +104,13 @@ def run_classification_indoqa(partition: str,
         index_to=index_to)
 
 
-def run_classification_musique(partition: str,
-                               context: bool,
-                               testing: bool = False):
-    print(f'Running classification for musique dataset {partition}')
+def run_classification_hotpot(partition: str,
+                              context: bool,
+                              testing: bool = False):
+    print(f'Running classification for hotpot dataset {partition}')
     print(f'Testing: {testing}')
-    from classification import classify_musique
-    classify_musique(
+    from classification import classify_hotpot
+    classify_hotpot(
         testing=testing,
         partition=partition,
         logging_classification=True,
@@ -131,7 +131,7 @@ def run_classification_qasina(testing: bool = False, context: bool = False):
 
 
 def run_translation_script(partition: str, testing: bool):
-    print(f'Running translation script for musique dataset {partition}')
+    print(f'Running translation script for hotpot dataset {partition}')
     from translation_script import translate_multihop
 
     translate_multihop(
@@ -248,7 +248,7 @@ def output_multiretrieval_issues():
         result = method.answer(
             query="Genealogi adalah supergroup Armenia yang bersaing dalam kontes menyanyi 2015 di kota apa?",
             with_logging=True,
-            index='musique'
+            index='hotpot'
         )
 
         print(f"Model: {model}")
@@ -289,8 +289,8 @@ def main():
 
     elif arguments.action == 'classification':
 
-        if arguments.dataset == 'musique':
-            run_classification_musique(arguments.partition, arguments.context, arguments.testing)
+        if arguments.dataset == 'hotpot':
+            run_classification_hotpot(arguments.partition, arguments.context, arguments.testing)
         elif arguments.dataset == 'indoqa':
             run_classification_indoqa(arguments.partition, arguments.index_from, arguments.index_to)
         elif arguments.dataset == 'qasina':

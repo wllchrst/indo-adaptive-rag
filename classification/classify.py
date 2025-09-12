@@ -3,7 +3,7 @@ import traceback
 import os
 import re
 import ast
-from classification.gather_data import gather_indo_qa, gather_musique_data, gather_qasina_data
+from classification.gather_data import gather_indo_qa, gather_hotpot_data, gather_qasina_data
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
 from helpers import EvaluationHelper
 from typing import Optional
@@ -231,20 +231,20 @@ def classify_indo_qa(testing: bool,
         return False
 
 
-def run_classification_on_musique(df,
-                                  model_type: str,
-                                  dataset_partition: str,
-                                  testing: bool,
-                                  logging_classification: bool,
-                                  log_method: bool,
-                                  index: str,
-                                  uses_context: bool = False):
+def run_classification_on_hotpot(df,
+                                 model_type: str,
+                                 dataset_partition: str,
+                                 testing: bool,
+                                 logging_classification: bool,
+                                 log_method: bool,
+                                 index: str,
+                                 uses_context: bool = False):
     """
     Helper function to classify rows in a dataframe and save the result.
     """
     try:
         previous_result: Optional[pd.DataFrame] = None
-        file_path = generate_file_path(model_type, 'musique', dataset_partition, testing)
+        file_path = generate_file_path(model_type, 'hotpot', dataset_partition, testing)
         if os.path.exists(file_path):
             previous_result = pd.read_csv(file_path)
 
@@ -290,30 +290,30 @@ def run_classification_on_musique(df,
             testing=testing,
             dataset_partition=dataset_partition,
             dataset=df,
-            dataset_name='musique',
+            dataset_name='hotpot',
             old_dataset=previous_result
         )
 
         return True
     except Exception as e:
-        print(f"Error while classifying musique: {e}")
+        print(f"Error while classifying hotpot: {e}")
         traceback.print_exc()
         return False
 
 
-def classify_musique(testing: bool,
-                     partition: str = 'all',
-                     uses_context: bool = True,
-                     logging_classification: bool = False,
-                     log_method: bool = False):
+def classify_hotpot(testing: bool,
+                    partition: str = 'all',
+                    uses_context: bool = True,
+                    logging_classification: bool = False,
+                    log_method: bool = False):
     """
-    Main function to classify musique dataset.
+    Main function to classify hotpot dataset.
     """
-    train_df, validation_df = gather_musique_data(partition)
-    index = 'musique'
+    train_df, validation_df = gather_hotpot_data(partition)
+    index = 'hotpot'
 
     if validation_df is not None:
-        run_classification_on_musique(
+        run_classification_on_hotpot(
             df=validation_df,
             model_type=model_type,
             dataset_partition='validation',
@@ -325,7 +325,7 @@ def classify_musique(testing: bool,
         )
 
     if train_df is not None:
-        run_classification_on_musique(
+        run_classification_on_hotpot(
             df=train_df,
             model_type=model_type,
             dataset_partition='train',

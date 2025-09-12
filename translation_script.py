@@ -10,7 +10,8 @@ from translator import translate_safe
 
 load_dotenv()
 
-def translate_row_musique(data, by_token: bool = False) -> Optional[dict]:
+
+def translate_row_hotpot(data, by_token: bool = False) -> Optional[dict]:
     id = data['id']
     question = data['question']
     contexts = data['context']
@@ -40,8 +41,9 @@ def translate_row_musique(data, by_token: bool = False) -> Optional[dict]:
     }
 
     print(f'Done translating dataset {id}')
-    
+
     return row
+
 
 def translate_multihop_iteration(
         dataset: Dataset,
@@ -54,7 +56,7 @@ def translate_multihop_iteration(
         print(f'Debugging row: {debug_row}')
 
         dataset = dataset.select([debug_row])
-        row_debugging = translate_row_musique(dataset[0])
+        row_debugging = translate_row_hotpot(dataset[0])
 
         rows.append(row_debugging)
         return pd.DataFrame(rows)
@@ -62,10 +64,10 @@ def translate_multihop_iteration(
     ids = loaded_dataset['id'].values if loaded_dataset is not None else []
 
     skip_indices = [3797, 3850, 3911, 3970, 4025, 4048, 4130, 4526]
-    
+
     for index, data in enumerate(dataset):
         id = data['id']
-        
+
         if id in ids:
             print(f"Skipping already translated id: {id}")
             continue
@@ -76,7 +78,7 @@ def translate_multihop_iteration(
             break
 
         try:
-            translated_row = translate_row_musique(data)
+            translated_row = translate_row_hotpot(data)
             rows.append(translated_row)
         except Exception as e:
             print(f"Error translating row {index} with id {id}: {e}")
@@ -84,8 +86,9 @@ def translate_multihop_iteration(
 
     return pd.DataFrame(rows)
 
+
 def get_translated_partition(partition: list[str]) -> dict:
-    folder_path = 'musique'
+    folder_path = 'hotpot'
     loaded_datasets = {}
 
     for dataset_name in partition:
@@ -96,15 +99,16 @@ def get_translated_partition(partition: list[str]) -> dict:
         except FileNotFoundError:
             print(f"File not found for dataset: {dataset_name}")
             continue
-    
+
     return loaded_datasets
 
+
 def save_dataset(
-    partition_name: str,
-    current_dataset: pd.DataFrame,
-    translated_dataset: Optional[pd.DataFrame] = None) -> bool:
+        partition_name: str,
+        current_dataset: pd.DataFrame,
+        translated_dataset: Optional[pd.DataFrame] = None) -> bool:
     try:
-        folder_path = 'musique'
+        folder_path = 'hotpot'
         if translated_dataset is None:
             current_dataset.to_csv(f'{folder_path}/{partition_name}.csv', index=False)
             return True
@@ -117,7 +121,8 @@ def save_dataset(
         print(f"An error occurred while saving the dataset: {e}")
         return False
 
-def translate_multihop(partition: list[str], testing:bool=False, debug_row: Optional[int] = None) -> bool:
+
+def translate_multihop(partition: list[str], testing: bool = False, debug_row: Optional[int] = None) -> bool:
     try:
         hotpot_qa = load_dataset('hotpot_qa', 'fullwiki', trust_remote_code=True)
         loaded_datasets = get_translated_partition(partition)
@@ -149,11 +154,12 @@ def translate_multihop(partition: list[str], testing:bool=False, debug_row: Opti
         print(f"An error occurred: {e}")
         return False
 
+
 if __name__ == "__main__":
     print("Running translation script")
     partition = ['train']
     translate_multihop(
-        partition=partition, 
-        testing=False, 
+        partition=partition,
+        testing=False,
         debug_row=None
     )

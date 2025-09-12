@@ -44,11 +44,11 @@ configs: Dict[str, Config] = {
         id_column='ID',
         experiment_result_folder='experiment_results'
     ),
-    'musique': Config(
+    'hotpot': Config(
         classifier_model_path='',
-        dataset_path='musique/validation.csv',
-        dataset_index='musique',
-        dataset_name='musique',
+        dataset_path='hotpot/validation.csv',
+        dataset_index='hotpot',
+        dataset_name='hotpot',
         dataset_part=1,
         keep_column=['id', 'question', 'answer'],
         model_type='',

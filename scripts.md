@@ -1,12 +1,12 @@
-﻿## Run main script for musique dataset classification
+﻿## Run main script for hotpot dataset classification
 
 ### Running validation partition
 
-python -m main --action classification --dataset musique --partition validation
+python -m main --action classification --dataset hotpot --partition validation
 
 ### Running train partition
 
-python -m main --action classification --dataset musique --partition train
+python -m main --action classification --dataset hotpot --partition train
 
 ### Running validation partition
 

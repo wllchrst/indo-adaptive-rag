@@ -9,11 +9,13 @@ from helpers import env_helper
 # Make sure you have run the docker compose file
 es = Elasticsearch(env_helper.ELASTIC_HOST)
 
+
 class Document(TypedDict):
     id: str
     text: str
     question: str
     answer: str
+
 
 def make_indoqa_context() -> List[Document]:
     from classification import gather_indo_qa
@@ -24,7 +26,7 @@ def make_indoqa_context() -> List[Document]:
     docs: List[Document] = []
     for _, row in full_df.iterrows():
         doc: Document = {
-            'id':row['id'],
+            'id': row['id'],
             'answer': row['answer'],
             'question': row['question'],
             'text': row['context']
@@ -34,7 +36,8 @@ def make_indoqa_context() -> List[Document]:
 
     return docs
 
-def make_musique_context(path: str):
+
+def make_hotpot_context(path: str):
     file_names = os.listdir(path)
     docs: List[Document] = []
     for file_name in file_names:
@@ -51,7 +54,7 @@ def make_musique_context(path: str):
                 context = literal_eval[0]
                 for sentence in context['sentences']:
                     doc: Document = {
-                        'id':row['id'],
+                        'id': row['id'],
                         'answer': row['answer'],
                         'question': row['question'],
                         'text': sentence
@@ -62,6 +65,7 @@ def make_musique_context(path: str):
                 raise exception
 
     return docs
+
 
 def make_qasina_context() -> List[Document]:
     from classification import gather_qasina_data
@@ -81,22 +85,25 @@ def make_qasina_context() -> List[Document]:
 
     return docs
 
+
 def check_index_exists(index_name: str) -> bool:
     return es.indices.exists(index=index_name)
+
 
 def insert_documents(index: str, documents: List[Document]):
     operations = []
     for document in documents:
         operations.append({'index': {'_index': index}})
         operations.append(document)
-        
+
     es.bulk(operations=operations)
+
 
 def build_all_index():
     try:
         print(f"Elasticsearch information: {es.info()}")
         indoqa_index = 'indoqa'
-        musique_index = 'musique'
+        hotpot_index = 'hotpot'
         qasina_index = 'qasina'
 
         # INDOQA
@@ -109,16 +116,15 @@ def build_all_index():
         else:
             print("Indoqa index already exists")
 
-
-        if not check_index_exists(musique_index):
-            print("Inserting musique dataset context")
-            musique_docs = make_musique_context("musique")
-            es.indices.delete(index=musique_index, ignore_unavailable=True)
-            es.indices.create(index=musique_index)
-            insert_documents(musique_index, musique_docs)
+        if not check_index_exists(hotpot_index):
+            print("Inserting hotpot dataset context")
+            hotpot_docs = make_hotpot_context("hotpot")
+            es.indices.delete(index=hotpot_index, ignore_unavailable=True)
+            es.indices.create(index=hotpot_index)
+            insert_documents(hotpot_index, hotpot_docs)
         else:
-            print("Musique index already exists")
-        
+            print("hotpot index already exists")
+
         if not check_index_exists(qasina_index):
             print("Inserting qasina dataset context")
             qasina_docs = make_qasina_context()
