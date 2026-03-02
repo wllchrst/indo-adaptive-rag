@@ -6,6 +6,18 @@ from classification.classify import multistep_retrieval
 parser = argparse.ArgumentParser(description="Python script that is used for indo adaptive rag experiments")
 
 
+## Technical todo list:
+# TODO Bootstrap testing for final experiment
+# TODO Retrieval hit rate analysis of every method (single retrieval, and multi retrieval)
+# TODO Add metric for efficiency of using the adaptive rag system method
+# TODO Compare new retrieval method to use semantic method to retrieve the documents.
+# TODO Using other model for automatic translation
+# TODO Need a method to evaluate the translation result when compared to the manually human translated dataset.
+
+# Non Technical
+# TODO Find people to do the human evaluated translation.
+
+
 def parse_all_args():
     parser.add_argument("--action", help="Action that is going to be done")
     parser.add_argument("--dataset", help="Dataset name that is going to be classify")

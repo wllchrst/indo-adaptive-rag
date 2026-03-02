@@ -155,11 +155,69 @@ def translate_multihop(partition: list[str], testing: bool = False, debug_row: O
         return False
 
 
+def generate_parallel_validation_sets():
+    import json
+    
+    print("Loading Indonesian validation data...")
+    indonesian_df = pd.read_csv('hotpot/validation.csv')
+    print(f"Loaded {len(indonesian_df)} rows from Indonesian validation data")
+    
+    print("Loading English validation data from hotpot_qa dataset...")
+    hotpot_qa = load_dataset('hotpot_qa', 'fullwiki', trust_remote_code=True)
+    english_data = hotpot_qa['validation']
+    print(f"Loaded {len(english_data)} rows from English validation data")
+    
+    print("Creating English DataFrame...")
+    english_list = []
+    for row in english_data:
+        english_list.append({
+            'id': row['id'],
+            'question': row['question'],
+            'contexts': row['context'],
+            'supporting_facts': row['supporting_facts'],
+            'answer': row['answer']
+        })
+    english_df = pd.DataFrame(english_list)
+    
+    print("Merging English and Indonesian data by ID...")
+    merged_df = english_df.merge(indonesian_df, on='id', suffixes=('_en', '_id'))
+    print(f"Merged to {len(merged_df)} rows")
+    
+    print("Creating parallel columns...")
+    output_df = pd.DataFrame({
+        'id': merged_df['id'],
+        'question_en': merged_df['question_en'],
+        'question_id': merged_df['question_id'],
+        'answer_en': merged_df['answer_en'],
+        'answer_id': merged_df['answer_id']
+    })
+    
+    print("Shuffling data...")
+    output_df = output_df.sample(frac=1, random_state=42).reset_index(drop=True)
+    
+    print("Splitting into 3 parts (150 rows each)...")
+    part1 = output_df.iloc[:150]
+    part2 = output_df.iloc[150:300]
+    part3 = output_df.iloc[300:450]
+    
+    print("Saving CSV files...")
+    part1.to_csv('hotpot/validation_part1.csv', index=False)
+    part2.to_csv('hotpot/validation_part2.csv', index=False)
+    part3.to_csv('hotpot/validation_part3.csv', index=False)
+    
+    print(f"Done! Generated 3 CSV files:")
+    print(f"  - hotpot/validation_part1.csv ({len(part1)} rows)")
+    print(f"  - hotpot/validation_part2.csv ({len(part2)} rows)")
+    print(f"  - hotpot/validation_part3.csv ({len(part3)} rows)")
+
+
 if __name__ == "__main__":
     print("Running translation script")
     partition = ['train']
-    translate_multihop(
-        partition=partition,
-        testing=False,
-        debug_row=None
-    )
+    # translate_multihop(
+    #     partition=partition,
+    #     testing=False,
+    #     debug_row=None
+    # )
+
+    generate_parallel_validation_sets()
