@@ -6,3 +6,4 @@ chroma_db
 cache_dir
 test.py
 .idea
+.DS_Store
