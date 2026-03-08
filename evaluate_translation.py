@@ -162,9 +162,9 @@ class TranslationEvaluator:
         context_titles_en = []
         context_titles_id = []
         for _, row in merged_df.iterrows():
-            contexts_en = row['contexts_en'] if pd.notna(row['contexts_en']) else []
-            contexts_id = row['contexts_id'] if pd.notna(row['contexts_id']) else []
-            
+            contexts_en = row['contexts_en'] if row['contexts_en'] is not None and row['contexts_en'] != [] else []
+            contexts_id = row['contexts_id'] if row['contexts_id'] is not None and row['contexts_id'] != [] else []
+
             try:
                 if isinstance(contexts_en, str):
                     contexts_en = ast.literal_eval(contexts_en)
@@ -189,9 +189,9 @@ class TranslationEvaluator:
         context_sentences_en = []
         context_sentences_id = []
         for _, row in merged_df.iterrows():
-            contexts_en = row['contexts_en'] if pd.notna(row['contexts_en']) else []
-            contexts_id = row['contexts_id'] if pd.notna(row['contexts_id']) else []
-            
+            contexts_en = row['contexts_en'] if row['contexts_en'] is not None and row['contexts_en'] != [] else []
+            contexts_id = row['contexts_id'] if row['contexts_id'] is not None and row['contexts_id'] != [] else []
+
             try:
                 if isinstance(contexts_en, str):
                     contexts_en = ast.literal_eval(contexts_en)
@@ -216,9 +216,9 @@ class TranslationEvaluator:
         fact_titles_en = []
         fact_titles_id = []
         for _, row in merged_df.iterrows():
-            facts_en = row['supporting_facts_en'] if pd.notna(row['supporting_facts_en']) else []
-            facts_id = row['supporting_facts_id'] if pd.notna(row['supporting_facts_id']) else []
-            
+            facts_en = row['supporting_facts_en'] if row['supporting_facts_en'] is not None and row['supporting_facts_en'] != [] else []
+            facts_id = row['supporting_facts_id'] if row['supporting_facts_id'] is not None and row['supporting_facts_id'] != [] else []
+
             try:
                 if isinstance(facts_en, str):
                     facts_en = ast.literal_eval(facts_en)
@@ -227,10 +227,10 @@ class TranslationEvaluator:
             except:
                 facts_en, facts_id = [], []
 
-            if 'title' in facts_en and 'title' in facts_id:
-                if len(facts_en['title']) == len(facts_id['title']):
-                    fact_titles_en.extend(facts_en['title'])
-                    fact_titles_id.extend(facts_id['title'])
+            if isinstance(facts_en, list) and isinstance(facts_id, list):
+                if len(facts_en) == len(facts_id):
+                    fact_titles_en.extend(facts_en)
+                    fact_titles_id.extend(facts_id)
 
         fact_title_results = self.evaluate_text_column(fact_titles_en, fact_titles_id)
         results['supporting_fact_titles'] = fact_title_results
