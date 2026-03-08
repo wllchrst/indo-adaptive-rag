@@ -24,3 +24,4 @@ seaborn==0.13.2
 googletrans==4.0.2
 evaluate==0.4.5
 accelerate==1.10.0
+unbabel-comet==2.2.7
