@@ -17,6 +17,17 @@ class TranslationEvaluator:
         self.comet_model = load_from_checkpoint(download_model("Unbabel/wmt22-comet-da"))
         print("All metrics loaded!")
 
+    def transform_context(self, context_dict: dict) -> list:
+        """Transform English context dict to Indonesian format (list of dicts)"""
+        return [
+            {'title': t, 'sentences': s}
+            for t, s in zip(context_dict['title'], context_dict['sentences'])
+        ]
+
+    def transform_supporting_facts(self, sf_dict: dict) -> list:
+        """Transform English supporting_facts dict to Indonesian format (list of titles)"""
+        return sf_dict['title']
+
     def load_validation_data(self) -> Tuple[pd.DataFrame, pd.DataFrame]:
         """Load Indonesian validation data and English original data"""
         print("\nLoading Indonesian validation data...")
@@ -34,8 +45,8 @@ class TranslationEvaluator:
             english_list.append({
                 'id': row['id'],
                 'question': row['question'],
-                'contexts': row['context'],
-                'supporting_facts': row['supporting_facts'],
+                'contexts': self.transform_context(row['context']),
+                'supporting_facts': self.transform_supporting_facts(row['supporting_facts']),
                 'answer': row['answer']
             })
         english_df = pd.DataFrame(english_list)
@@ -110,7 +121,7 @@ class TranslationEvaluator:
                 {"src": "", "mt": pred, "ref": ref}
                 for ref, pred in zip(valid_refs, valid_preds)
             ]
-            comet_result = self.comet_model.predict(comet_data, batch_size=8, gpus=0)
+            comet_result = self.comet_model.predict(comet_data, batch_size=8, gpus=1)
             result['comet'] = np.mean(comet_result.scores)
         except Exception as e:
             print(f"Error computing COMET: {e}")
