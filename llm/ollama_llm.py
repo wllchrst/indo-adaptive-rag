@@ -6,9 +6,9 @@ from ollama import Client
 OLLAMA_MODEL_LIST = ['deepseek-r1:latest', 'bangundwir/bahasa-4b-chat', 'gemma3:latest', 'qwen3:8b']
 DEFAULT_TIMEOUT = 180
 DEFAULT_OPTIONS = {
-    "temperature": 0,
-    "top_k": 1,
-    "top_p": 1,
+    "temperature": 0.1,
+    "top_k": 5,
+    "top_p": 0.1,
     "repeat_penalty": 1.0,
     "seed": 42
 }
