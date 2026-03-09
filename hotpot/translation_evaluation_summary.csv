@@ -1,0 +1,6 @@
+Column,Count,BLEU,chrF,COMET
+question,7403,N/A,34.8757,0.7023
+answer,7403,N/A,64.0509,0.8831
+context_titles,73622,N/A,65.0408,0.8732
+context_sentences,314534,N/A,36.7690,0.7237
+supporting_fact_titles,18001,N/A,72.0205,0.8987

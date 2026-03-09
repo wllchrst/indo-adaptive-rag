@@ -1,0 +1,32 @@
+{
+  "question": {
+    "count": 7403,
+    "bleu": null,
+    "chrf": 34.87566290076524,
+    "comet": 0.7022809775821199
+  },
+  "answer": {
+    "count": 7403,
+    "bleu": null,
+    "chrf": 64.05086892240416,
+    "comet": 0.8831442533417938
+  },
+  "context_titles": {
+    "count": 73622,
+    "bleu": null,
+    "chrf": 65.04079292346573,
+    "comet": 0.8732367801340313
+  },
+  "context_sentences": {
+    "count": 314534,
+    "bleu": null,
+    "chrf": 36.76900828820075,
+    "comet": 0.723730430801513
+  },
+  "supporting_fact_titles": {
+    "count": 18001,
+    "bleu": null,
+    "chrf": 72.0204836624106,
+    "comet": 0.8986827181624768
+  }
+}
