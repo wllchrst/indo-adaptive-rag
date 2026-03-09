@@ -16,12 +16,24 @@ class OllamaLLM(BaseLLM):
 
     def answer(self, prompt: str) -> str:
         try:
-            response = self.client.chat(self.model_name, think=False, stream=False, messages=[
-                {
-                    'role': 'user',
-                    'content': prompt,
-                },
-            ])
+            response = self.client.chat(
+                self.model_name,
+                think=False,
+                stream=False,
+                messages=[
+                    {
+                        "role": "user",
+                        "content": prompt,
+                    },
+                ],
+                options={
+                    "temperature": 0,
+                    "top_k": 1,
+                    "top_p": 1,
+                    "repeat_penalty": 1.0,
+                    "seed": 42
+                }
+            )
 
             return response.message.content
         except httpx.ReadTimeout as timeout:
