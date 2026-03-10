@@ -7,8 +7,8 @@ OLLAMA_MODEL_LIST = ['deepseek-r1:latest', 'bangundwir/bahasa-4b-chat', 'gemma3:
 DEFAULT_TIMEOUT = 180
 DEFAULT_OPTIONS = {
     "temperature": 0.1,
-    "top_k": 5,
-    "top_p": 0.1,
+    "top_k": 20,
+    "top_p": 0.9,
     "repeat_penalty": 1.0,
     "seed": 42
 }
