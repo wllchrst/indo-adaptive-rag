@@ -3,7 +3,7 @@ from llm.base_llm import BaseLLM
 from helpers import env_helper
 from ollama import Client
 
-OLLAMA_MODEL_LIST = ['deepseek-r1:latest', 'bangundwir/bahasa-4b-chat', 'gemma3:latest', 'qwen3:8b']
+OLLAMA_MODEL_LIST = ['deepseek-r1:latest', 'bangundwir/bahasa-4b-chat', 'gemma3:latest', 'qwen3:8b', 'stable-qwen', 'stable-gemma']
 DEFAULT_TIMEOUT = 180
 DEFAULT_OPTIONS = {
     "temperature": 0.1,
