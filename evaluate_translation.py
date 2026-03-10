@@ -270,12 +270,12 @@ class TranslationEvaluator:
     def save_results(self, results: Dict, summary_df: pd.DataFrame):
         """Save results to files"""
         # Save detailed results as JSON
-        with open('hotpot/translation_evaluation_results.json', 'w') as f:
+        with open('hotpot-results/translation_evaluation_results.json', 'w') as f:
             json.dump(results, f, indent=2)
         print("\n✓ Saved detailed results to hotpot/translation_evaluation_results.json")
 
         # Save summary table as CSV
-        summary_df.to_csv('hotpot/translation_evaluation_summary.csv', index=False)
+        summary_df.to_csv('hotpot-results/translation_evaluation_summary.csv', index=False)
         print("✓ Saved summary table to hotpot/translation_evaluation_summary.csv")
 
     def run_evaluation(self):
