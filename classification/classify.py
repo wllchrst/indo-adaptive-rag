@@ -15,8 +15,9 @@ multistep_retrieval = 'multistep-retrieval'
 save_path = 'classification_result'
 
 # model_type = 'hugging_face'
-model_type = 'gemini'
+# model_type = 'gemini'
 # model_type = 'gemma3:latest'
+model_type = 'stable-qwen'
 
 methods = {
     non_retrieval: NonRetrieval(model_type),
@@ -147,7 +148,7 @@ def classify_indo_qa(testing: bool,
                      log_classification: bool,
                      log_method: bool,
                      partition: str = 'full',
-                     model_type: str = 'default',
+                     model_type: str = model_type,
                      index_from: Optional[int] = None,
                      index_to: Optional[int] = None):
     try:
@@ -169,6 +170,8 @@ def classify_indo_qa(testing: bool,
 
         classifications = []
         classified_index = []
+
+        print(f'TOTAL DATA TO CLASSIFY: {len(full_df)}')
 
         for i, row in full_df.iterrows():
             try:
