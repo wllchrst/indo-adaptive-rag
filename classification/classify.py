@@ -4,6 +4,7 @@ import traceback
 import os
 import re
 import ast
+from datetime import datetime
 from classification.gather_data import gather_indo_qa, gather_hotpot_data, gather_qasina_data
 from methods import NonRetrieval, SingleRetrieval, MultistepRetrieval
 from helpers import EvaluationHelper
@@ -25,6 +26,28 @@ methods = {
     single_retrieval: SingleRetrieval(model_type),
     multistep_retrieval: MultistepRetrieval(model_type)
 }
+
+
+def log_error(error: Exception, question: str, answer: str, index: str, supporting_facts: list[str]) -> None:
+    logs_dir = 'logs'
+    os.makedirs(logs_dir, exist_ok=True)
+    
+    timestamp = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
+    log_filename = f'error_{timestamp}.log'
+    log_path = os.path.join(logs_dir, log_filename)
+    
+    with open(log_path, 'w') as log_file:
+        log_file.write(f"Timestamp: {datetime.now()}\n")
+        log_file.write(f"Error Type: {type(error).__name__}\n")
+        log_file.write(f"Error Message: {str(error)}\n")
+        log_file.write(f"Question: {question}\n")
+        log_file.write(f"Answer: {answer}\n")
+        log_file.write(f"Index: {index}\n")
+        log_file.write(f"Supporting Facts: {supporting_facts}\n")
+        log_file.write("\nTraceback:\n")
+        log_file.write(traceback.format_exc())
+    
+    print(f"Error logged to: {log_path}")
 
 
 def sanitize_filename(name: str) -> str:
@@ -347,32 +370,32 @@ def classify(question: str,
              log_method: bool = False,
              index: str = '',
              supporting_facts: list[str] = []) -> str:
-    non_retrieval_prediction = get_answer(question, non_retrieval, log_method, index)
-    if WordHelper.contains(answer, non_retrieval_prediction):
-        return 'A'
-
-    single_retrieval_prediction = get_answer(question, single_retrieval, log_method, index)
-    if WordHelper.contains(answer, single_retrieval_prediction):
-        return 'B'
-
-    non_retrieval_result = EvaluationHelper.compute_scores(answer, non_retrieval_prediction)
-    single_retrieval_result = EvaluationHelper.compute_scores(answer, single_retrieval_prediction)
-
-    if logging_classification:
-        print("*" * 100)
-        print(f'Question: {question}')
-        print(f'Actual answer: {answer}')
-        print(f'No Retrieval {non_retrieval_result}: {non_retrieval_prediction}')
-        print(f'Single Retrieval {single_retrieval_result}: {single_retrieval_prediction}')
-
-    if non_retrieval_result['exact_match'] == 1:
-        return 'A'
-    elif single_retrieval_result['exact_match'] == 1:
-        return 'B'
-    elif non_retrieval_result['f1_score'] > single_retrieval_result['f1_score']:
-        return 'A'
-
     try:
+        non_retrieval_prediction = get_answer(question, non_retrieval, log_method, index)
+        if WordHelper.contains(answer, non_retrieval_prediction):
+            return 'A'
+
+        single_retrieval_prediction = get_answer(question, single_retrieval, log_method, index)
+        if WordHelper.contains(answer, single_retrieval_prediction):
+            return 'B'
+
+        non_retrieval_result = EvaluationHelper.compute_scores(answer, non_retrieval_prediction)
+        single_retrieval_result = EvaluationHelper.compute_scores(answer, single_retrieval_prediction)
+
+        if logging_classification:
+            print("*" * 100)
+            print(f'Question: {question}')
+            print(f'Actual answer: {answer}')
+            print(f'No Retrieval {non_retrieval_result}: {non_retrieval_prediction}')
+            print(f'Single Retrieval {single_retrieval_result}: {single_retrieval_prediction}')
+
+        if non_retrieval_result['exact_match'] == 1:
+            return 'A'
+        elif single_retrieval_result['exact_match'] == 1:
+            return 'B'
+        elif non_retrieval_result['f1_score'] > single_retrieval_result['f1_score']:
+            return 'A'
+
         multistep_retrieval_prediction = get_answer(question, multistep_retrieval, log_method, index, answer,
                                                     supporting_facts)
         # If multistep method cannot answer the question, return 'C'
@@ -389,7 +412,8 @@ def classify(question: str,
             return 'B'
         else:
             return 'C'
-    except httpx.ReadTimeout as e:
+    except Exception as e:
+        log_error(e, question, answer, index, supporting_facts)
         return 'C'
 
 def get_answer(question: str, mode: str, log_method: bool, index: str, answer: Optional[str] = None,
