@@ -1,3 +1,4 @@
+import httpx
 import pandas as pd
 import traceback
 import os
@@ -371,24 +372,25 @@ def classify(question: str,
     elif non_retrieval_result['f1_score'] > single_retrieval_result['f1_score']:
         return 'A'
 
-    multistep_retrieval_prediction = get_answer(question, multistep_retrieval, log_method, index, answer,
-                                                supporting_facts)
+    try:
+        multistep_retrieval_prediction = get_answer(question, multistep_retrieval, log_method, index, answer,
+                                                    supporting_facts)
+        # If multistep method cannot answer the question, return 'C'
+        if multistep_retrieval_prediction is None:
+            return 'C'
 
-    # If multistep method cannot answer the question, return 'C'
-    if multistep_retrieval_prediction is None:
+        multi_retrieval_result = EvaluationHelper.compute_scores(answer, multistep_retrieval_prediction)
+        if logging_classification:
+            print(f'Multistep Retrieval {multi_retrieval_result}: {multistep_retrieval_prediction}')
+
+        if multi_retrieval_result['exact_match'] == 1:
+            return 'C'
+        elif single_retrieval_result['f1_score'] > multi_retrieval_result['f1_score']:
+            return 'B'
+        else:
+            return 'C'
+    except httpx.ReadTimeout as e:
         return 'C'
-
-    multi_retrieval_result = EvaluationHelper.compute_scores(answer, multistep_retrieval_prediction)
-    if logging_classification:
-        print(f'Multistep Retrieval {multi_retrieval_result}: {multistep_retrieval_prediction}')
-
-    if multi_retrieval_result['exact_match'] == 1:
-        return 'C'
-    elif single_retrieval_result['f1_score'] > multi_retrieval_result['f1_score']:
-        return 'B'
-    else:
-        return 'C'
-
 
 def get_answer(question: str, mode: str, log_method: bool, index: str, answer: Optional[str] = None,
                supporting_facts: list[str] = []) -> str:
