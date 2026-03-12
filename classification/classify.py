@@ -175,6 +175,9 @@ def classify_indo_qa(testing: bool,
                      model_type: str = model_type,
                      index_from: Optional[int] = None,
                      index_to: Optional[int] = None):
+    if partition != 'train' and partition != 'test':
+        raise Exception(f"Invalid partition: {partition}")
+
     try:
         train_df, test_df = gather_indo_qa(index_from=index_from, index_to=index_to)
         full_df = pd.concat([train_df, test_df]).reset_index(drop=True)
