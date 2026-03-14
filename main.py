@@ -2,6 +2,7 @@ from helpers import env_helper
 import argparse
 from typing import Optional
 from classification.classify import multistep_retrieval
+from training_classifier.config import ClassifierConfig
 
 parser = argparse.ArgumentParser(description="Python script that is used for indo adaptive rag experiments")
 
@@ -152,11 +153,9 @@ def run_translation_script(partition: str, testing: bool):
     )
 
 
-def run_train_classifier(undersample: bool):
+def run_train_classifier():
     from training_classifier import TrainClassifier
-    filepath = 'classification_result/final_dataset_augmented.csv'
-
-    train_classifier = TrainClassifier(undersample, filepath)
+    file_path = 'classification_result/final_dataset_augmented.csv'
     model_paths = [
         'indobenchmark/indobert-base-p1',
         'indobenchmark/indobert-base-p2',
@@ -165,13 +164,13 @@ def run_train_classifier(undersample: bool):
     ]
 
     for model_path in model_paths:
-        train_classifier.train_model(
-            training_dataset=train_classifier.train_dataset,
-            validation_dataset=train_classifier.val_dataset,
-            testing_dataset=train_classifier.test_dataset,
-            model_path=model_path
-        )
+        config = ClassifierConfig(
+            model_path=model_path,
+            file_path=file_path,
+            use_balanced_only=True)
 
+        train_classifier = TrainClassifier(config=config)
+        train_classifier.train_and_evaluate()
 
 def merge_dataset():
     import os
