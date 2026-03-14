@@ -270,7 +270,7 @@ def main():
     arguments = parse_all_args()
 
     if arguments.action == 'train-classifier':
-        run_train_classifier(arguments.undersample)
+        run_train_classifier()
         return
     elif arguments.action == 'seed_context':
         build_elasticsearch_index()
