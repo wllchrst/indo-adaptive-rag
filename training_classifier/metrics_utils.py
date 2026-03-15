@@ -20,12 +20,13 @@ def compute_metrics(eval_pred, label_names):
     }
     
     # Per-class metrics (NEW - addresses Priority #10)
+    precision_per_class = precision_metric.compute(predictions=predictions, references=labels, average=None)["precision"]
+    recall_per_class = recall_metric.compute(predictions=predictions, references=labels, average=None)["recall"]
+    f1_per_class = f1_metric.compute(predictions=predictions, references=labels, average=None)["f1"]
+    
     for i, label in enumerate(label_names):
-        metrics[f"precision_class_{label}"] = precision_metric.compute(
-            predictions=predictions, references=labels, average="binary", pos_label=i)["precision"]
-        metrics[f"recall_class_{label}"] = recall_metric.compute(
-            predictions=predictions, references=labels, average="binary", pos_label=i)["recall"]
-        metrics[f"f1_class_{label}"] = f1_metric.compute(
-            predictions=predictions, references=labels, average="binary", pos_label=i)["f1"]
+        metrics[f"precision_class_{label}"] = precision_per_class[i]
+        metrics[f"recall_class_{label}"] = recall_per_class[i]
+        metrics[f"f1_class_{label}"] = f1_per_class[i]
     
     return metrics
