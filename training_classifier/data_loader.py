@@ -9,7 +9,7 @@ from training_classifier.eda import indonesia_eda
 
 class DataLoader:
     def __init__(self,
-                 main_folder_dataset: str = 'classification_result/final_dataset',
+                 main_folder_dataset: str = 'classification_result/stable-qwen',
                  hotpot_folder_dataset: str = 'hotpot',
                  undersample: bool = True,
                  file_path: Optional[str] = None):
