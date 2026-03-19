@@ -15,6 +15,8 @@ class Config:
     answer_column: str
     id_column: str
     experiment_result_folder: str
+    n_bootstrap_samples: int = 10
+    random_seed: int = 42
 
 
 configs: Dict[str, Config] = {
@@ -29,7 +31,9 @@ configs: Dict[str, Config] = {
         question_column='question',
         answer_column='answer',
         id_column='id',
-        experiment_result_folder='experiment_results'
+        experiment_result_folder='experiment_results',
+        n_bootstrap_samples=10,
+        random_seed=42
     ),
     'qasina': Config(
         classifier_model_path='',
@@ -42,7 +46,9 @@ configs: Dict[str, Config] = {
         question_column='question',
         answer_column='answer',
         id_column='ID',
-        experiment_result_folder='experiment_results'
+        experiment_result_folder='experiment_results',
+        n_bootstrap_samples=10,
+        random_seed=42
     ),
     'hotpot': Config(
         classifier_model_path='',
@@ -55,6 +61,8 @@ configs: Dict[str, Config] = {
         question_column='question',
         answer_column='answer',
         id_column='id',
-        experiment_result_folder='experiment_results'
+        experiment_result_folder='experiment_results',
+        n_bootstrap_samples=10,
+        random_seed=42
     )
 }

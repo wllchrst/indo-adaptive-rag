@@ -37,6 +37,32 @@ def parse_all_args():
         default=1.0,
         help="Fraction of the dataset to use (e.g., 0.5 for 50%)"
     )
+    parser.add_argument(
+        "--bootstrap",
+        action='store_true',
+        help="Enable bootstrap testing mode (run experiments multiple times)"
+    )
+    parser.add_argument(
+        "--bootstrap_samples",
+        type=int,
+        default=None,
+        help="Number of bootstrap samples to run (default: 10)"
+    )
+    parser.add_argument(
+        "--aggregate",
+        action='store_true',
+        help="Aggregate existing bootstrap results"
+    )
+    parser.add_argument(
+        "--generate_tables",
+        action='store_true',
+        help="Generate paper-ready tables with statistical comparisons"
+    )
+    parser.add_argument(
+        "--compare",
+        action='store_true',
+        help="Run all-pair statistical comparisons"
+    )
 
     return parser.parse_args()
 
@@ -201,11 +227,54 @@ def augment_dataset():
 
 def run_experiment(system_type: str,
                    dataset: str,
-                   dataset_part: float):
-    from final_experiment import System, configs, system_type_mapping
+                   dataset_part: float,
+                   bootstrap: bool = False,
+                   bootstrap_samples: int = None,
+                   aggregate: bool = False,
+                   generate_tables: bool = False,
+                   compare: bool = False):
+    from final_experiment import System, configs, system_type_mapping, SystemType
     config = configs[dataset]
     BEST_MODEL_PATH = 'saved_model/indobenchmark_indobert-large-p1'
     MODEL_TYPE = 'gemma3:latest'
+
+    if generate_tables:
+        print("📄 Generating paper-ready tables...")
+        system = System(
+            classifier_model_path=BEST_MODEL_PATH,
+            dataset_path=config.dataset_path,
+            dataset_index=config.dataset_index,
+            dataset_name=config.dataset_name,
+            dataset_part=dataset_part,
+            keep_column=config.keep_column,
+            model_type=MODEL_TYPE,
+            question_column=config.question_column,
+            answer_column=config.answer_column,
+            id_column=config.id_column,
+            experiment_result_folder=config.experiment_result_folder,
+            n_bootstrap_samples=bootstrap_samples,
+        )
+        system.generate_paper_tables(n_samples=bootstrap_samples)
+        return
+
+    if compare:
+        print("🔬 Running all-pair statistical comparisons...")
+        system = System(
+            classifier_model_path=BEST_MODEL_PATH,
+            dataset_path=config.dataset_path,
+            dataset_index=config.dataset_index,
+            dataset_name=config.dataset_name,
+            dataset_part=dataset_part,
+            keep_column=config.keep_column,
+            model_type=MODEL_TYPE,
+            question_column=config.question_column,
+            answer_column=config.answer_column,
+            id_column=config.id_column,
+            experiment_result_folder=config.experiment_result_folder,
+            n_bootstrap_samples=bootstrap_samples,
+        )
+        system.compare_all_systems(n_samples=bootstrap_samples)
+        return
 
     if system_type == 'all':
         for type in system_type_mapping.values():
@@ -221,9 +290,18 @@ def run_experiment(system_type: str,
                 answer_column=config.answer_column,
                 id_column=config.id_column,
                 experiment_result_folder=config.experiment_result_folder,
+                n_bootstrap_samples=bootstrap_samples,
             )
 
-            system.process(type)
+            if aggregate:
+                print(f"📊 Aggregating bootstrap results for {type.value}...")
+                system.aggregate_bootstrap_results(type, n_samples=bootstrap_samples)
+            elif bootstrap:
+                print(f"🔄 Running bootstrap experiments for {type.value}...")
+                system.run_bootstrap_experiments(type, n_samples=bootstrap_samples)
+            else:
+                print(f"🥸 Running normal experiment for {type.value}...")
+                system.process(type)
     else:
         system = System(
             classifier_model_path=BEST_MODEL_PATH,
@@ -237,9 +315,19 @@ def run_experiment(system_type: str,
             answer_column=config.answer_column,
             id_column=config.id_column,
             experiment_result_folder=config.experiment_result_folder,
+            n_bootstrap_samples=bootstrap_samples,
         )
 
-        system.process(system_type_mapping[system_type])
+        sys_type = system_type_mapping[system_type]
+        if aggregate:
+            print(f"📊 Aggregating bootstrap results for {sys_type.value}...")
+            system.aggregate_bootstrap_results(sys_type, n_samples=bootstrap_samples)
+        elif bootstrap:
+            print(f"🔄 Running bootstrap experiments for {sys_type.value}...")
+            system.run_bootstrap_experiments(sys_type, n_samples=bootstrap_samples)
+        else:
+            print(f"🥸 Running normal experiment for {sys_type.value}...")
+            system.process(sys_type)
 
 
 def run_calculation():
@@ -285,7 +373,12 @@ def main():
         run_experiment(
             system_type=arguments.experiment_type,
             dataset=arguments.dataset,
-            dataset_part=arguments.dataset_part
+            dataset_part=arguments.dataset_part,
+            bootstrap=arguments.bootstrap,
+            bootstrap_samples=arguments.bootstrap_samples,
+            aggregate=arguments.aggregate,
+            generate_tables=arguments.generate_tables,
+            compare=arguments.compare
         )
     elif arguments.action == 'multi-retrieval-issues':
         output_multiretrieval_issues()
