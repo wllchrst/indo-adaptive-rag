@@ -1,0 +1,151 @@
+ID,Question,Answer,Label,Source_Dataset
+539g1HipZa4q8coORPOMHwj292,Siapa inisiator peristiwa Gerakan 30 September?,Partai Komunis Indonesia,C,IndoQA-Train
+27105B4kNatJgs2HMEX3Qbc-940,"Apa nama aliansi yang dibentuk oleh Jerman, Austria-Hongaria, dan Italia?",Aliansi Tiga.,A,IndoQA-Train
+23673tRgiJvkPjfOQH_z0y3o3715,Bagaimana lingkungan masyarakat di sekitar Nabi Muhammad?,terbelakang yang senang dengan kekerasan dan pertempuran,C,IndoQA-Test
+5ac557975542993e66e8231c,"Tim mana yang menang di tahun 1939 oleh pemain basket Amerika terkenal dengan nama ""Scat""?",Oklahoma Sooners,C,Hotpot-Validation
+15314QMC--BggOkyoE34_Rfc1943,Dimana Mark Lee lahir?,"Toronto, Ontario, Kanada",B,IndoQA-Train
+87,Apa yang ditakdirkan bagi Anak cucu Isra'il dalam Kitab?,membuat kerusakan di muka bumi ini dua kali,B,QASiNa
+2135JNizCTqBzs-NkJ-0GhnT1405,Mengapa Amerika serikat mencari Osama Bin Laden ?,"mendalangi serangan terhadap menara kembar WTC, New York",B,IndoQA-Train
+5ae13f3c5542997b2ef7d168,Arthur Noss adalah penembak untuk komader selama dua teater Eropa pertempuran dalam Perang Dunia II?,Pertempuran Inggris dan Pertempuran Malta,C,Hotpot-Validation
+984CNpDqalkISFG_gY2XwD_448,Apa permintaan Soekarno sebelum meninggal?,"meminta agar dirinya dimakamkan di Istana Batu Tulis, Bogor",A,IndoQA-Test
+7e87b569623c4885bc463f05526e54bc,Apakah Kleopatra tidak ada dalam catatan resmi sebagai penguasa tunggal Kerajaan?,Tidak,A,IndoQA-Test
+2057JTrMpRMQ_nlV6rjSFX2Z1629,Kapanakah Antares tayang perdana ?,30 Juli 2021,B,IndoQA-Train
+1435t5gBGAM2so8S89BXRimx590,Di mana sultan terakhir melaka wafat?,"Kampar, Riau, Sumatra",B,IndoQA-Train
+1438GBcsCGsIXBK4Ri5BDA7-2136,Proyek proyek besar apa saja yang dilakukan diera Soekarno?,"Gelora Bung Karno, Masjid Istiqlal, dan Monumen Nasional",A,IndoQA-Train
+2213gQhJ4zM5EYENYcGQHGTa4060,Bagaimana cara Jokowi berangkat ke sekolah pada masa kecil?,berjalan kaki,A,IndoQA-Train
+690GIHw-tnLr_HWI41EF_rt2901,Berapa banyak yang tewas ketika operasi penertiban dilakukan?,sekitar 100.000 hingga 2 juta jiwa,C,IndoQA-Test
+2565Fka6oc0BTYJ567R8eShz2459,Siapa saja yang mendampingi Jendral De Kock ketika bertemu Pangeran Diponegoro?,"Residen Kedu Valck, Letkol Roest (perwira De Kock), Mayor F.V.H.A de Stuers, dan penerjemah bahasa Jawa, Kapten J.J Roefs",B,IndoQA-Train
+79,Apa nama lain dari Masjid Aqsha?,Bait al-Maqdis,C,QASiNa
+2210pb1OBuEFnf38HXMK9cDk4067,Kapan Jokowi mulai dikenal oleh publik?,"etelah dianggap berhasil mengubah wajah Kota Surakarta menjadi kota pariwisata, kota budaya, dan kota batik",A,IndoQA-Train
+1458iv0WdN_NvJkFoTdqCZ_Q2098,kapan taman monas selesai dibangun?,1910,B,IndoQA-Train
+2712b_7wo5wra85_-rQQk4ow933,Siapa nama pendiri Angkatan Laut Kekaisaran Jerman?,Antara 1908 dan 1913,C,IndoQA-Test
+1508H4qju9CSQupQaGqERdUH2004,dimana NCT U pertama kali perform?,On Air NCT Show-Day 1 NCT Life di V Live,A,IndoQA-Train
+1753kpSTtywObsOC3dzGk8kX3543,Apa salah satu tujuan invasi AS ke Irak?,mengusir Saddam Hussein,A,IndoQA-Train
+5a85df525542994c784ddb9f,Mantan presiden televisi ABC adalah perwira tinggi di perusahaan yang sama dengan Christine Mccarthy?,Robert A. Iger,C,Hotpot-Validation
+1825MtNCYtNGCoORkHQFRAhq3374,Siapakah tokoh Amerika yang menjadi pelopor dalam film animasi?,Walt Disney,A,IndoQA-Train
+5ab2e3c45542991669774126,Apakah Centarium dan Dacrydium keduanya genuses spesies tanaman?,ya,C,Hotpot-Validation
+393,Siapa yang menggoda para tentara tentang perang dalam keadaan hadas besar?,syaithan,C,QASiNa
+715SezBiCypFnDLlX1h7Gmv2838,Siapa yang menjadi wakil presiden?,Sri Sultan Hamengku Buwono IX,C,IndoQA-Test
+614qvZZNRxxpBg3ucW1nsPI74,Makanan apakah yang disajikan oleh Rumah Masakan Padang?,nasi Padang,A,IndoQA-Train
+1379RrT3A_PqlFKQNYvghi-j741,Siapa yang mendeklarasikan berdirinya Negara Islam Indonesia?,militan Darul Islam,A,IndoQA-Train
+336,Berapa kawasan iklim yang terjadi di jazirah Arab?,lima,B,QASiNa
+3753577ecc2e4d6c876ab556c7129e91,Pekerja mendapatkan gaji yang lebih kecil karena banyak pabrik yang menggunakan tenaga mesin,Ya,B,IndoQA-Train
+1986ywsnzXO8mfN71y1-tg7v2227,dimana Sultan mengunci armada lautnya?,Tanjung Emas,B,IndoQA-Train
+5a77e2095542995d8318131d,Siapa yang lahir di Swedia 1964 yang mendirikan Hidden City Entertainment pada tahun 2004?,Jesper Myrfors,C,Hotpot-Validation
+7201GV7Ue0Cd9oNYVERMrHM2828,Berapa banyak komposisi MPR yang ditunjuk oleh Presiden Soeharto?,20%,C,IndoQA-Train
+1144Dngx4nkJVbVR8P-iE7sU3318,Siapakah yang mendapatkan dukungan politik Uni Soviet?,Fretilin,C,IndoQA-Train
+725fIuqkG2FAMAMrRV2o_q72814,Siapa yang memberikan penghargaan?,Javier de Cueller,C,IndoQA-Test
+2154hgnNDJMyC_N1LGBLoIru4214,Siapakah Martin van Bruinessen?,Sejarawan Belanda masa kini yang banyak mengkaji sejarah Islam di Indonesia,B,IndoQA-Train
+604BaVh8B5igEaFS0x8dDlu99,Budaya asing apa saja yang masuk ke Indonesia dan mempengaruhi warisan budaya beberapa etnis?,"India, Arab, Tiongkok, Eropa",B,IndoQA-Train
+3027Cqdh_u1lGLcEm6FGsksN3803,Kapan Rencana Marshall berlangsung?,1948–1951,C,IndoQA-Train
+8486FcfpGKVx1trsy0PGkDp2754,Negara manakah yang mempunyai perekonomian terbesar nomor satu ?,Amerika Serikat,A,IndoQA-Train
+2605EHUeu9PLnQV7xV85uEAC2379,Dimana SBY tinggal semasa kecil?,Pacitan,B,IndoQA-Train
+5ae32ce75542992f92d8223d,Bulan apa yang situs web dewasa online yang majalah cetak terakhir diterbitkan pada musim panas 2007 mengenali Nikita Gross?,Januari,C,Hotpot-Validation
+5ae5aba0554299546bf82f17,"Yang mana Tara Strong peran suara utama dalam seri animasi adalah serial televisi animasi Amerika berdasarkan DC Comics fiksi tim superhero, ""Teen Titans""?",Teen Titans Go!,C,Hotpot-Validation
+214,Siapakah yang dimanfaatkan oleh orang Arab sebagai tawanan perang atau budak?,orang non-Arab,C,QASiNa
+5a77309d55429972597f1487,"Siapa yang pertama lahir, José Echegaray y Eizaguirre atau P.J. O'Rourke?",José Echegaray y Eizaguirre,C,Hotpot-Validation
+2026yIVtrJbiaYcqiJLKF7l92162,hal hal apa yang menarik Pangeran Diponegoro?,masalah-masalah keagamaan,C,IndoQA-Train
+5ac29aa655429967731025b2,Eduard Schweizer mengajar di sebuah universitas Jerman dengan lebih dari berapa banyak siswa?,"26,000",C,Hotpot-Validation
+5ab8627f5542990e739ec8da,Harrison Newey membuat debut ADAC Formula 4 dengan partner yang merupakan putra dari siapa?,Corinna dan tujuh kali Juara Dunia Formula Satu Michael Schumacher,C,Hotpot-Validation
+329,Apa nama suku besar yang diturunkan oleh Arab Aribah?,"kaum Ad, kaum Tsamud, kaum Thasm",C,QASiNa
+5ae2070a5542994d89d5b313,"Tindakan kinerja mana yang memiliki instrumen yang lebih tinggi untuk rasio orang, Bocah Buruk Digambar atau Wolf Alice?",Anak yang Ditarik Buruk,C,Hotpot-Validation
+543NpNSndtBz1uxC9CuhODm281,Slogan persatuan indonesia adalah,Bhinneka tunggal ika,C,IndoQA-Train
+255,Apa yang dijanjikan oleh Rasulullah kepada keluarga Yasir?,surga,A,QASiNa
+dfa04009717747708fd122c1b60eea80,Tugas Johanes van den Bosch diangkan sebagau gubernur di Indonesia untuk mendapatkan dana sebanyak mungkin untuk mengisi kekosongan kas negara,Ya,A,IndoQA-Train
+1182HI-17dsw8VRu8AKL-nGo3209,Berapa lama masa pemerintahan Abu al-Abbas?,dari tahun 750-754 M,A,IndoQA-Train
+5ae5cf0b55429929b08079aa,"Apa penyebab kematian lebih dari 250 orang di Accra, Ghana?",sebuah ledakan dan kebakaran terjadi di sebuah pompa bensin,C,Hotpot-Validation
+25185MAzxodWaNF6paGbye9m1739,Apakah tanah Israel dalam bahasa Ibrani ?,Eretz Yisrael,A,IndoQA-Train
+660OkEB4CLXdYAqxgG9z5RE2976,contoh video youtube yang bisa didownload?,pidato mingguan Presiden Barack Obama,C,IndoQA-Test
+1961NgbrYCa8qLoT8bwQvWyP2273,pada tahun berapa mulainya Mustafa II menyerang balasan ke Wangsa Habsburg?,1695,B,IndoQA-Train
+673iXJr6OQEiXTiLOSzfmZ82945,Teknik Spike digunakan untuk apa?,menyerang dalam upaya memperoleh nilai suatu tim,C,IndoQA-Train
+1231cJjNwm3bfsTH7qWJy5MR3064,Berapa banyak populasi dari budak kulit hitam di Tiga Belas Koloni?,Hampir seperlima dari total populasi,C,IndoQA-Train
+2402MAhKxnMmLtfOdk-08LTn3642,Siapakah yang diperintahkan Utsman untuk menyalin dan memperbanyak mushaf?,Zaid bin Tsabit Al-Anshari dan tiga orang Quraish,B,IndoQA-Train
+958UDYY0qFH9pDU9YSVA8Vc526,Apa yang menyebabkan Soekarno ditangkap oleh Belanda?,Aktivitas Soekarno di PNI,A,IndoQA-Train
+5a710bb15542994082a3e50d,"Pemain poker profesional Amerika mana yang juga membintangi film ""Extraction"" 2015?",Dan Bilzerian,C,Hotpot-Validation
+21523ahtzE44hJmj4vLleIFL4217,Bagaimana cara Syarif Hidayatullah dalam membentuk masyarakat Islam?,memperbanyak tabligh di pelosok dengan cara yang baik dan teratur,B,IndoQA-Train
+1037pwf13W4KYglfjZucyzMr303,Berapa jumlah pembagian musim di jepang?,empat musim,B,IndoQA-Train
+3010SprKLAHdowqTjGRQOf4i3838,Dimana Operasi Bagration dilakukan?,Belarus,A,IndoQA-Train
+2100wZS8Veo6hc9TL1NaJSaL1506,Apakah provinsi yang menampilkan gambar Borobudur pada lambang daerahnya ?,Jawa Tengah,A,IndoQA-Train
+1635Hr33DL3IPT77L-BnMrWK1145,Berapa besarkah bidang manufaktur menyumbang PDB Singapura ?,26%,B,IndoQA-Test
+5a77d12755429967ab1052b8,"Siapa yang pertama lahir, Jaap Speyer atau Bruce Conner?",Jaap Speyer,C,Hotpot-Validation
+689RfOgas4kQddfMQXny3cR2902,dari tahun berapa Soeharto menjabat sebagai presiden indonesia?,1967 sampai 1998,B,IndoQA-Train
+138,Apa nama kerajaan yang dibangun oleh Saba' Abdu Syams bin Yasyjub bin Ya'rub bin Qathan?,Kerajaan Saba',A,QASiNa
+1476v2PUFlQQdpTZSxONJoJN2058,Apa saja makanan khas Jakarta?,"Kerak Telor, Soto Betawi, Kue Ape, Roti Buaya, Combro, dan Nasi Uduk",A,IndoQA-Train
+939UKiLhBxA_KgLZ3hrXrJ0584,Di manakah lokasi kantor rekaman Radio Republik Indonesia?,"Jalan Medan Merdeka Barat 4–5, Jakarta Pusat",B,IndoQA-Train
+1744p6ivEreYdqU2OaXpqwiv3570,Apa sikap yang diambil AS pada perang dunia 1?,netral,A,IndoQA-Train
+1586xdhd1pR6S0dzxj9ovgft1274,Kapankah megawati mengirimkan surat pencalonan panglima TNI ke DPR ?,8 Oktober 2004,B,IndoQA-Train
+23527XII60w5C9XqiZx6OCLt3753,Apa tujuan Nabi Muhammad di dunia ini?,penyebaran ajaran Islam untuk seluruh umat manusia dan mewariskan pemerintahan tunggal Islam,A,IndoQA-Train
+1749wiiGSfeFQ3yPQ1BOc1U43556,Siapa yang mengesahkan program Medicare dan Medicaid?,Presiden Lyndon B. Johnson,A,IndoQA-Test
+1001W57bXvzsU7BsCan0XmdL407,Apa jataban yang diisi oleh warga biasa yang dipilih secara sembarang?,jabatan administratif dan yudisial,A,IndoQA-Train
+5ae135fb55429920d523431f,Scott Workman adalah stuntman Amerika dan aktor dikreditkan dengan sukses acara pada jaringan TV kecil apa?,Jaringan Televisi WB,C,Hotpot-Validation
+422,Siapa yang memimpin pendekatan konstruktif penerapan risalah dan dakwah dengan menginfakkan dana untuk pembangunan masjid?,Nabi Saw,B,QASiNa
+1813DaTooZTJtMNx4CNYD2p73402,Bagaimana rasio aborsi di Amerika jika dibandingkan dengan negara barat lainnya?,lebih tinggi,A,IndoQA-Train
+2104i0gKzSVXucEKM9-yEEk01496,Apakah nama organisasi kepanduan putra milik Muhammadiyah ?,Hizboel Wathan,B,IndoQA-Test
+5a8aee2c55429970aeb70338,Apakah George Duran dan Ara Babajian koki terkenal?,tidak,C,Hotpot-Validation
+1831Xo4Pvss8ZM9-2FPfWbXN3356,Siapa yang mendirikan pergerakan filsafat pertama di AS?,Thoreau dan Ralph Waldo Emerson,B,IndoQA-Test
+5f8292eaf4f94d329c966d56cc866421,Apakah Kleopatra datang ke Antiokhia sendirian?,Tidak,A,IndoQA-Train
+945tBlPoKsnHp4m96z6_5la566,Apa itu yandex.ru?,"perusahaan teknologi terbesar di Rusia dan mesin pencari terbesar di internet di Rusia, dengan pangsa pasar lebih dari 52%",A,IndoQA-Train
+1775dGCKacaEaf4vXnKBh4Rd3488,Berapa banyak angkatan bersenjata AS pada tahun 2008?,"1,4 juta",A,IndoQA-Train
+2121tJVu3NPeLooSCowp2KBZ1446,Kemanakah pemerintah pusat dipindahkan saat agresi militer Belanda ?,Kraton Ngayogyakarta Hadiningrat,C,IndoQA-Train
+2108xKVGNBGadZC0TWhSQviQ1483,Apakah yang dilakukan pemerintah Belanda guna menanggulangi ancaman invasi Jepang ?,mengajari rakyat cara-cara menghadapi serangan udara,A,IndoQA-Train
+1610uoqONpVWq8hbfW0IWTp01209,Berapakah perdagangan yang melalui Singapura pada tahun pertama ?,"$400,000 (dollar Spanyol)",B,IndoQA-Test
+5a746abf55429929fddd8417,Toko jangkar apa di Mall Stratford Square memiliki 728 lokasi department store di benua Amerika Serikat?,Macy,C,Hotpot-Validation
+926tAEnfqtEDknSf1RRHRGd2548,Siapakah ketua majelis umum PBB pada masa sidang 1974?,28 September 196,C,IndoQA-Train
+25567DWWtABHgq600h7hP6972477,Apa yang dilakukan Hindia Belanda ketika musim hujan?,melakukan gencatan senjata dan berunding,A,IndoQA-Train
+2550LYN4iIl7yI_G3sifQnSg2491,Pada tahun berapa Pangerang Diponegoro dalam pengasingan?,1835-1855,C,IndoQA-Test
+723ytGpHPbjoavIcmlhSSPx2819,apa yang di quote dalam paragraf diatas dalam pidato Soeharto?,"“Jika pembangunan di bidang pangan ini dinilai berhasil, itu merupakan kerja raksasa dari seluruh bangsa Indonesia,",B,IndoQA-Train
+1185QUMqAkrbMIjcG5gvt2YM3201,Berapa banyak khalifah sesudah Abu al-Abbas dan al-Manshur yang menjadikan pemerintahan daulah Abbasiyah memasuki puncak keemasan?,tujuh khalifah sesudahnya,B,IndoQA-Train
+1594vbwJIaYnRKU4MTrVcD4P1249,Kapankah Tirtokoesomo menjabat sebagai ketua Budi Utomo ?,dari tahun 1908-1911,B,IndoQA-Train
+5ac27d2555429963665199dc,Metode pengajaran yang pertama kali Maggie Gripenberg perkenalkan ke Finlandia digunakan untuk mengajar apa?,musik,C,Hotpot-Validation
+1163WM0PVD9qbxkmDaQOIW7Y3264,Siapakah kakek B.J. Habibie?,"seorang pemuka agama, anggota majelis peradilan agama, serta salah satu pemangku adat Gorontalo",B,IndoQA-Train
+131,Siapa istri Nabi Ibrahim yang lama tidak mendapat keturunan?,Sarah,C,QASiNa
+2084DKE_Kbr8ADg_nsufsrgw1549,Kapankah Gunung merapi pernah meletus ?,3–5 November 2010,B,IndoQA-Test
+5ac3c264554299204fd21e37,Band Gap berasal dari tetangga yang dikenal sebagai jalan dinding hitam?,"Lingkungan Greenwood di kota asal Tulsa, Oklahoma",C,Hotpot-Validation
+2118jdsykE0McP5cAZxVpo2d1455,Siapakah yang berhasil menumpas revolusi proletar ?,Nasution,B,IndoQA-Train
+2163prpiVkHoWAkyQR6_xuQb4191,Apa rencana dari Majapahit ketika ditunjuk menjadi perdana menteri gajah mada?,melebarkan kekuasaan Majapahit dan membangun sebuah kemaharajaan,B,IndoQA-Train
+1637oAol1FhKHhQdYFj8rM9_1137,Berapakah jumlah kunjungan ke Singapura pada tahun 2007 ?,"10,2 juta",B,IndoQA-Train
+1417CvbtpTdNieUFK8V6Ekov637,Mengapa kartini menjadi lebih toleran terhadap budaya jawa menjelang pernikahannya?,pernikahan akan membawa keuntungan tersendiri dalam mewujudkan keinginan mendirikan sekolah,B,IndoQA-Train
+2422G-GiBC-3LUz-jnAzT2Mq3609,Mengapa Soekarno membutuhkan dukungan PKI?,untuk menghadapi Malaysia,B,IndoQA-Train
+2207G7fY90tz0IlYJOMAOQxR4077,Siapa yang menyempurnakan pembuatan struktur bata,para arsitek Majapahitl,B,IndoQA-Train
+3029RNg5pq9YerUjJjs2WY-K3799,Mengapa terdapat banyak korban tewas semasa Perang Dunia II?,diakibatkan oleh kejahatan perang yang dilakukan pasukan Jerman dan Jepang di wilayah penduduka,A,IndoQA-Test
+14135nOR58ZI6lSglpLLKJLs649,Siapa salah satu kenalan dari Kartini?,"Estelle Stella Zeehandelaar,",C,IndoQA-Train
+5a84d4555542992a431d1aac,Penghargaan apa yang dimenangkan oleh sutradara yang menyutradarai musikal kedelapan oleh tim Richard Rodgers dan Oscar Hammerstein II?,Tony Award,C,Hotpot-Validation
+539W46MSJwTdnqptRMTDZ5i291,Insiden apa yang terjadi pada 30 September 1965?,Pembantaian,C,IndoQA-Train
+358,Muhammad berasal dari suku apa?,suku Quraish,B,QASiNa
+169,Kapan bangsa Galia menyerang Roma?,390 SM,A,QASiNa
+5a85cead5542991dd0999ea9,"Apa permainan arcade dinamakan setelah satu-satunya pemain dalam sejarah liga utama untuk memiliki 0,300 memukul rata-rata untuk 7 musim berturut-turut?",mesin pinball,C,Hotpot-Validation
+361,Dimana Muhammad baru dapat dikatakan sebagai kepala agama dan pemerintahan,Madinah,A,QASiNa
+1957eVvVnYRmwC4qKHak6Ffq2281,Pada tahun berapa Krimea Devlet I Giray membakar Moskwa?,1571,A,IndoQA-Train
+5a7eb22655429930675135cb,Analis CBS NBA saat ini bermain untuk TrailbLazers PORTLAND bersama dengan mantan rekan satu tim UNLV Stacey Augmon?,Greg Anthony,C,Hotpot-Validation
+688c3WuYR4MMHLmhRv-gN0x2904,apa arti semboyan Bhinneka Tunggal Ika?,Berbeda-beda tetapi tetap satu,A,IndoQA-Test
+1608c9TBfOJ7m6Ujr7b8pUF_1214,Kapankah Thomas Stamford Raffles mendarat di Singapura ?,28 Januari 1819,A,IndoQA-Test
+1748onKgABfsH9Ey9B-K6T2n3558,Siapakah yang berhasil meluncurkan pesawat ruang angkasa pertama kali?,Soviet,A,IndoQA-Train
+5ab960d6554299743d22eb21,Thomas Francis Murphy punya peran dalam film komedi 2008?,Kepala kulit,C,Hotpot-Validation
+18328gCMjbpzCLFnoMXN6srf3355,Gaya seni apa yang dikembangkan oleh Andy Warhol dan Roy Lichtenstein?,seni pop,B,IndoQA-Train
+5a7cd7f055429909bec7683e,Di sekolah mana aktris yang tampil bersama Michelle Williams di babak terakhir drama drama drama drama Rusia Anton Chekhov hadir ketika dia menandatangani kontrak untuk memegang bakat?,Juilliard School,C,Hotpot-Validation
+2406S8qt5kYqLYszOCu0lYmZ3636,Dalam kondisi apa saja seseorang tidak diperbolehkan menyentuh Al-Qur'an?,"junub, perempuan haid dan nifas",B,IndoQA-Train
+1424tcuici39BiIRCrEsLBdb617,Pada tanggal berapa singapura dkeluarkan dari malaysia?,9 Agustus 1965,A,IndoQA-Train
+702ZyLrhle3vhQtUnuumcP32874,Setelah tamat SMP Soeharto kembali kemana?,ke rumah bibinya di Wuryantoro,B,IndoQA-Test
+2114PF_Hzr-w95B50r8JycTn1466,Siapakah yang menggantikan sudirman sebagai kepala divisi V ?,Kolonel Sutiro,B,IndoQA-Train
+864muZ5kcZBdy9N4BfgJs1i2709,Kapankah biasanya mi dingin dan sashimi dimakan di Jepang ?,pada musim panas,A,IndoQA-Test
+1384F3UCzmVUDztYUe75gYZ8725,Berapa lama musyawarah konstituante berlangsung?,dua setengah tahun,B,IndoQA-Test
+8800eSsNgilzH8vuQNt4Jml2673,Kapankah permainan bola basket masuk ke Indonesia ?,menjelang kemerdekaan,C,IndoQA-Train
+2995FYU3dbcdZ2Om_eXNrFz43874,Kapan operasi Jepang menduduki Port Moresby dilakukan?,awal Mei 1942,B,IndoQA-Train
+2565CoSVkWMIiJBlke0DSSt82458,Tanggal 28 Maret 1830 hari raya apa?,Hari Idul Fitri,B,IndoQA-Train
+2537Mv3a6NlfgOCO7AKi5VRU1686,Apakah perbatasan utara Israel ?,Lebanon,A,IndoQA-Test
+1439FueGAYIvwKpcGr1leJJu2135,Siapa yang ingin mengurangi laju penduduk?,Ali Sadikin,B,IndoQA-Train
+2505FyMeBIza_lW5D_Zn1Sgx1770,Berapakah rakyar Indonesia yang terbunuh dalam pembantaian anti-PKI menurut para ahli ?,200.000 sampai 500.000 orang,A,IndoQA-Train
+2988TQKy1nIs2XH8-mdMN3js3890,Mengapa Britania dan Soviet menyerbu Iran?,melindungi Koridor Persia dan ladang minyak Iran,B,IndoQA-Test
+2511-vZKa4GoTWbZHRqOchi_1757,Bagaimanakah nasib anggota PKI yang berada diluar Indonesia ?,terisolasi dari perkembangan politik di dalam Indonesia,A,IndoQA-Test
+2526CdjM-lnmz5ecSSuR247z1715,Dimanakah Adolf Eichmann bersembunyi ?,Argentina,A,IndoQA-Test
+17591UgJnLedMhDmVXf_x8r33526,Berapa banyak spesies tumbuhan berpembuluh di AS?,17.000 spesies,B,IndoQA-Test
+5ae6050f55429929b0807a5e,Penyanyi dari Hari yang Agak Mengherankan ini juga menyuarakan landak apa?,Sonic,C,Hotpot-Validation
+2374k50_RHXB5GThYKzc39DZ3701,Mengapa penyebaran Islam di Mekkah mendapat respons yang keras dan masif?,bertentangan dengan apa yang sudah menjadi budaya dan pola pikir masyarakat Mekkah saat itu,B,IndoQA-Test
+2376URQldjysl6l8eVv3nAMJ3695,Siapakah raja Habsyah yang adil dan memperbolehkan orang-orang Islam berhijrah ke negaranya?,Negus,A,IndoQA-Train
+556P8pjHZyb4ejA9BA5GDtx241,Siapa penjajah terkuat yang datang ke Indonesia diantara negara Eropa lainnya?,Belanda,A,IndoQA-Test
+1608Cjwz1f5MVloyXDrYtYD11215,Apakah tujuan Raffles ke Siangpura ?,untuk mencari lokasi strategis untuk membangun pelabuhan di mulut Selat Malaka,A,IndoQA-Test
+1984InJu5XFguodK1Khic6FC2232,Pada tahun berapa Mahmud II membubarkan korps Yanisari?,1826,A,IndoQA-Train
+914b0zdkdwAh3xlbhnY8du72582,Mengapa Presiden Soekarno menyerahkan kekuasaan pada Jenderal Soeharto ?,untuk mengatasi situasi konflik yang semakin memuncak kala itu,B,IndoQA-Train
+558WnzWtR_n-6_l7FCPRBSg235,Kapan Belanda dijajah oleh Jerman?,Perang Dunia II,A,IndoQA-Test
+609XnbMzpiEKTX90WRPpJOt84,Apa pencapaian terbaik Indonesia dalam olimpiade olahraga tahun 1992?,menduduki peringkat 24 dengan meraih 2 emas 2 perak dan 1 perunggu,B,IndoQA-Train
+479,"Ketika kedua utusan tiba kembali di Madinah, disana baru terjadi peperangan antara golongan Aus dan Kharaj siapa yang menang?",Aus,A,QASiNa

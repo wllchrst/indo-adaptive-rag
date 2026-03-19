@@ -1,0 +1,151 @@
+ID,Question,Answer,Label,Source_Dataset
+17877jymQtwntyWZpIqtv6ZT3457,Bagaimana tarif pajak penghasilan di AS dibanding negara-negara Eropa?,lebih tinggi,A,IndoQA-Test
+22235lwUx01x9_1JlfE_OedT4041,Siapa nama ketua PDIP?,Megawati Soekarnoputri,A,IndoQA-Test
+5a79c9c05542994bb94570a5,Pria yang lahir pada tanggal 25 April 1947 ini adalah anggota rumah bagian bawah legislatif Negara Hawaii.,"Robert ""Bobby"" Bunda",C,Hotpot-Validation
+5ae1bf46554299234fd042e6,Apakah Jack dan Coke dan Clover Club Cocktail cocktails?,ya,C,Hotpot-Validation
+707rbJ8T66FV5pGZGyETeS02861,Soeharto menjabat sebagai apa ketika usia 32 tahun?,Komandan Resimen Infenteri 15,C,IndoQA-Train
+899il7HMq79D4iA4PWEiSgJ2628,Siapakah yang memberikan tanda bila terjadi offside ?,penjaga garis,B,IndoQA-Train
+936Yj1HaPjTlXv6Hgo8Cae92522,Kapankah periode Pelita IV dilaksanakan ?,1 April 1984 sampai 31 Maret 1989,B,IndoQA-Train
+1957eVvVnYRmwC4qKHak6Ffq2281,Pada tahun berapa Krimea Devlet I Giray membakar Moskwa?,1571,A,IndoQA-Train
+1815f6fVJ_fLb1arKXjogwwq3397,Berapa tahun rata-rata masa sekolah anak di Amerika?,dua belas,C,IndoQA-Test
+5abd1b6e55429933744ab729,"Kota mana yang merupakan kota tingkat daerah, Jingzhou atau Zixing?",Zixing,C,Hotpot-Validation
+1008VQqljjuFs1c2gPBIS1kJ389,Kapan para migran inggris hijrah ke amerika utara?,1620,C,IndoQA-Test
+705nABbOAzpYWFGNrPSDwL22868,tim apa yang dipimpin oleh Soeharto pada operasi di Sulawesi?,Brigade Garuda Mataram,C,IndoQA-Train
+2640x6nNIaOGwyi0gBPzvykU1131,Apa saja negara melayu bersukutu yang dikuasai Siam?,"Perlis, Kedah, Kelantan, dan Terengganu",B,IndoQA-Train
+1034wHnCBpfrzubpIdoRKWKA312,Apa isi dari konstitusi baru?,epang ditetapkan sebagai negara yang menganut paham pasifisme dan mengutamakan praktik demokrasi liberal,A,IndoQA-Train
+5ac3d90b5542995c82c4ac4b,Apa jenis permainan Castle Risk dan Elfenland?,permainan papan,C,Hotpot-Validation
+607iZnQImrfBvXmq3Usq-9n90,Apa yang ditampilkan oleh TMII?,keanekaragaman arsitektur Indonesia,C,IndoQA-Test
+3015_6PGvHISvA52mQzE3uqn3830,Kapan militer Riechstag berhasil ditundukkan?,30 April 1945,A,IndoQA-Test
+1350iEyQpgS8um8egWa2LDPk820,Siapa pihak yang berseteru dalam peristiwa madiun?,pemerintah Republik Indonesia dan kelompok oposisi sayap kiri yaitu Front Demokrasi Rakyat,C,IndoQA-Train
+6397bAfLk75E5KWRPhdSxoO3035,Agama apa yang tidak diakui pemerintah?,Konghucu,C,IndoQA-Train
+124,Berapa jumlah suku terkemuka yang kurang lebih lahir dari jalur Himyar?,dua belas,A,QASiNa
+209479ecAuID6IOsgZlZzFI71521,Apakah arti daksina dalam bahasa sanskerta ?,timur,B,IndoQA-Train
+9281L0ojvJ8_Y1OZ8Y5E-2U2542,Apakah yang menjadi fokus program pemerintah ?,penyelamatan ekonomi nasional,A,IndoQA-Train
+11737vcT3qwp_gJxVFslucFe3235,Apa bentuk apresiasi pemerintah daerah terhadap sosok Habibie?,sebagai tokoh kebanggaan Parepare yang diwujudkan dalam beberapa kebijakan pemerintah,B,IndoQA-Train
+1586CJRbcCFLoT3hGLQI9g7U1272,Siapakah yang diajukan Presiden Megawati sebagai calon Panglima TNI ?,Jenderal Ryamizard Ryacudu,B,IndoQA-Train
+5a7c34905542996dd594b8d5,"Siapa yang lahir pertama, Ana Kasparian atau Andre Agassi?",Andre Kirk Agassi,C,Hotpot-Validation
+1513e32PRGagyhaNmp__k3W51991,Siapa nama 3 anggota baru?,"Kun, Lucas, dan Jungwoo",C,IndoQA-Train
+1826l7UVGsNPZHXbgRIPoIUx3372,Berapa lama rata-rata warga AS mendengarkan radio?,lebih dari dua setengah jam per hari,B,IndoQA-Train
+2432u9ka_a3VlwpFXDXhYOOy3597,Sarana komunikasi apa saja yang dikuasai PKI setelah peristiwa pembunuhan beberapa perwira TNI AD?,studio RRI di Jalan Merdeka Barat dan Kantor Telekomunikasi yang terletak di Jalan Merdeka Selatan,B,IndoQA-Test
+1636U9fgDPC8e9WhnQASL0AZ1141,Berapakah pertumbuhan Singapura pada tahun 2004 ?,"8,3%",C,IndoQA-Test
+172,Bagaimana pembagian kelas rakyat Romawi?,kelas terhormat dan kelas umum,B,QASiNa
+278,"Siapa yang berkata, ""Pada mulanya semua orang Islam akan hijrah, mereka melakukannya dengan sembunyi-sembunyi""?",Ali r.a,B,QASiNa
+5ab2f53d5542991669774157,Larry Mosley dan sepupunya Shane Mosley keduanya kotak di divisi mana?,Kelas menengah,C,Hotpot-Validation
+1354mCWTp9JbO_9CEDgtcsqF809,Apa tujuan pokok dari rasionalisasi hatta?,menata kembali organisasi-organisasi militer dan untuk memobilisasi tenaga kerja produktif,B,IndoQA-Train
+2697JyMvj1z_Y1AtYTrkQf8_971,Pada tahun berapa federasi malaya merdeka?,1957,A,IndoQA-Test
+2617lIcTuHq8N8es-n39g3012365,Di kampus apa SBY mendapat gelar doktor?,Institut Pertanian Bogor,B,IndoQA-Train
+2964jl5Made9jV-JHe3reqP93947,Apa yang dilakukan Uni Soviet untuk mengakhiri kerjasama Tiongkok dengan Jerman?,menandatangani pakta non-agresi dengan Tiongkok,A,IndoQA-Test
+5ac42c6d5542997ea680ca1a,Apa nama sebelumnya kota Italia yang sekitar 15 kilometer dari mantan biara Cistercian?,Borgo San Donnino,C,Hotpot-Validation
+460,"Pada tradisi masyarakat Arab sebelum Islam di Makkah ada perdagangan komersial atau yang biasa disebut Ilaf. Pada musim panas, masyarakat Arab berdagang kemana?",Syria,B,QASiNa
+2391XlLV19O8kFC0y7L8sUPy3665,Apa makna Al-Qur'an menurut kata dasarnya qara'a?,membaca atau mengumpulkan,C,IndoQA-Test
+1380vA5P1fp-1XlZm7dLip3Q738,Berapa lama Indonesia berperang melawan belanda?,empat tahun,B,IndoQA-Train
+70b92157bc0245b0bb28e29a51efa75b,Karena pembuatan barang menjadi cepat mudah dan jumlah banyak harga jadi lebih murah,Ya,A,IndoQA-Train
+2192E69qwAmZtNVbqNK6FNLe4119,Bagaimana rupa pakaian dari bangsawan?,"dihiasi dengan emas, keris, pedang, pisau",B,IndoQA-Test
+2146CMsypO-GlkGAyST9v2a-4234,Siapa nama guru dari Sunan Giri?,Sunan Ampel,B,IndoQA-Train
+2474aB357FAulw_H4WRn_Ime1842,Apakah susunan kenegaraan INdonesia menurut UUD 1945 ?,kesatuan,A,IndoQA-Train
+586FyS4ZNoDr1aP3HZyVHPo150,Apa yang menandai berakhirnya Orde Baru di Indonesia?,pengunduran diri Presiden Soeharto,B,IndoQA-Train
+2957RON0RMexHAq6R8NDth-G3968,Mengapa kekaisaran Jepang berusaha mempengaruhi Tiongkok sejak lama?,sebagai tahap pertama dari apa yang disebut pemerintahnya sebagai hak untuk menguasai Asia,A,IndoQA-Train
+2102z4y9nEpbATY8I78HaePk1502,Kapankah hari pahlawan nasional Indonesia ?,10 Desember,A,IndoQA-Train
+20865AJD7uSijZkNu3lQlJ481545,Apa sajakah gagasan yang diambil dari India pada pembangunan candi Borobudur ?,"stupa, dan mandala",B,IndoQA-Train
+1832FDx5dSa_iuFFmwv2RODi3353,Seni apa yang memperkenalkan tradisi naturalisme Eropa di AS pada abad 19?,Aliran Sungai Hudson,B,IndoQA-Test
+642t90xpp6PDsZFZ-bpxEez3028,Kapan Soeharto turun jabatan dari presiden?,21 Mei 1998,A,IndoQA-Train
+1813DaTooZTJtMNx4CNYD2p73402,Bagaimana rasio aborsi di Amerika jika dibandingkan dengan negara barat lainnya?,lebih tinggi,A,IndoQA-Train
+1752E5XokYRzRxCMWKU2kTp-3548,Keputusan kontroversial apakah yang diambil presiden Bush pada tahun 2003?,memulai invasi untuk mengubah rezim di Irak,A,IndoQA-Train
+559Gc5T32327tuZtR-qGbvH231,Siapa yang mendesak Soekarno untuk memproklamasikan kemerdekaan Indonesia?,organisasi pemuda,C,IndoQA-Train
+1389Ypbz0yiTxHj8sdg8Dd-O714,Dimanakah pemberontakan daud beureuh terjadi?,Aceh,A,IndoQA-Train
+5727w28zIiNblkHmyplKA2z192,Mengapa Indonesia memiliki banyak gunung berapi dan sering terjadi gempa bumi?,terletak di Cincin Api Pasifik,B,IndoQA-Train
+2994z92F6tuanrTZ7p_1PiGz3877,Dimanakah Jerman mengacaukan jalur kapal sekutu?,di lepas pesisir Atlantik Amerika Serikat,B,IndoQA-Train
+af225317e0344e869f51f816a901bfe2,Apakah Ptolemaios XIII meloloskan diri dengan naik kuda?,Tidak,A,IndoQA-Train
+2972anHdG1TwBtQaRXhi-WEK3929,Kemana pemecah kode Enigma Polandia diungsikan?,Prancis,B,IndoQA-Train
+5adf6a5c5542995ec70e8ff9,Di kota apa yang paling sukses Amerika dan internasional bisnis lima-dan-dime memiliki bangunan bersejarah?,"Watertown, New York",C,Hotpot-Validation
+2136oFgVPp4a2aBSRi_E2Wfp1401,Kapankah pasukan Amerika Serikat keluar dari afganistan ?,Mei 2021,B,IndoQA-Train
+2511-vZKa4GoTWbZHRqOchi_1757,Bagaimanakah nasib anggota PKI yang berada diluar Indonesia ?,terisolasi dari perkembangan politik di dalam Indonesia,A,IndoQA-Test
+5ab93781554299131ca422c7,Bintang Maltese Bippy yang meninggal tahun 1987?,Dan Rowan,C,Hotpot-Validation
+88e723bcfe674f4f9aa356d14644e6f8,Sistem ekonomi kapitalis modern muncul setelah Revolusi Industri,Ya,A,IndoQA-Test
+947RcyMsfmB5EqbyHMxRUMk558,Apa nama perusahaan induk dari Akardia pada tahun 1993?,"Comptek International,",B,IndoQA-Train
+5ab48af35542996a3a969f92,Rubah kecil malam hari mana yang ditemukan di Sahara Afrika Utara apakah seri animasi Prancis Fennec memiliki karakter?,Rubah Fennec,C,Hotpot-Validation
+5ab811395542990e739ec80f,Benua mana yang memiliki distribusi baik Ternstroemia dan genus Cussonia?,Afrika,C,Hotpot-Validation
+984CNpDqalkISFG_gY2XwD_448,Apa permintaan Soekarno sebelum meninggal?,"meminta agar dirinya dimakamkan di Istana Batu Tulis, Bogor",A,IndoQA-Test
+1419tOWt7I089hJ4HUoPR6EI630,Siapa saja nama tokoh perempuan selain kartini?,"Cut Nyak Dhien, Martha Christina Tiahahu, Dewi Sartika",C,IndoQA-Train
+70,Apa nama yang diberikan karena melenyapkan kewibawaan kaum yang sombong?,bakkah,C,QASiNa
+2395o2IF67yRoSD5xGlszZGz3659,Apa yang dimaksud dengan surah Madaniyah?,surah-surah yang turun setelahnya tergolong sebagai surah Madaniyah,A,IndoQA-Train
+1234WIzl7ElikCCPk4gA-7ua3057,Kapan seluruh negara bagian Utara menghapuskan perbudakan?,antara tahun 1780 dan 1804,B,IndoQA-Train
+2608ntJl4AFAduDIt0AYknjI2371,Di Universitas apa Edhie Baskoro kuliah?,Curtin University of Technology,C,IndoQA-Train
+2123OTmL8FamXbZSNs3_HwHe1441,Siapa sajakah menteri yang ditemui Soedirman di desa Jambu ?,9 Januari 19,C,IndoQA-Train
+708039C_1LOgHzr9Hb6yAEm2860,Ke kota apa Soeharto dipindahkan?,Bandung,C,IndoQA-Train
+540gS6PWvy11E_WySWDzeHa288,Apa yang diperingati bangsa Indonesia pada tanggal 1 Oktober?,Hari Kesaktian Pancasila,A,IndoQA-Train
+2526CdjM-lnmz5ecSSuR247z1715,Dimanakah Adolf Eichmann bersembunyi ?,Argentina,A,IndoQA-Test
+5ac005a15542997719eab6fc,Apakah keduanya Alabama Slammer dan Yorsh non minuman beralkohol?,tidak,C,Hotpot-Validation
+27385FnxYBX7geCrqoYaZeLD859,Siapa yang berhasil mengalahkan pasukan Jerman dan Utsmaniyah di peperangan Romani?,Pasukan Berkuda Anzac dan Divisi Infanteri (Dataran rendah) ke-52,B,IndoQA-Train
+26765i_aQSNS1WuOSbksxa7p1034,Mengapa Malaysia memiliki status salah satu tempat terburuk bagi para pengungsi?,karena adanya praktik diskriminasi negara kepada pengungsi,B,IndoQA-Train
+2972anHdG1TwBtQaRXhi-WEK3930,Apa nama kota di Tiongkok yang diserang oleh Jepang pertama kali?,Changsha,C,IndoQA-Train
+977VFT5gGcef8xNkpsM7Dde470,Apa yang dihasilkan dari proyek film porno tersebut?,"menghasilkan setidaknya beberapa foto, meski tampaknya tak pernah digunakan",B,IndoQA-Test
+2703tHS1apl2j5UgPSEuvXw2955,Apa yang merupakan salah satu kemampuan dari malaikat?,dapat melintasi alam semesta secepat kilat atau bahkan lebih cepat lagi,C,IndoQA-Train
+2390E0CHAPiA5irDHQbYbUX_3668,Apa sebutan bagi penghafal Al-Qur'an?,Hafidz,C,IndoQA-Train
+2605EHUeu9PLnQV7xV85uEAC2379,Dimana SBY tinggal semasa kecil?,Pacitan,B,IndoQA-Train
+2712gqTOsON2hU4puCu5hGNj932,Apa efek dari penggabungan dan pembentukan kekaisaran Jerman pada tahun 1871?,Kekuatan industri dan ekonomi Jerman tumbuh pesat,B,IndoQA-Train
+ee659535aa5b4df0b9f9e9220d1c29ae,Apakah Ylius Kaisar membenci hubungan dengan perempuan bagsawan?,Tidak,A,IndoQA-Train
+2444VM3M-Xnaa4T5rEXxP45X1908,Apakah bentuk citra diproyeksikan pada budaya China ?,kepatuhan kolektif,B,IndoQA-Train
+5abb14d85542996cc5e49f92,Apakah Alexander Kluge dan Sidney Salkow memiliki kebangsaan yang sama?,tidak,C,Hotpot-Validation
+2226L8d66ouJEV1RUNRdzzwj4033,Mengapa jokowi mendapatkan kritik?,karena meluncurkan program yang tidak memiliki payung hukum dan melanggar tertib anggaran,A,IndoQA-Train
+1406r0ltJ0ogZOEySbpwaMW3669,Apa media yang membuat kartini tertarik dengan pemikiran perempuan eropa?,"buku-buku, koran, dan majalah Eropa",B,IndoQA-Train
+1837DjnvLKs92-s8s-2bK5zI3339,Kebiasaan apakah yang seringkali dikaitkan oleh dokter sebagai sebab dari wabah obesitas Amerika?,sering kali makan di gerai makanan siap saji,B,IndoQA-Train
+57141609166d4f83b0dfc45e4621e744,Upah pekerja home industry diperoleh berdasarkan jumlah barang yang dikerjakan,Ya,A,IndoQA-Test
+488,"Siapa yang memiliki pemukiman di Aliyah, di lembah Baththan sejauh 2 atau 3 mil dari Madinah?",Bani Nadhir,B,QASiNa
+5ab850795542990e739ec8bd,Akademi Erskine terletak di sebuah desa di daerah mana?,"Kennebec County, Maine",C,Hotpot-Validation
+5a7369da55429901807db037,Dalam kelompok apa penulis Songs and Dances of Death masuk?,"""The Five""",C,Hotpot-Validation
+2345L8lcdJOyUpQRQBcnRzDK3766,Bagian apakah yang paling diperhatikan dalam bulu tangkis?,senarnya,C,IndoQA-Train
+5a7f650755429969796c1a2c,"Selain Richard Strauss, Luigi Nono, Krzysztof Penderecki, Joaquín Rodrigo, dan komponis Jerman yang dikenal dengan ""Das Marienleben"", komponis lain apa yang telah diwakili oleh ESZ sejak 1950-an?","Igor Stravinsky, Carl Orff",C,Hotpot-Validation
+580nH6LvFdvuQbuzorAxkmf168,Apa wewenang MPR Indonesia?,mengubah dan menetapkan konstitusi,B,IndoQA-Train
+5ab278745542997061209617,"Apa gitaris bermain dengan baik Device dan kelompok rock industri Amerika yang album debutnya bernama ""Short Bus""?",Geno Lenardo,C,Hotpot-Validation
+1627y16BUwp_39IprpSx206Q1161,Apa sajakah organisasi yang diikuti oleh Singapura ?,"Perserikatan Bangsa-Bangsa, Persemakmuran, ASEAN dan Gerakan Non-Blok",A,IndoQA-Train
+1202iIzasrTScRTbY9MqhVF43151,Bagaimana para khilafah menanggapi fanatisme kebangsaan ini?,mereka tidak bersungguh-sungguh menghapuskan fanatisme tersebut,B,IndoQA-Train
+2210pb1OBuEFnf38HXMK9cDk4067,Kapan Jokowi mulai dikenal oleh publik?,"etelah dianggap berhasil mengubah wajah Kota Surakarta menjadi kota pariwisata, kota budaya, dan kota batik",A,IndoQA-Train
+5a75a4135542992d0ec05fcd,Distrik Sejarah Woodvale dibangun untuk membeli kantor pusat di mana?,"Furnace Rockhill, Pennsylvania",C,Hotpot-Validation
+5ab6f17d5542995eadef00ee,Alex Yamanidjian adalah CEO perusahaan yang memiliki apa Las Vegas Strip hotel?,Tropicana Las Vegas,C,Hotpot-Validation
+2604w8Y2Cl6uiR5M0-ejmWMM2383,Sampai tanggal berapa Presiden Susilo Bambang Yudhoyono menjabat sebagai Presiden,20 Oktober 2014,A,IndoQA-Train
+998Con_q4MLI1RfJuY2bKbI415,Apa makna demokrasi?,penghargaan terhadap harkat dan martabat manusia.,C,IndoQA-Train
+985ZjvvC0gTx6zRqASlgtzC446,Apa peristiwa yang digambarkan oleh Tugu Proklamasi?,suasana pembacaan teks Proklamasi pada tahun 1945 dahulu,B,IndoQA-Test
+1603mLkIXwPW7Y21tE83oCqe1229,Kapankah Budi Utomo mulai dipimpin tanpa bidang politik ?,selama periode 1908-1926,C,IndoQA-Train
+17,Apa reaksi Abu Sufyan setelah mengetahui bahwa sahabat Nabi akan menghalangi kafilahnya?,sangat takut,B,QASiNa
+22165cE4SIrSj4XGK-I-cUmM4056,Apa yang menginspirasi Jokowi?,Pengaturan kota yang baik di Eropa,C,IndoQA-Train
+1753F2-F3aTBMQahcdDwW-XL3544,Siapakah presiden Afrika-Amerika pertama di AS?,Barack Obama,A,IndoQA-Train
+994GU89OGfkUkf_KwQ-KrNe296,Siapakah Soekarno?,presiden pertama Indonesia.,B,IndoQA-Train
+2466lC31cH6baEqjSIz-P2Z51863,Kapankah UUD 1945 berlaku sebagai konstitusi Republik Indonesia ?,18 Agustus 1945,A,IndoQA-Train
+2725lLg7uHCwU2triDIo3B-h898,Apa akibat dari mundurnya pasukan Aljazair?,terbentuk celah sepanjang enam kilometer (empat mil) terbuka di lini Sekutu yang segera dimanfaatkan Jerman,A,IndoQA-Train
+2100wZS8Veo6hc9TL1NaJSaL1506,Apakah provinsi yang menampilkan gambar Borobudur pada lambang daerahnya ?,Jawa Tengah,A,IndoQA-Train
+29802gx0lFYy6rgIUS6ZhDD83910,"Apa inti dari Pakta Tiga pihak antara Jepang, Italia, dan Jerman?",meresmikan Kekuatan Poros,A,IndoQA-Train
+2481QuoZomeqE_LzkMNHhSK-1824,Apakah kepentingan utama RRT pada negara negara asia ?,pembangunan ekonomi yang cepat,B,IndoQA-Test
+2355g1DEdj6BajInIdfN43xp3744,Peristiwa apa yang menjadi awal penanggalan kalender Hijriah?,Peristiwa hijrah,A,IndoQA-Train
+1617-HTq6axozTF-eMfISD1Y1189,Mengapa Singapura bergabung dengan federasi Malaysia ?,hasil dari Referendum Penggabungan Singapura 1962,A,IndoQA-Train
+1534DljtGtyMC7VBZ7LOjAQY1936,Apa pekerjaan Lee Je-no sebelum bergabung dengan SM?,bintang iklan di tv korea,B,IndoQA-Train
+722Zb3Sw31D8-m69waDslkm2822,Kapan Konfrensi ke-23 FAO?,14 November 1985,B,IndoQA-Train
+1441MCBHwz4mlshCsnGFlkHe2130,Apa yang menjadi penyebab makin parahnya kemacetan di Jakarta?,"para pelaju dari kota-kota di sekitar Jakarta seperti Depok, Bekasi, Tangerang, dan Bogor yang bekerja di Jakarta",A,IndoQA-Train
+5a8a3dd55542995153361360,Apakah Nicholas Hytner dan Maya Deren berperan sama dalam industri film?,tidak,C,Hotpot-Validation
+627343cba73d42d49f9ab2152ac7ee73,"di sistem pabrik, tempat pemasaran berbeda dengan tempat produksi",Ya,A,IndoQA-Train
+138,Apa nama kerajaan yang dibangun oleh Saba' Abdu Syams bin Yasyjub bin Ya'rub bin Qathan?,Kerajaan Saba',A,QASiNa
+678otpfB47oYxNuzn83DpRo2933,kementerian apa yang memberikan penghargaan penonton terbanyak?,Kementerian Pariwisata dan Ekonomi Kreatif Republik Indonesia,B,IndoQA-Test
+1623v44E7fmDk54O42TCHeFJ1171,Apakah sistem pemerintahan yang di anut Singapura ?,sistem pemerintahan parlementer unikameral Westminster,C,IndoQA-Train
+2447UihYYfUXE3z2K7OG-aL91903,Apakah arti kebudayaan menurut M. Selamet Riyadi ?,suatu bentuk rasa cinta dari nenek moyang kita yang diwariskan kepada seluruh keturunannya,C,IndoQA-Test
+845RUlmcCAkxZC2itV7MBh62763,Apa sajakah bentuk bentuk Pasukan Bela diri Jepang ,"Angkatan Darat Bela Diri Jepang (JGSDF), Angkatan Laut Bela Diri Jepang (JMSDF), dan Angkatan Udara Bela Diri Jepang (JASDF)",B,IndoQA-Train
+5ae5df84554299546bf82fa8,Tes apa yang mengawali Operasi Julian sebelum negosiasi dimulai untuk Perjanjian Uji Penyelesaian?,Operasi Akuaduk,C,Hotpot-Validation
+878tqshp6q6ko3DcqZ6tS6C2678,Apakah nama dari teknik bola basket yang mendorong badan kebelakang saat menembak bola ?,Fade away,B,IndoQA-Train
+906MvzKtaiX283ibJ29qi6M2606,Kapankah Belanda mengakui secara resmi kemerdekaan Indonesia ?,tahun 1949,A,IndoQA-Train
+27105B4kNatJgs2HMEX3Qbc-940,"Apa nama aliansi yang dibentuk oleh Jerman, Austria-Hongaria, dan Italia?",Aliansi Tiga.,A,IndoQA-Train
+1779lcPuO1NFS50gJD6T-Zo73478,Bagaimana perbandingan kasus pembunuhan di AS antara tahun 2011 dengan tahun 2000?,"14,5% lebih sedikit",B,IndoQA-Train
+5a7760165542993569682d74,Siapa nama penyair Inggris yang menulis puisi berjudul Don Juan dan juga menjadi model nyata karakter dalam novel Glenarvon?,Lord Byron,C,Hotpot-Validation
+244,Apa faktor yang memengaruhi bangsa Arab hidup dalam kejumudan?,tanah yang tandus dan gersang,B,QASiNa
+1502t95YZwb3DBEc50kzbs112018,NCT dibentuk oleh siapa?,SM Entertainment,A,IndoQA-Train
+c744d9c42ac147e4b6aa2100fee15c60,Sistem pabrik menempati tempat di daerah industri yang sudah ditentukan,Ya,A,IndoQA-Train
+5ae780bf554299540e5a55d0,Pembom yang melakukan Tentara Republik Irlandia Sementara (IRA) upaya pembunuhan terhadap tingkat atas pemerintah Inggris pada tahun 1984 lahir pada tahun berapa?,1951,C,Hotpot-Validation
+1795AVJ8Ru2GLyRyIYxjznuC3441,Kendaraan apa yang paling umum dimiliki warga AS?,mobil,A,IndoQA-Train
+2605xGWRPmjAX3zTTpbG5G9l2381,Apa jabatan terakhir SBY di militer?,Jenderal,B,IndoQA-Train
+5ab2acbc55429929539467d2,Pulau mana yang terletak di 808 nmi barat laut ibu kota Hawaii?,Laysan,C,Hotpot-Validation
+2364AC254gkfMx5ABnQlrV723723,Berapa umur Khadijah saat menikah dengan Nabi Muhammad SAW?,40 tahun,A,IndoQA-Test
+584nEQ5EoREN-G1n2xXlQ6W156,Berapa banyak provinsi yang ada di Indonesia saat ini?,34 provinsi,A,IndoQA-Train
+573-_AYG-xxnzzEd1LZiGf8191,Gunung apakah yang meletus pada 1815 dan termasuk letusan gunung terbesar dalam sejarah?,Tambora,A,IndoQA-Train
+2052CjMDg4rKssIF2dZJmzem1645,Kapankah bahasa inggris mulai digunakan sebagai bahasa utami di Singapura ?,setelah 1965,B,IndoQA-Train
+5a80071f5542992bc0c4a684,Alice David adalah suara Lara Croft dalam video game dikembangkan oleh perusahaan mana ?,Dinamis Kristal,C,Hotpot-Validation
+22353xyc8AR6WxpoF2OKgYnG4005,Mengapa pada 24 Mei 2014 Jokowi memberikan pernyataan bahwa Ia adalah bagian dari Islam,muncul berbagai tudingan yang mempertanyakan keislaman Jokowi,B,IndoQA-Train
+1345JzmbSlEwtFkj07wPh-DW837,Siapa nama menteri perindustrian?,Airlangga Hartarto,A,IndoQA-Test
+1608c9TBfOJ7m6Ujr7b8pUF_1214,Kapankah Thomas Stamford Raffles mendarat di Singapura ?,28 Januari 1819,A,IndoQA-Test

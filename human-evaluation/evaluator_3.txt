@@ -1,0 +1,36 @@
+Human Evaluation Dataset Statistics
+========================================
+
+Generation parameters:
+  - Samples per class: 50
+  - Random seed: 303
+  - Class C Hotpot ratio: 0.5
+  - Output file: human-evaluation/evaluator_3.csv
+
+Total questions: 150
+
+By class:
+  Class A: 50 (33.3%)
+  Class B: 50 (33.3%)
+  Class C: 50 (33.3%)
+
+By source dataset:
+  IndoQA-Train: 76 (50.7%)
+  IndoQA-Test: 35 (23.3%)
+  Hotpot-Validation: 25 (16.7%)
+  QASiNa: 14 (9.3%)
+
+Class breakdown by source:
+  Class A:
+    - IndoQA-Test: 17
+    - IndoQA-Train: 29
+    - QASiNa: 4
+  Class B:
+    - IndoQA-Test: 11
+    - IndoQA-Train: 34
+    - QASiNa: 5
+  Class C:
+    - Hotpot-Validation: 25
+    - IndoQA-Test: 7
+    - IndoQA-Train: 13
+    - QASiNa: 5
