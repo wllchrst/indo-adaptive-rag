@@ -1,0 +1,17 @@
+{
+    "train_balanced": 2364,
+    "val_balanced": 592,
+    "test_balanced": 740,
+    "train_val_split_ratio": "0.8:0.2",
+    "test_split_ratio": 0.2,
+    "random_seed": 42,
+    "train_balanced_class_A": 801,
+    "train_balanced_class_B": 776,
+    "train_balanced_class_C": 787,
+    "val_balanced_class_A": 187,
+    "val_balanced_class_B": 202,
+    "val_balanced_class_C": 203,
+    "test_balanced_class_A": 244,
+    "test_balanced_class_B": 254,
+    "test_balanced_class_C": 242
+}
