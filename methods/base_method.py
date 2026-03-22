@@ -3,8 +3,10 @@ from llm import GeminiLLM, HuggingFaceLLM, OllamaLLM, OLLAMA_MODEL_LIST
 # from vector_database import DatabaseHandler
 from interfaces import IDocument, IMetadata
 from bm25 import ElasticsearchRetriever
-from typing import List, Optional, Tuple
+from typing import List, Optional, Tuple, Dict
 from llm.ollama_llm import OLLAMA_MODEL_LIST
+import os
+import pandas as pd
 
 model_type_list = ['gemini', 'hugging_face']
 
@@ -15,6 +17,8 @@ class BaseMethod(ABC):
         self.assign_llm(model_type=model_type)
         # self.database_handler = DatabaseHandler()
         self.elastic_retriever = ElasticsearchRetriever()
+        self.mappings: Dict[str, Dict[str, List[str]]] = {}
+        self.load_all_mappings()
 
     def assign_llm(self, model_type: str):
         if model_type not in model_type_list and model_type not in OLLAMA_MODEL_LIST:
@@ -30,7 +34,7 @@ class BaseMethod(ABC):
 
     @abstractmethod
     def answer(self, query: str, with_logging: bool, index: str, answer: Optional[str] = None,
-               supporting_facts: list[str] = []) -> Tuple[str, int]:
+               supporting_facts: list[str] = [], question_id: Optional[str] = None) -> Tuple[str, int, Optional[Dict]]:
         pass
 
     def retrieve_document(self,
@@ -102,3 +106,32 @@ class BaseMethod(ABC):
         print(method)
         print(f'Query: {query}')
         print(f'Answer: {answer}')
+
+    def load_all_mappings(self):
+        indices = ['indoqa', 'hotpot', 'qasina']
+        for index in indices:
+            self.mappings[index] = self.load_single_mapping(index)
+
+    def load_single_mapping(self, index: str) -> Dict[str, List[str]]:
+        mapping_file = f'mappings/{index}_mapping.csv'
+        if not os.path.exists(mapping_file):
+            return {}
+        
+        df = pd.read_csv(mapping_file)
+        mapping = {}
+        for _, row in df.iterrows():
+            mapping[row['question_id']] = row['context_ids'].split(',')
+        return mapping
+
+    def calculate_hit_rate(self, retrieved_docs: List[IDocument], expected_ids: List[str]) -> Dict[str, any]:
+        retrieved_ids = [doc.metadata.docid for doc in retrieved_docs]
+        hits = [rid for rid in retrieved_ids if rid in expected_ids]
+        
+        return {
+            'hits': len(hits),
+            'total_retrieved': len(retrieved_docs),
+            'expected_count': len(expected_ids),
+            'hit_rate': len(hits) / max(len(expected_ids), 1) if expected_ids else 0,
+            'retrieved_ids': retrieved_ids,
+            'expected_ids': expected_ids
+        }

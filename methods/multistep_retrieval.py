@@ -1,8 +1,7 @@
-from typing import List
+from typing import List, Dict, Optional, Tuple
 from methods.base_method import BaseMethod
 from interfaces import IDocument
 from helpers import WordHelper
-from typing import Optional, Tuple
 
 
 class MultistepRetrieval(BaseMethod):
@@ -10,7 +9,7 @@ class MultistepRetrieval(BaseMethod):
         super().__init__(model_type)
 
     def answer(self, query: str, with_logging: bool = False, index: str = '', answer: Optional[str] = None,
-               supporting_facts: list[str] = []) -> Tuple[str, int]:
+               supporting_facts: list[str] = [], question_id: Optional[str] = None) -> Tuple[str, int, Optional[Dict]]:
         """
         This method retrieves multiple relevant documents from the vector database
         and uses them to answer the query.
@@ -27,10 +26,18 @@ class MultistepRetrieval(BaseMethod):
             index=index
         )
 
-        result = self.retrieve(
-            query, index=index, with_logging=with_logging, answer=answer, previous_documents=documents_from_fact)
+        mapping = self.mappings.get(index, {})
+        expected_ids = mapping.get(question_id, []) if question_id else []
 
-        return result
+        result, count, all_retrieved_docs = self.retrieve(
+            query, index=index, with_logging=with_logging, answer=answer, previous_documents=documents_from_fact,
+            question_id=question_id, expected_ids=expected_ids)
+
+        hit_rate_stats = None
+        if question_id and expected_ids and all_retrieved_docs:
+            hit_rate_stats = self.calculate_hit_rate(all_retrieved_docs, expected_ids)
+
+        return result, count, hit_rate_stats
 
     def retrieve(self,
                  original_question: str,
@@ -42,9 +49,16 @@ class MultistepRetrieval(BaseMethod):
                  limit_count: int = 5,
                  index: str = '',
                  retrieval_count: int = 3,
-                 with_logging: bool = False):
+                 with_logging: bool = False,
+                 question_id: Optional[str] = None,
+                 expected_ids: List[str] = [],
+                 all_retrieved_docs: List[IDocument] = None):
+        if all_retrieved_docs is None:
+            all_retrieved_docs = []
+        
         retrieval_query = original_question if query == '' else query
         documents = self.retrieve_document(retrieval_query, total_result=retrieval_count, index=index)
+        all_retrieved_docs.extend(documents)
 
         result, is_answered = self.reasoning(
             question=original_question,
@@ -55,7 +69,7 @@ class MultistepRetrieval(BaseMethod):
         )
 
         if is_answered or current_count >= limit_count:
-            return result, current_count
+            return result, current_count, all_retrieved_docs
 
         previous_reasonings.append(result)
         previous_documents.append(documents)
@@ -69,7 +83,10 @@ class MultistepRetrieval(BaseMethod):
             previous_documents=previous_documents,
             with_logging=with_logging,
             index=index,
-            answer=answer
+            answer=answer,
+            question_id=question_id,
+            expected_ids=expected_ids,
+            all_retrieved_docs=all_retrieved_docs
         )
 
     def gather_documents_by_supporting_facts(self,

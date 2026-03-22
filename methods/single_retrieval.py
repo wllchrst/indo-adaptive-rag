@@ -1,6 +1,6 @@
 from methods.base_method import BaseMethod
 from helpers import WordHelper
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict, List
 
 
 class SingleRetrieval(BaseMethod):
@@ -12,7 +12,8 @@ class SingleRetrieval(BaseMethod):
                with_logging: bool = False,
                index: str = '',
                answer: Optional[str] = None,
-               supporting_facts: list[str] = []) -> Tuple[str, int]:
+               supporting_facts: list[str] = [],
+               question_id: Optional[str] = None) -> Tuple[str, int, Optional[Dict]]:
         """
         This method retrieves a single relevant document from the vector database
         and uses it to answer the query.
@@ -34,4 +35,11 @@ class SingleRetrieval(BaseMethod):
             with_logging=with_logging
         )
 
-        return prediction.strip(), 1
+        hit_rate_stats = None
+        if question_id:
+            mapping = self.mappings.get(index, {})
+            expected_ids = mapping.get(question_id, [])
+            if expected_ids:
+                hit_rate_stats = self.calculate_hit_rate(retrieved_document, expected_ids)
+
+        return prediction.strip(), 1, hit_rate_stats

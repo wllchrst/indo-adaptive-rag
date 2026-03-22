@@ -1,5 +1,5 @@
 from methods.base_method import BaseMethod
-from typing import Optional, Tuple
+from typing import Optional, Tuple, Dict
 
 
 class NonRetrieval(BaseMethod):
@@ -11,8 +11,9 @@ class NonRetrieval(BaseMethod):
                with_logging: bool = False,
                index: str = '',
                answer: Optional[str] = None,
-               supporting_facts: list[str] = []) -> Tuple[str, int]:
-        """True
+               supporting_facts: list[str] = [],
+               question_id: Optional[str] = None) -> Tuple[str, int, Optional[Dict]]:
+        """
         This method is a placeholder for non-retrieval methods.
         It simply returns an answer from llm without any retrieval process.
         """
@@ -26,4 +27,4 @@ class NonRetrieval(BaseMethod):
             with_logging=with_logging
         )
 
-        return prediction.strip(), 0
+        return prediction.strip(), 0, None
