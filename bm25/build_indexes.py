@@ -2,8 +2,9 @@ import pandas as pd
 import os
 import traceback
 import ast
+import uuid
 from elasticsearch import Elasticsearch
-from typing import List, TypedDict
+from typing import List, TypedDict, Dict
 from helpers import env_helper
 
 # Make sure you have run the docker compose file
@@ -17,29 +18,39 @@ class Document(TypedDict):
     answer: str
 
 
-def make_indoqa_context() -> List[Document]:
+def make_indoqa_context() -> tuple[List[Document], Dict[str, List[str]]]:
     from classification import gather_indo_qa
     train_df, test_df = gather_indo_qa()
     full_df = pd.concat([train_df, test_df])
-    full_df = full_df.drop_duplicates(subset=['context'])
 
     docs: List[Document] = []
+    mapping: Dict[str, List[str]] = {}
+
     for _, row in full_df.iterrows():
+        question_id = str(row['id'])
+        context_id = str(uuid.uuid4())
+        
         doc: Document = {
-            'id': row['id'],
+            'id': context_id,
             'answer': row['answer'],
             'question': row['question'],
             'text': row['context']
         }
 
         docs.append(doc)
+        
+        if question_id not in mapping:
+            mapping[question_id] = []
+        mapping[question_id].append(context_id)
 
-    return docs
+    return docs, mapping
 
 
-def make_hotpot_context(path: str):
+def make_hotpot_context(path: str) -> tuple[List[Document], Dict[str, List[str]]]:
     file_names = os.listdir(path)
     docs: List[Document] = []
+    mapping: Dict[str, List[str]] = {}
+    
     for file_name in file_names:
         file_path = os.path.join(path, file_name)
         df = pd.read_csv(file_path)
@@ -52,38 +63,54 @@ def make_hotpot_context(path: str):
                     continue
 
                 context = literal_eval[0]
+                question_id = str(row['id'])
+                
+                if question_id not in mapping:
+                    mapping[question_id] = []
+                
                 for sentence in context['sentences']:
+                    context_id = str(uuid.uuid4())
+                    
                     doc: Document = {
-                        'id': row['id'],
+                        'id': context_id,
                         'answer': row['answer'],
                         'question': row['question'],
                         'text': sentence
                     }
 
                     docs.append(doc)
+                    mapping[question_id].append(context_id)
             except Exception as exception:
                 raise exception
 
-    return docs
+    return docs, mapping
 
 
-def make_qasina_context() -> List[Document]:
+def make_qasina_context() -> tuple[List[Document], Dict[str, List[str]]]:
     from classification import gather_qasina_data
     df = gather_qasina_data()
-    df = df.drop_duplicates(subset=['context'])
 
     docs: List[Document] = []
+    mapping: Dict[str, List[str]] = {}
+
     for _, row in df.iterrows():
+        question_id = str(row['ID'])
+        context_id = str(uuid.uuid4())
+        
         doc: Document = {
-            'id': row['ID'],
+            'id': context_id,
             'answer': row['answer'],
             'question': row['question'],
             'text': row['context']
         }
 
         docs.append(doc)
+        
+        if question_id not in mapping:
+            mapping[question_id] = []
+        mapping[question_id].append(context_id)
 
-    return docs
+    return docs, mapping
 
 
 def check_index_exists(index_name: str) -> bool:
@@ -93,10 +120,24 @@ def check_index_exists(index_name: str) -> bool:
 def insert_documents(index: str, documents: List[Document]):
     operations = []
     for document in documents:
-        operations.append({'index': {'_index': index}})
+        operations.append({'index': {'_index': index, '_id': document['id']}})
         operations.append(document)
 
     es.bulk(operations=operations)
+
+
+def save_mapping_to_csv(mapping: Dict[str, List[str]], filename: str):
+    os.makedirs(os.path.dirname(filename), exist_ok=True)
+    
+    mapping_data = []
+    for question_id, context_ids in mapping.items():
+        mapping_data.append({
+            'question_id': question_id,
+            'context_ids': ','.join(context_ids)
+        })
+    
+    df = pd.DataFrame(mapping_data)
+    df.to_csv(filename, index=False)
 
 
 def build_all_index():
@@ -109,28 +150,31 @@ def build_all_index():
         # INDOQA
         if not check_index_exists(indoqa_index):
             print("Inserting indoqa context")
-            indoqa_docs = make_indoqa_context()
+            indoqa_docs, indoqa_mapping = make_indoqa_context()
             es.indices.delete(index=indoqa_index, ignore_unavailable=True)
             es.indices.create(index=indoqa_index)
             insert_documents(indoqa_index, indoqa_docs)
+            save_mapping_to_csv(indoqa_mapping, 'mappings/indoqa_mapping.csv')
         else:
             print("Indoqa index already exists")
 
         if not check_index_exists(hotpot_index):
             print("Inserting hotpot dataset context")
-            hotpot_docs = make_hotpot_context("hotpot")
+            hotpot_docs, hotpot_mapping = make_hotpot_context("hotpot")
             es.indices.delete(index=hotpot_index, ignore_unavailable=True)
             es.indices.create(index=hotpot_index)
             insert_documents(hotpot_index, hotpot_docs)
+            save_mapping_to_csv(hotpot_mapping, 'mappings/hotpot_mapping.csv')
         else:
             print("hotpot index already exists")
 
         if not check_index_exists(qasina_index):
             print("Inserting qasina dataset context")
-            qasina_docs = make_qasina_context()
+            qasina_docs, qasina_mapping = make_qasina_context()
             es.indices.delete(index=qasina_index, ignore_unavailable=True)
             es.indices.create(index=qasina_index)
             insert_documents(qasina_index, qasina_docs)
+            save_mapping_to_csv(qasina_mapping, 'mappings/qasina_mapping.csv')
         else:
             print("Qasina index already exists")
 
