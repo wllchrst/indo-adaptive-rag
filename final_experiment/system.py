@@ -149,6 +149,7 @@ class System:
             ids = []
 
             if os.path.exists(file_save_path):
+                print(f'Path exists: {file_save_path}')
                 existing_result = pd.read_csv(file_save_path)
                 ids = existing_result['dataset_id'].values
 

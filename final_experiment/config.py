@@ -22,7 +22,7 @@ class Config:
 configs: Dict[str, Config] = {
     'indoqa': Config(
         classifier_model_path='',
-        dataset_path='classification_result/final_dataset/indoqa_train.csv',
+        dataset_path='classification_result/stable-qwen/indoqa_train.csv',
         dataset_index='indoqa',
         dataset_name='indo_qa',
         dataset_part=1,
@@ -37,7 +37,7 @@ configs: Dict[str, Config] = {
     ),
     'qasina': Config(
         classifier_model_path='',
-        dataset_path='classification_result/final_dataset/qasina__full.csv',
+        dataset_path='classification_result/stable-qwen/qasina__full.csv',
         dataset_index='qasina',
         dataset_name='qasina',
         dataset_part=1,

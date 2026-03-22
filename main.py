@@ -236,7 +236,7 @@ def run_experiment(system_type: str,
     from final_experiment import System, configs, system_type_mapping, SystemType
     config = configs[dataset]
     BEST_MODEL_PATH = 'saved_model/indobenchmark_indobert-large-p1'
-    MODEL_TYPE = 'gemma3:latest'
+    MODEL_TYPE = 'stable-qwen'
 
     if generate_tables:
         print("📄 Generating paper-ready tables...")
