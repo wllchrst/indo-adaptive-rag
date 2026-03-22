@@ -170,9 +170,10 @@ class System:
                         continue
 
                     start_time = time.time()
-                    answer, retrieve_count = self.answer_question(
+                    answer, retrieve_count, hit_rate_stats = self.answer_question(
                         question=row[self.question_column],
-                        system_type=system_type
+                        system_type=system_type,
+                        question_id=str(dataset_id)
                     )
 
                     end_time = time.time()
@@ -186,6 +187,18 @@ class System:
                     result['time'] = elapsed
                     result['step'] = retrieve_count
                     result['dataset_id'] = dataset_id
+                    
+                    if hit_rate_stats is not None:
+                        result['hit_rate'] = hit_rate_stats['hit_rate']
+                        result['hits'] = hit_rate_stats['hits']
+                        result['total_retrieved'] = hit_rate_stats['total_retrieved']
+                        result['expected_count'] = hit_rate_stats['expected_count']
+                    else:
+                        result['hit_rate'] = None
+                        result['hits'] = None
+                        result['total_retrieved'] = None
+                        result['expected_count'] = None
+                    
                     experiment_result.append(result)
 
                     print(f"\n[Q] {row[self.question_column]}")
@@ -212,7 +225,8 @@ class System:
 
     def answer_question(self,
                         question: str,
-                        system_type: SystemType) -> Tuple[str, int]:
+                        system_type: SystemType,
+                        question_id: str) -> Tuple[str, int, Optional[Dict]]:
         if system_type is SystemType.ADAPTIVE:
             classification = self.classifier.classify(text=question)
             system_type = self.type_mapping.get(classification)
@@ -230,7 +244,8 @@ class System:
             with_logging=False,
             index=self.dataset_index,
             answer=None,
-            supporting_facts=[]
+            supporting_facts=[],
+            question_id=question_id
         )
 
         return result
@@ -421,7 +436,7 @@ class System:
         print(f"\n✅ Combined {len(all_runs)} runs, total {len(combined)} observations")
 
         # Identify metric columns
-        metric_columns = ['em', 'f1_score', 'time', 'step']
+        metric_columns = ['exact_match', 'f1_score', 'time', 'step', 'hit_rate', 'hits', 'total_retrieved', 'expected_count']
         available_metrics = [col for col in metric_columns if col in combined.columns]
 
         print(f"📈 Computing statistics for metrics: {available_metrics}\n")
@@ -491,7 +506,7 @@ class System:
         self,
         system_type_1: SystemType,
         system_type_2: SystemType,
-        metric: str = 'em',
+        metric: str = 'exact_match',
         n_samples: Optional[int] = None,
         n_bootstrap_resamples: int = 10000,
         confidence_level: float = 0.95
@@ -505,7 +520,7 @@ class System:
         Args:
             system_type_1: First system to compare
             system_type_2: Second system to compare
-            metric: Metric to compare ('em' or 'f1_score')
+            metric: Metric to compare ('exact_match' or 'f1_score' or 'hit_rate')
             n_samples: Number of bootstrap samples per system
             n_bootstrap_resamples: Number of resamples for bootstrap test
             confidence_level: Confidence level for intervals (e.g., 0.95 for 95%)
@@ -627,14 +642,14 @@ class System:
 
     def compare_all_systems(
         self,
-        metrics: List[str] = ['em', 'f1_score'],
+        metrics: List[str] = ['exact_match', 'f1_score', 'hit_rate'],
         n_samples: Optional[int] = None
     ) -> dict:
         """
         Perform pairwise statistical significance tests for all system combinations.
 
         Args:
-            metrics: List of metrics to test (e.g., ['em', 'f1_score'])
+            metrics: List of metrics to test (e.g., ['exact_match', 'f1_score', 'hit_rate'])
             n_samples: Number of bootstrap samples per system
 
         Returns:
@@ -729,7 +744,7 @@ class System:
         for sys_type, stats_df in all_stats.items():
             sys_name = reverse_mapping[sys_type]
 
-            for metric in ['em', 'f1_score']:
+            for metric in ['exact_match', 'f1_score', 'hit_rate']:
                 mean_col = f'{metric}_mean'
                 ci_lower_col = f'{metric}_ci_lower'
                 ci_upper_col = f'{metric}_ci_upper'
@@ -754,7 +769,7 @@ class System:
         performance_table = pd.DataFrame(performance_data)
 
         # Table 2: Pairwise comparisons with p-values
-        comparisons = self.compare_all_systems(metrics=['em', 'f1_score'], n_samples=n_samples)
+        comparisons = self.compare_all_systems(metrics=['exact_match', 'f1_score', 'hit_rate'], n_samples=n_samples)
 
         comparison_data = []
         for metric, comp_dict in comparisons.items():
