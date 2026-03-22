@@ -380,6 +380,7 @@ def main():
             generate_tables=arguments.generate_tables,
             compare=arguments.compare
         )
+        return
     elif arguments.action == 'multi-retrieval-issues':
         output_multiretrieval_issues()
         return
