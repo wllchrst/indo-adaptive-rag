@@ -54,7 +54,7 @@ class System:
                  question_column: str = 'question',
                  answer_column: str = 'answer',
                  id_column: str = 'id',
-                 experiment_result_folder: str = 'experiment_results_stable',
+                 experiment_result_folder: str = 'experiment_results',
                  n_bootstrap_samples: int = 10,
                  random_seed: int = 42):
         print("\n🚀 System initialized with configuration:")
@@ -308,9 +308,9 @@ class System:
         sanitized_path = re.sub(r'[^A-Za-z0-9/_]', '_', base_name)
 
         if bootstrap_run is not None:
-            return f'{sanitized_path}_bootstrap_run{bootstrap_run}.csv'
+            return f'{folder}/{sanitized_path}_bootstrap_run{bootstrap_run}.csv'
 
-        return f'{sanitized_path}.csv'
+        return f'{folder}/{sanitized_path}.csv'
 
     def run_bootstrap_experiments(
         self,
