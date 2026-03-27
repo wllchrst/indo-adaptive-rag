@@ -22,7 +22,7 @@ class Config:
 configs: Dict[str, Config] = {
     'indoqa': Config(
         classifier_model_path='',
-        dataset_path='classification_result/stable-qwen/indoqa_train.csv',
+        dataset_path='classification_result/stable-qwen/indoqa__train.csv',
         dataset_index='indoqa',
         dataset_name='indo_qa',
         dataset_part=1,
