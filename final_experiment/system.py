@@ -821,3 +821,80 @@ class System:
             'comparison': comparison_table
         }
 
+    def summarize_results(self, output_path: str = None) -> pd.DataFrame:
+        output_path = output_path or f'{self.experiment_result_folder}/final_report.csv'
+
+        model_display_names = {
+            'gemma3_latest': 'Gemma 3',
+            'qwen3_8b': 'Qwen 3',
+            'stable_qwen': 'Stable Qwen',
+        }
+
+        results = []
+        result_folder = Path(self.experiment_result_folder)
+
+        if not result_folder.exists():
+            raise FileNotFoundError(f"Experiment results folder not found: {result_folder}")
+
+        for dataset_dir in sorted(result_folder.iterdir()):
+            if not dataset_dir.is_dir():
+                continue
+
+            dataset_name = dataset_dir.name
+
+            for csv_file in sorted(dataset_dir.glob('*.csv')):
+                if '_bootstrap' in csv_file.stem:
+                    continue
+
+                stem = csv_file.stem
+
+                model_key = None
+                method = None
+                for prefix, display_name in model_display_names.items():
+                    if stem.startswith(prefix):
+                        model_key = prefix
+                        method = stem[len(prefix) + 1:]
+                        break
+
+                if model_key is None or method is None:
+                    print(f"⚠️  Skipping unrecognized file: {csv_file}")
+                    continue
+
+                try:
+                    df = pd.read_csv(csv_file)
+                except Exception as e:
+                    print(f"⚠️  Error reading {csv_file}: {e}")
+                    continue
+
+                total_data = len(df)
+
+                row = {
+                    'method': method,
+                    'llm_model': model_display_names.get(model_key, model_key),
+                    'dataset': dataset_name,
+                    'total_data': total_data,
+                    'exact_match': int(df['exact_match'].sum()),
+                    'accuracy': df['exact_match'].mean(),
+                    'f1_mean': df['f1_score'].mean(),
+                    'step_mean': df['step'].mean(),
+                    'time_mean': df['time'].mean(),
+                }
+
+                if 'hit_rate' in df.columns:
+                    row['hit_rate_mean'] = df['hit_rate'].mean()
+                else:
+                    row['hit_rate_mean'] = None
+
+                results.append(row)
+
+        if not results:
+            raise ValueError("No result files found to summarize.")
+
+        report_df = pd.DataFrame(results)
+        report_df.to_csv(output_path, index=False)
+
+        print(f"✅ Summary report saved to: {output_path}")
+        print(f"   Total rows: {len(report_df)}")
+
+        return report_df
+
