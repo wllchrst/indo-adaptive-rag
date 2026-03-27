@@ -1,0 +1,12 @@
+{
+  "model_type": "stable-qwen",
+  "dataset_name": "indo_qa",
+  "dataset_index": "indoqa",
+  "dataset_size": 3250,
+  "n_bootstrap_samples": null,
+  "random_seed": 42,
+  "question_column": "question",
+  "answer_column": "answer",
+  "id_column": "id",
+  "experiment_result_folder": "experiment_results"
+}
