@@ -1,0 +1,12 @@
+{
+  "model_type": "stable-qwen",
+  "dataset_name": "qasina",
+  "dataset_index": "qasina",
+  "dataset_size": 500,
+  "n_bootstrap_samples": null,
+  "random_seed": 42,
+  "question_column": "question",
+  "answer_column": "answer",
+  "id_column": "ID",
+  "experiment_result_folder": "experiment_results"
+}
