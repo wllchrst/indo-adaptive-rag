@@ -1,0 +1,10 @@
+evaluator,q_semantic_score,q_entity_translation_score,a_semantic_score,a_entity_translation_score,"('q_semantic_score', 'count')","('q_semantic_score', 'mean')","('q_semantic_score', 'std')","('q_semantic_score', 'median')","('q_semantic_score', 'min')","('q_semantic_score', 'max')","('q_entity_translation_score', 'count')","('q_entity_translation_score', 'mean')","('q_entity_translation_score', 'std')","('q_entity_translation_score', 'median')","('q_entity_translation_score', 'min')","('q_entity_translation_score', 'max')","('a_semantic_score', 'count')","('a_semantic_score', 'mean')","('a_semantic_score', 'std')","('a_semantic_score', 'median')","('a_semantic_score', 'min')","('a_semantic_score', 'max')","('a_entity_translation_score', 'count')","('a_entity_translation_score', 'mean')","('a_entity_translation_score', 'std')","('a_entity_translation_score', 'median')","('a_entity_translation_score', 'min')","('a_entity_translation_score', 'max')"
+count,450.0,450.0,450.0,450.0,,,,,,,,,,,,,,,,,,,,,,,,
+mean,4.084444444444444,4.475555555555555,4.888888888888889,4.662222222222222,,,,,,,,,,,,,,,,,,,,,,,,
+std,1.1567475244999548,1.1328572300110111,0.5004328737438061,0.9702223217517417,,,,,,,,,,,,,,,,,,,,,,,,
+median,5.0,5.0,5.0,5.0,,,,,,,,,,,,,,,,,,,,,,,,
+min,1.0,1.0,1.0,1.0,,,,,,,,,,,,,,,,,,,,,,,,
+max,5.0,5.0,5.0,5.0,,,,,,,,,,,,,,,,,,,,,,,,
+CO,,,,,150.0,4.326666666666667,0.993243393372816,5.0,1.0,5.0,150.0,4.666666666666667,0.9808000204371353,5.0,1.0,5.0,150.0,4.886666666666667,0.5376641833423697,5.0,1.0,5.0,150.0,4.6066666666666665,1.0737669167463122,5.0,1.0,5.0
+EZ,,,,,150.0,4.453333333333333,0.7648894877115473,5.0,2.0,5.0,150.0,4.526666666666666,1.0662401272455215,5.0,1.0,5.0,150.0,4.953333333333333,0.3540118427220647,5.0,1.0,5.0,150.0,4.766666666666667,0.8855034337009636,5.0,1.0,5.0
+LY,,,,,150.0,3.473333333333333,1.3742437415893658,4.0,1.0,5.0,150.0,4.233333333333333,1.2922934540438766,5.0,1.0,5.0,150.0,4.826666666666667,0.5763419318177054,5.0,2.0,5.0,150.0,4.613333333333333,0.9397034136326424,5.0,1.0,5.0

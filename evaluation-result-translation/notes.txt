@@ -1,0 +1,32 @@
+Hiii, this is a tutorial of what I need you to do regarding the human evaluation task!!!
+First you should open the excel that I have given to you called data-[name].csv. It is
+essentially a dataset for question answering task, and there is multiple column that you need
+to evaluate below are the description of each column:
+-
+id - identifier of each question data.
+-
+question
+_
+en and question
+_
+id, the question in english and indonesian
+-
+answer
+en and answer
+_
+_
+id, the answer in english and indonesian
+What i need you to do is to open the excel that i give you named evaluation.xlsx it has 5
+column, the value for all this data is a number ranging from 1 - 5 (1 really bad result, 5 really
+good result)
+There are two main things that you need to evaluate:
+1. Semantic score: Does the translation process from the origin text to the translated
+text still preserve the main definition and meaning from the origin text? If there is a
+shift of meaning and the translated result doesn’t even make sense that it will lean
+more towards the number 1. If it keeps the meaning of the question really well that it
+will lean more towards the number 5
+2. Entity translation score: Does the translation process still keep the entities in the
+origin text? For example the word Software Laboratory Center it is an entity and
+should not be changed after the translation process, then the score will lean more
+towards the number 1.
+If there are any questions regarding this scoring system, please ask directly t
