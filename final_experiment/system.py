@@ -209,7 +209,19 @@ class System:
                 except Exception as e:
                     traceback.print_exc()
                     print(f'Error when trying to answer index: {index}')
-                    break
+                    experiment_result.append({
+                        'exact_match': None,
+                        'f1_score': None,
+                        'time': None,
+                        'step': None,
+                        'dataset_id': dataset_id,
+                        'hit_rate': None,
+                        'hits': None,
+                        'total_retrieved': None,
+                        'expected_count': None,
+                        'error': str(e),
+                    })
+                    continue
 
             experiment_result_df = pd.DataFrame(experiment_result)
             experiment_result_df.to_csv(file_save_path, index=False)
