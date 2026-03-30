@@ -1,4 +1,5 @@
 ﻿import pandas as pd
+import csv
 import time
 import os
 import traceback
@@ -143,9 +144,7 @@ class System:
     def process(self, system_type: SystemType):
         try:
             print(f"🥸 Running process using type: {system_type}")
-            experiment_result: List[Dict] = []
             file_save_path = self.generate_file_name(system_type)
-            existing_result = None
             ids = []
 
             if os.path.exists(file_save_path):
@@ -153,85 +152,109 @@ class System:
                 existing_result = pd.read_csv(file_save_path)
                 ids = existing_result['dataset_id'].values
 
-            for index, row in self.dataset.iterrows():
+            columns = [
+                'exact_match', 'f1_score', 'time', 'step', 'dataset_id',
+                'hit_rate', 'hits', 'total_retrieved', 'expected_count', 'error'
+            ]
+
+            file_is_new = not os.path.exists(file_save_path)
+
+            with open(file_save_path, 'a', newline='') as f:
+                writer = csv.DictWriter(f, fieldnames=columns)
+                if file_is_new:
+                    writer.writeheader()
+
                 try:
-                    dataset_id = row[self.id_column]
+                    for index, row in self.dataset.iterrows():
+                        dataset_id = row[self.id_column]
 
-                    if len(ids) > 0 and self.dataset_name == 'qasina' and int(dataset_id) in ids.astype(int):
-                        print(f"Skipping row with dataset id: {dataset_id}")
-                        continue
-                    elif len(ids) > 0 and dataset_id in ids:
-                        print(f"Skipping row with dataset id: {dataset_id}")
-                        continue
-                    elif row[self.question_column] is None or row[self.answer_column] is None:
-                        print(f'Skipping row because answer or question is None index: {index}')
-                        continue
-                    elif not isinstance(row[self.answer_column], str):
-                        print(f'Cleaned answer is not string: {row[self.answer_column]}')
-                        continue
+                        if len(ids) > 0 and self.dataset_name == 'qasina' and int(dataset_id) in ids.astype(int):
+                            print(f"Skipping row with dataset id: {dataset_id}")
+                            continue
+                        elif len(ids) > 0 and dataset_id in ids:
+                            print(f"Skipping row with dataset id: {dataset_id}")
+                            continue
 
-                    start_time = time.time()
-                    answer, retrieve_count, hit_rate_stats = self.answer_question(
-                        question=row[self.question_column],
-                        system_type=system_type,
-                        question_id=str(dataset_id)
-                    )
+                        result = {
+                            'exact_match': None,
+                            'f1_score': None,
+                            'time': None,
+                            'step': None,
+                            'dataset_id': dataset_id,
+                            'hit_rate': None,
+                            'hits': None,
+                            'total_retrieved': None,
+                            'expected_count': None,
+                            'error': None,
+                        }
 
-                    end_time = time.time()
-                    elapsed = end_time - start_time
+                        try:
+                            if row[self.question_column] is None or row[self.answer_column] is None:
+                                print(f'Skipping row because answer or question is None index: {index}')
+                                result['error'] = 'Skipped: answer or question is None'
+                                writer.writerow(result)
+                                f.flush()
+                                continue
+                            elif not isinstance(row[self.answer_column], str):
+                                print(f'Cleaned answer is not string: {row[self.answer_column]}')
+                                result['error'] = f'Skipped: answer is not string, got {type(row[self.answer_column]).__name__}'
+                                writer.writerow(result)
+                                f.flush()
+                                continue
 
-                    result = EvaluationHelper.compute_scores(
-                        a_gold=row[self.answer_column],
-                        a_pred=answer
-                    )
+                            start_time = time.time()
+                            answer, retrieve_count, hit_rate_stats = self.answer_question(
+                                question=row[self.question_column],
+                                system_type=system_type,
+                                question_id=str(dataset_id)
+                            )
 
-                    result['time'] = elapsed
-                    result['step'] = retrieve_count
-                    result['dataset_id'] = dataset_id
-                    
-                    if hit_rate_stats is not None:
-                        result['hit_rate'] = hit_rate_stats['hit_rate']
-                        result['hits'] = hit_rate_stats['hits']
-                        result['total_retrieved'] = hit_rate_stats['total_retrieved']
-                        result['expected_count'] = hit_rate_stats['expected_count']
-                    else:
-                        result['hit_rate'] = None
-                        result['hits'] = None
-                        result['total_retrieved'] = None
-                        result['expected_count'] = None
-                    
-                    experiment_result.append(result)
+                            end_time = time.time()
+                            elapsed = end_time - start_time
 
-                    print(f"\n[Q] {row[self.question_column]}")
-                    print(f"[A] {answer}")
-                    print("[Result]:")
-                    pprint(result, width=60)
-                except Exception as e:
-                    traceback.print_exc()
-                    print(f'Error when trying to answer index: {index}')
-                    experiment_result.append({
-                        'exact_match': None,
-                        'f1_score': None,
-                        'time': None,
-                        'step': None,
-                        'dataset_id': dataset_id,
-                        'hit_rate': None,
-                        'hits': None,
-                        'total_retrieved': None,
-                        'expected_count': None,
-                        'error': str(e),
-                    })
-                    continue
+                            scores = EvaluationHelper.compute_scores(
+                                a_gold=row[self.answer_column],
+                                a_pred=answer
+                            )
 
-            experiment_result_df = pd.DataFrame(experiment_result)
-            experiment_result_df.to_csv(file_save_path, index=False)
+                            result['exact_match'] = scores.get('exact_match')
+                            result['f1_score'] = scores.get('f1_score')
+                            result['time'] = elapsed
+                            result['step'] = retrieve_count
+                            result['dataset_id'] = dataset_id
 
-            if existing_result is not None:
-                combined_dataset = pd.concat([existing_result, experiment_result_df], ignore_index=True)
-                combined_dataset.drop_duplicates(subset=['dataset_id'], inplace=True)
-                combined_dataset.to_csv(file_save_path, index=False)
+                            if hit_rate_stats is not None:
+                                result['hit_rate'] = hit_rate_stats['hit_rate']
+                                result['hits'] = hit_rate_stats['hits']
+                                result['total_retrieved'] = hit_rate_stats['total_retrieved']
+                                result['expected_count'] = hit_rate_stats['expected_count']
+
+                            print(f"\n[Q] {row[self.question_column]}")
+                            print(f"[A] {answer}")
+                            print("[Result]:")
+                            pprint(result, width=60)
+
+                        except KeyboardInterrupt:
+                            print(f'\n⚠️  Interrupted at index {index}, saving progress...')
+                            writer.writerow(result)
+                            f.flush()
+                            print(f'Progress saved to: {file_save_path}')
+                            raise
+                        except Exception as e:
+                            traceback.print_exc()
+                            print(f'Error when trying to answer index: {index}')
+                            result['error'] = str(e)
+
+                        writer.writerow(result)
+                        f.flush()
+
+                except KeyboardInterrupt:
+                    print(f'Process interrupted. Results saved to: {file_save_path}')
+                    raise
 
             print(f"Final experiment done: {file_save_path}")
+        except KeyboardInterrupt:
+            print('Process stopped by user.')
         except Exception as e:
             traceback.print_exc()
             print(f'Error doing final experiment: {e}')
