@@ -1,0 +1,13 @@
+{
+  "exact_match": {
+    "non-retrieval_vs_single-retrieval": {
+      "system_1": "non-retrieval",
+      "system_2": "single-retrieval",
+      "metric": "exact_match",
+      "mean_1": 0.032,
+      "mean_2": NaN,
+      "mean_diff": NaN,
+      "ci_lower": NaN,
+      "ci_upper": NaN,
+      "p_value": 0.0,
+      "significant": 
