@@ -733,7 +733,7 @@ class System:
         output_file = f'{self.experiment_result_folder}/{self.dataset_name}/statistical_comparisons.json'
 
         with open(output_file, 'w') as f:
-            json.dump(results, f, indent=2)
+            json.dump(results, f, indent=2, default=lambda o: o.item() if isinstance(o, np.generic) else o)
 
         print(f"✅ Saved comparison results to: {output_file}\n")
 

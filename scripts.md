@@ -81,5 +81,7 @@ python -m main --action experiment --dataset indoqa --experiment_type all --comp
 
 # Complete workflow: Run bootstrap → Aggregate → Generate tables
 python -m main --action experiment --dataset qasina --experiment_type all --bootstrap --bootstrap_samples 10
-python -m main --action experiment --dataset qasina --experiment_type all --aggregate
-python -m main --action experiment --dataset qasina --experiment_type all --generate_tables
+
+python -m main --action experiment --dataset qasina --experiment_type all --aggregate -- bootstrap_samples 10
+
+python -m main --action experiment --dataset qasina --experiment_type all --generate_tables --bootstrap_samples 10
