@@ -63,6 +63,17 @@ def parse_all_args():
         action='store_true',
         help="Run all-pair statistical comparisons"
     )
+    parser.add_argument(
+        "--cleanup",
+        action='store_true',
+        help="Remove corrupted bootstrap run files (high error rate)"
+    )
+    parser.add_argument(
+        "--error_threshold",
+        type=float,
+        default=0.5,
+        help="Error rate threshold for marking bootstrap runs as corrupted (default: 0.5)"
+    )
 
     return parser.parse_args()
 
@@ -232,11 +243,32 @@ def run_experiment(system_type: str,
                    bootstrap_samples: int = None,
                    aggregate: bool = False,
                    generate_tables: bool = False,
-                   compare: bool = False):
+                   compare: bool = False,
+                   cleanup: bool = False,
+                   error_threshold: float = 0.5):
     from final_experiment import System, configs, system_type_mapping, SystemType
     config = configs[dataset]
     BEST_MODEL_PATH = 'saved_model/indobenchmark_indobert-large-p1'
     MODEL_TYPE = 'stable-qwen'
+
+    if cleanup:
+        print("🧹 Cleaning up corrupted bootstrap run files...")
+        system = System(
+            classifier_model_path=BEST_MODEL_PATH,
+            dataset_path=config.dataset_path,
+            dataset_index=config.dataset_index,
+            dataset_name=config.dataset_name,
+            dataset_part=dataset_part,
+            keep_column=config.keep_column,
+            model_type=MODEL_TYPE,
+            question_column=config.question_column,
+            answer_column=config.answer_column,
+            id_column=config.id_column,
+            experiment_result_folder=config.experiment_result_folder,
+            n_bootstrap_samples=bootstrap_samples,
+        )
+        system.cleanup_bootstrap_results(error_threshold=error_threshold)
+        return
 
     if generate_tables:
         print("📄 Generating paper-ready tables...")
@@ -378,7 +410,9 @@ def main():
             bootstrap_samples=arguments.bootstrap_samples,
             aggregate=arguments.aggregate,
             generate_tables=arguments.generate_tables,
-            compare=arguments.compare
+            compare=arguments.compare,
+            cleanup=arguments.cleanup,
+            error_threshold=arguments.error_threshold,
         )
         return
     elif arguments.action == 'multi-retrieval-issues':

@@ -379,15 +379,44 @@ class System:
 
         # Check for existing runs if resume is True
         existing_runs = []
+        corrupted_runs = []
         if resume:
             for run_idx in range(1, n_samples + 1):
                 file_path = self.generate_file_name(system_type, bootstrap_run=run_idx)
-                if os.path.exists(file_path):
-                    existing_runs.append(run_idx)
+                if not os.path.exists(file_path):
+                    continue
+
+                try:
+                    existing_df = pd.read_csv(file_path)
+                    total_rows = len(existing_df)
+                    error_rows = existing_df['error'].notna().sum() + existing_df['exact_match'].isna().sum()
+                    error_rows = max(error_rows, existing_df['error'].notna().sum())
+                    error_rate = error_rows / total_rows if total_rows > 0 else 1.0
+
+                    if error_rate > 0.5:
+                        corrupted_runs.append(run_idx)
+                        corrupted_path = f"{file_path}.corrupted"
+                        if os.path.exists(corrupted_path):
+                            os.remove(corrupted_path)
+                        os.rename(file_path, corrupted_path)
+                        print(f"⚠️  Run {run_idx} has {error_rate:.1%} error rate, marking as corrupted")
+                    else:
+                        existing_runs.append(run_idx)
+                except Exception as e:
+                    print(f"⚠️  Could not read run {run_idx} file, marking as corrupted: {e}")
+                    corrupted_runs.append(run_idx)
+                    corrupted_path = f"{file_path}.corrupted"
+                    if os.path.exists(file_path):
+                        if os.path.exists(corrupted_path):
+                            os.remove(corrupted_path)
+                        os.rename(file_path, corrupted_path)
 
             if existing_runs:
-                print(f"⏭️  Found {len(existing_runs)} existing runs, will skip them")
+                print(f"⏭️  Found {len(existing_runs)} existing valid runs, will skip them")
                 print(f"   Skipping runs: {existing_runs}")
+            if corrupted_runs:
+                print(f"⚠️  Found {len(corrupted_runs)} corrupted runs, will re-run them")
+                print(f"   Re-running runs: {corrupted_runs}")
 
         # Run experiments for missing iterations
         start_time = time.time()
@@ -423,6 +452,84 @@ class System:
         print(f"✅ Bootstrap testing complete!")
         print(f"   Total new runs: {completed_runs}")
         print(f"   Total time: {total_elapsed:.2f}s ({total_elapsed/60:.2f} minutes)")
+        print(f"{'='*60}\n")
+
+    def cleanup_bootstrap_results(
+        self,
+        system_types: Optional[List[SystemType]] = None,
+        n_samples: Optional[int] = None,
+        error_threshold: float = 0.5,
+    ):
+        """
+        Scan bootstrap run files and remove/rename those with high error rates.
+
+        Args:
+            system_types: Which systems to check (default: all)
+            n_samples: Number of bootstrap samples (default from config)
+            error_threshold: Error rate above which a file is considered corrupted (default: 0.5)
+        """
+        import glob
+
+        n_samples = n_samples or self.n_bootstrap_samples
+        if system_types is None:
+            system_types = list(SystemType)
+
+        reverse_mapping = {v: k for k, v in self.type_mapping.items()}
+        folder = os.path.join(self.base_dir, self.experiment_result_folder, self.dataset_name)
+        os.makedirs(folder, exist_ok=True)
+
+        total_cleaned = 0
+
+        for system_type in system_types:
+            method_name = reverse_mapping.get(system_type, system_type.value)
+            sanitized_method = re.sub(r'[^A-Za-z0-9]', '_', method_name)
+            pattern = os.path.join(folder, f'{self.model_type}_{sanitized_method}_bootstrap_run*.csv')
+
+            files = sorted(glob.glob(pattern))
+            if not files:
+                print(f"  No bootstrap files found for {method_name}")
+                continue
+
+            print(f"\n  Checking {method_name}: {len(files)} files")
+
+            for file_path in files:
+                filename = os.path.basename(file_path)
+                try:
+                    df = pd.read_csv(file_path)
+                    total_rows = len(df)
+                    if total_rows == 0:
+                        print(f"    ❌ {filename}: empty file, removing")
+                        os.remove(file_path)
+                        total_cleaned += 1
+                        continue
+
+                    error_count = df['error'].notna().sum()
+                    null_count = df['exact_match'].isna().sum()
+                    error_rate = error_count / total_rows if total_rows > 0 else 1.0
+
+                    if error_rate > error_threshold:
+                        corrupted_path = f"{file_path}.corrupted"
+                        if os.path.exists(corrupted_path):
+                            os.remove(corrupted_path)
+                        os.rename(file_path, corrupted_path)
+                        print(f"    ❌ {filename}: {error_rate:.1%} errors ({error_count}/{total_rows}), renamed to .corrupted")
+                        total_cleaned += 1
+                    elif null_count > error_threshold * total_rows:
+                        corrupted_path = f"{file_path}.corrupted"
+                        if os.path.exists(corrupted_path):
+                            os.remove(corrupted_path)
+                        os.rename(file_path, corrupted_path)
+                        print(f"    ❌ {filename}: {null_count/total_rows:.1%} null results ({null_count}/{total_rows}), renamed to .corrupted")
+                        total_cleaned += 1
+                    else:
+                        print(f"    ✅ {filename}: OK ({error_count} errors, {null_count} nulls out of {total_rows})")
+                except Exception as e:
+                    print(f"    ❌ {filename}: could not read file ({e}), removing")
+                    os.remove(file_path)
+                    total_cleaned += 1
+
+        print(f"\n{'='*60}")
+        print(f"🧹 Cleanup complete! Removed/renamed {total_cleaned} corrupted files")
         print(f"{'='*60}\n")
 
     def aggregate_bootstrap_results(
