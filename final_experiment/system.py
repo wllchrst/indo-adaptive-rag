@@ -149,6 +149,7 @@ class System:
         try:
             print(f"🥸 Running process using type: {system_type}")
             file_save_path = self.generate_file_name(system_type)
+            print(f'USING PATH: {file_save_path}')
             ids = []
 
             if os.path.exists(file_save_path):
