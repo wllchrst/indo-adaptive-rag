@@ -1,0 +1,5 @@
+exact_match,f1_score,time,step,dataset_id,hit_rate,hits,total_retrieved,expected_count,error
+1,1.0,0.31496524810791016,1,0,,,,,
+0,0.3636363636363636,0.24660205841064453,1,1,,,,,
+0,0.787878787878788,0.5336716175079346,1,2,,,,,
+,,,,3,,,,,
