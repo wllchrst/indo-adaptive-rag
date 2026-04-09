@@ -74,6 +74,13 @@ def parse_all_args():
         default=0.5,
         help="Error rate threshold for marking bootstrap runs as corrupted (default: 0.5)"
     )
+    parser.add_argument(
+        "--retrieval_type",
+        type=str,
+        default='lexical',
+        choices=['lexical', 'semantic', 'hybrid'],
+        help="Retrieval type to use (default: lexical)"
+    )
 
     return parser.parse_args()
 
@@ -245,7 +252,8 @@ def run_experiment(system_type: str,
                    generate_tables: bool = False,
                    compare: bool = False,
                    cleanup: bool = False,
-                   error_threshold: float = 0.5):
+                   error_threshold: float = 0.5,
+                   retrieval_type: str = 'lexical'):
     from final_experiment import System, configs, system_type_mapping, SystemType
     config = configs[dataset]
     BEST_MODEL_PATH = 'saved_model/indobenchmark_indobert-large-p1'
@@ -266,6 +274,7 @@ def run_experiment(system_type: str,
             id_column=config.id_column,
             experiment_result_folder=config.experiment_result_folder,
             n_bootstrap_samples=bootstrap_samples,
+            retrieval_type=retrieval_type,
         )
         system.cleanup_bootstrap_results(error_threshold=error_threshold)
         return
@@ -285,6 +294,7 @@ def run_experiment(system_type: str,
             id_column=config.id_column,
             experiment_result_folder=config.experiment_result_folder,
             n_bootstrap_samples=bootstrap_samples,
+            retrieval_type=retrieval_type,
         )
         system.generate_paper_tables(n_samples=bootstrap_samples)
         return
@@ -304,6 +314,7 @@ def run_experiment(system_type: str,
             id_column=config.id_column,
             experiment_result_folder=config.experiment_result_folder,
             n_bootstrap_samples=bootstrap_samples,
+            retrieval_type=retrieval_type,
         )
         system.compare_all_systems(n_samples=bootstrap_samples)
         return
@@ -323,6 +334,7 @@ def run_experiment(system_type: str,
                 id_column=config.id_column,
                 experiment_result_folder=config.experiment_result_folder,
                 n_bootstrap_samples=bootstrap_samples,
+                retrieval_type=retrieval_type,
             )
 
             if aggregate:
@@ -348,6 +360,7 @@ def run_experiment(system_type: str,
             id_column=config.id_column,
             experiment_result_folder=config.experiment_result_folder,
             n_bootstrap_samples=bootstrap_samples,
+            retrieval_type=retrieval_type,
         )
 
         sys_type = system_type_mapping[system_type]
@@ -413,6 +426,7 @@ def main():
             compare=arguments.compare,
             cleanup=arguments.cleanup,
             error_threshold=arguments.error_threshold,
+            retrieval_type=arguments.retrieval_type,
         )
         return
     elif arguments.action == 'multi-retrieval-issues':

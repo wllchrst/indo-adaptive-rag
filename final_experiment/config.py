@@ -17,6 +17,7 @@ class Config:
     experiment_result_folder: str
     n_bootstrap_samples: int = 10
     random_seed: int = 42
+    retrieval_type: str = 'lexical'
 
 
 configs: Dict[str, Config] = {

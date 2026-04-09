@@ -57,7 +57,8 @@ class System:
                  id_column: str = 'id',
                  experiment_result_folder: str = 'experiment_results',
                  n_bootstrap_samples: int = 10,
-                 random_seed: int = 42):
+                 random_seed: int = 42,
+                 retrieval_type: str = 'lexical'):
         print("\n🚀 System initialized with configuration:")
         print(f"  classifier_model_path : {classifier_model_path}")
         print(f"  dataset_path          : {dataset_path}")
@@ -69,7 +70,8 @@ class System:
         print(f"  question_column       : {question_column}")
         print(f"  answer_column         : {answer_column}")
         print(f"  id_column             : {id_column}")
-        print(f"  experiment_result_dir : {experiment_result_folder}\n")
+        print(f"  experiment_result_dir : {experiment_result_folder}")
+        print(f"  retrieval_type        : {retrieval_type}\n")
 
         self.classifier = Classifier(model_path=classifier_model_path)
         self.type_mapping = {
@@ -96,6 +98,8 @@ class System:
         }
 
         self.experiment_result_folder = experiment_result_folder
+
+        self.retrieval_type = retrieval_type
 
         # Add bootstrap configuration
         self.n_bootstrap_samples = n_bootstrap_samples
@@ -281,7 +285,8 @@ class System:
             index=self.dataset_index,
             answer=None,
             supporting_facts=[],
-            question_id=question_id
+            question_id=question_id,
+            retrieval_type=self.retrieval_type
         )
 
         return result
@@ -314,7 +319,8 @@ class System:
             "question_column": self.question_column,
             "answer_column": self.answer_column,
             "id_column": self.id_column,
-            "experiment_result_folder": self.experiment_result_folder
+            "experiment_result_folder": self.experiment_result_folder,
+            "retrieval_type": self.retrieval_type
         }
 
         # Create config directory if needed
@@ -339,7 +345,7 @@ class System:
         folder = f'{self.experiment_result_folder}/{self.dataset_name}'
         os.makedirs(folder, exist_ok=True)
 
-        base_name = f'{self.model_type}_{reverse_mapping[system_type]}'
+        base_name = f'{self.model_type}_{reverse_mapping[system_type]}_{self.retrieval_type}'
         sanitized_path = re.sub(r'[^A-Za-z0-9/_]', '_', base_name)
 
         if bootstrap_run is not None:
@@ -631,7 +637,7 @@ class System:
         """
         Generate file path for aggregated bootstrap statistics.
         """
-        base_name = f'{self.model_type}_{reverse_mapping[system_type]}'
+        base_name = f'{self.model_type}_{reverse_mapping[system_type]}_{self.retrieval_type}'
         sanitized_path = re.sub(r'[^A-Za-z0-9/_]', '_', base_name)
         folder = f'{self.experiment_result_folder}/{self.dataset_name}'
         return f'{folder}/{sanitized_path}_bootstrap_stats.csv'
@@ -640,7 +646,7 @@ class System:
         """
         Generate file path for bootstrap summary JSON.
         """
-        base_name = f'{self.model_type}_{reverse_mapping[system_type]}'
+        base_name = f'{self.model_type}_{reverse_mapping[system_type]}_{self.retrieval_type}'
         sanitized_path = re.sub(r'[^A-Za-z0-9/_]', '_', base_name)
         folder = f'{self.experiment_result_folder}/{self.dataset_name}'
         return f'{folder}/{sanitized_path}_bootstrap_summary.json'
