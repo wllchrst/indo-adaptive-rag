@@ -53,27 +53,27 @@ def get_unembedded_docs(es: Elasticsearch, index: str, batch_size: int = 100) ->
         }
     }
     hits = []
-    from_ = 0
+    result = es.search(
+        index=index,
+        query=query,
+        size=batch_size,
+        _source=['text'],
+        scroll='2m',
+    )
+    scroll_id = result['_scroll_id']
+    hits.extend(result['hits']['hits'])
     while True:
-        result = es.search(
-            index=index,
-            query=query,
-            size=batch_size,
-            _source=['text'],
-            from_=from_,
-        )
+        result = es.scroll(scroll_id=scroll_id, scroll='2m')
         batch = result['hits']['hits']
         if not batch:
             break
         hits.extend(batch)
-        from_ += batch_size
-        if len(batch) < batch_size:
-            break
+    es.clear_scroll(scroll_id=scroll_id)
     return hits
 
 
 def index_embeddings(es: Elasticsearch, indices: list[str], batch_size: int, dry_run: bool = False):
-    model = SentenceTransformer(EMBEDDING_MODEL_NAME)
+    model = SentenceTransformer(EMBEDDING_MODEL_NAME, device='cuda')
 
     for index in indices:
         if not es.indices.exists(index=index):
