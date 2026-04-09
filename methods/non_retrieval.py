@@ -1,4 +1,4 @@
-from methods.base_method import BaseMethod
+from methods.base_method import BaseMethod, RetrievalType
 from typing import Optional, Tuple, Dict
 
 
@@ -12,7 +12,8 @@ class NonRetrieval(BaseMethod):
                index: str = '',
                answer: Optional[str] = None,
                supporting_facts: list[str] = [],
-               question_id: Optional[str] = None) -> Tuple[str, int, Optional[Dict]]:
+               question_id: Optional[str] = None,
+               retrieval_type: RetrievalType = 'lexical') -> Tuple[str, int, Optional[Dict]]:
         """
         This method is a placeholder for non-retrieval methods.
         It simply returns an answer from llm without any retrieval process.

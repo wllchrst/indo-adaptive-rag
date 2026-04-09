@@ -3,12 +3,13 @@ from llm import GeminiLLM, HuggingFaceLLM, OllamaLLM, OLLAMA_MODEL_LIST
 # from vector_database import DatabaseHandler
 from interfaces import IDocument, IMetadata
 from bm25 import ElasticsearchRetriever
-from typing import List, Optional, Tuple, Dict
+from typing import List, Optional, Tuple, Dict, Literal
 from llm.ollama_llm import OLLAMA_MODEL_LIST
 import os
 import pandas as pd
 
 model_type_list = ['gemini', 'hugging_face']
+RetrievalType = Literal['lexical', 'semantic', 'hybrid']
 
 
 class BaseMethod(ABC):
@@ -34,27 +35,35 @@ class BaseMethod(ABC):
 
     @abstractmethod
     def answer(self, query: str, with_logging: bool, index: str, answer: Optional[str] = None,
-               supporting_facts: list[str] = [], question_id: Optional[str] = None) -> Tuple[str, int, Optional[Dict]]:
+               supporting_facts: list[str] = [], question_id: Optional[str] = None,
+               retrieval_type: RetrievalType = 'lexical') -> Tuple[str, int, Optional[Dict]]:
         pass
 
     def retrieve_document(self,
                           query: str,
                           total_result: int = 3,
-                          index: str = '') -> List[IDocument]:
+                          index: str = '',
+                          retrieval_type: RetrievalType = 'lexical') -> List[IDocument]:
         """
-        This method retrieves a single document from the vector database based on the query.
+        Retrieve documents based on the specified retrieval type.
+        
+        Args:
+            query: The search query
+            total_result: Number of documents to retrieve
+            index: Elasticsearch index name
+            retrieval_type: 'lexical' (BM25), 'semantic' (knn), or 'hybrid' (RRF)
         """
         use_chromadb = True if index == '' else False
 
         if use_chromadb:
             return self.retrieve_chromadb(query, total_result)
 
-        documents = self.retrieve_elasticsearch(
-            query=query,
-            total_result=total_result,
-            index=index
-        )
-        return documents
+        if retrieval_type == 'semantic':
+            return self.retrieve_semantic(query, total_result, index)
+        elif retrieval_type == 'hybrid':
+            return self.retrieve_hybrid(query, total_result, index)
+        else:
+            return self.retrieve_elasticsearch(query, total_result, index)
 
     def retrieve_elasticsearch(self, query: str, total_result: int, index: str) -> List[IDocument]:
         search_result = self.elastic_retriever.search(index=index, query=query, total_result=total_result)
@@ -73,6 +82,50 @@ class BaseMethod(ABC):
             ))
 
         return documents
+
+    def retrieve_semantic(self, query: str, total_result: int, index: str) -> List[IDocument]:
+        search_result = self.elastic_retriever.search_knn(index=index, query=query, total_result=total_result)
+
+        documents: List[IDocument] = []
+        for result in search_result:
+            source = result['_source']
+            documents.append(IDocument(
+                text=source['text'],
+                distance=result['_score'],
+                metadata=IMetadata(
+                    docid=result['_id'],
+                    source=result['_index'],
+                    title=''
+                )
+            ))
+
+        return documents
+
+    def retrieve_hybrid(self, query: str, total_result: int, index: str,
+                        rrf_k: int = 60, lexical_weight: float = 0.5) -> List[IDocument]:
+        lexical_docs = self.retrieve_elasticsearch(query, total_result * 2, index)
+        semantic_docs = self.retrieve_semantic(query, total_result * 2, index)
+
+        doc_scores: Dict[str, float] = {}
+        doc_map: Dict[str, IDocument] = {}
+
+        for rank, doc in enumerate(lexical_docs):
+            doc_id = doc.metadata.docid
+            doc_scores[doc_id] = doc_scores.get(doc_id, 0) + lexical_weight / (rrf_k + rank + 1)
+            doc_map[doc_id] = doc
+
+        for rank, doc in enumerate(semantic_docs):
+            doc_id = doc.metadata.docid
+            doc_scores[doc_id] = doc_scores.get(doc_id, 0) + (1 - lexical_weight) / (rrf_k + rank + 1)
+            if doc_id not in doc_map:
+                doc_map[doc_id] = doc
+
+        sorted_ids = sorted(doc_scores.keys(), key=lambda x: doc_scores[x], reverse=True)
+        merged_docs = []
+        for doc_id in sorted_ids[:total_result]:
+            merged_docs.append(doc_map[doc_id])
+
+        return merged_docs
 
     def retrieve_chromadb(self, query: str, total_result: int = 5) -> List[IDocument]:
         return []

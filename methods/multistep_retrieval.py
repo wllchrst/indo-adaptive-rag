@@ -1,5 +1,5 @@
 from typing import List, Dict, Optional, Tuple
-from methods.base_method import BaseMethod
+from methods.base_method import BaseMethod, RetrievalType
 from interfaces import IDocument
 from helpers import WordHelper
 
@@ -9,7 +9,8 @@ class MultistepRetrieval(BaseMethod):
         super().__init__(model_type)
 
     def answer(self, query: str, with_logging: bool = False, index: str = '', answer: Optional[str] = None,
-               supporting_facts: list[str] = [], question_id: Optional[str] = None) -> Tuple[str, int, Optional[Dict]]:
+               supporting_facts: list[str] = [], question_id: Optional[str] = None,
+               retrieval_type: RetrievalType = 'lexical') -> Tuple[str, int, Optional[Dict]]:
         """
         This method retrieves multiple relevant documents from the vector database
         and uses them to answer the query.
@@ -23,7 +24,8 @@ class MultistepRetrieval(BaseMethod):
         """
         documents_from_fact = self.gather_documents_by_supporting_facts(
             supporting_facts=supporting_facts,
-            index=index
+            index=index,
+            retrieval_type=retrieval_type
         )
 
         mapping = self.mappings.get(index, {})
@@ -31,7 +33,7 @@ class MultistepRetrieval(BaseMethod):
 
         result, count, all_retrieved_docs = self.retrieve(
             query, index=index, with_logging=with_logging, answer=answer, previous_documents=documents_from_fact,
-            question_id=question_id, expected_ids=expected_ids)
+            question_id=question_id, expected_ids=expected_ids, retrieval_type=retrieval_type)
 
         hit_rate_stats = None
         if question_id and expected_ids and all_retrieved_docs:
@@ -52,12 +54,14 @@ class MultistepRetrieval(BaseMethod):
                  with_logging: bool = False,
                  question_id: Optional[str] = None,
                  expected_ids: List[str] = [],
-                 all_retrieved_docs: List[IDocument] = None):
+                 all_retrieved_docs: List[IDocument] = None,
+                 retrieval_type: RetrievalType = 'lexical'):
         if all_retrieved_docs is None:
             all_retrieved_docs = []
         
         retrieval_query = original_question if query == '' else query
-        documents = self.retrieve_document(retrieval_query, total_result=retrieval_count, index=index)
+        documents = self.retrieve_document(retrieval_query, total_result=retrieval_count, index=index,
+                                           retrieval_type=retrieval_type)
         all_retrieved_docs.extend(documents)
 
         result, is_answered = self.reasoning(
@@ -86,18 +90,21 @@ class MultistepRetrieval(BaseMethod):
             answer=answer,
             question_id=question_id,
             expected_ids=expected_ids,
-            all_retrieved_docs=all_retrieved_docs
+            all_retrieved_docs=all_retrieved_docs,
+            retrieval_type=retrieval_type
         )
 
     def gather_documents_by_supporting_facts(self,
                                              supporting_facts: list[str],
-                                             index: str):
+                                             index: str,
+                                             retrieval_type: RetrievalType = 'lexical'):
         final_documents = []
         for fact in supporting_facts:
             documents = self.retrieve_document(
                 query=fact,
                 total_result=3,
-                index=index
+                index=index,
+                retrieval_type=retrieval_type
             )
             final_documents += documents
 

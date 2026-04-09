@@ -1,4 +1,4 @@
-from methods.base_method import BaseMethod
+from methods.base_method import BaseMethod, RetrievalType
 from helpers import WordHelper
 from typing import Optional, Tuple, Dict, List
 
@@ -13,7 +13,8 @@ class SingleRetrieval(BaseMethod):
                index: str = '',
                answer: Optional[str] = None,
                supporting_facts: list[str] = [],
-               question_id: Optional[str] = None) -> Tuple[str, int, Optional[Dict]]:
+               question_id: Optional[str] = None,
+               retrieval_type: RetrievalType = 'lexical') -> Tuple[str, int, Optional[Dict]]:
         """
         This method retrieves a single relevant document from the vector database
         and uses it to answer the query.
@@ -22,7 +23,8 @@ class SingleRetrieval(BaseMethod):
 
         retrieved_document = self.retrieve_document(
             query=retrieval_query,
-            index=index
+            index=index,
+            retrieval_type=retrieval_type
         )
 
         formatted_query = self.llm.format_with_document(query, retrieved_document)

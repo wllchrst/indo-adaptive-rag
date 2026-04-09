@@ -1,3 +1,4 @@
 from methods.non_retrieval import NonRetrieval
 from methods.single_retrieval import SingleRetrieval
 from methods.multistep_retrieval import MultistepRetrieval
+from methods.base_method import RetrievalType
