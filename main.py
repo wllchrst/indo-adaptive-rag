@@ -254,7 +254,7 @@ def run_experiment(system_type: str,
                    cleanup: bool = False,
                    error_threshold: float = 0.5,
                    retrieval_type: str = 'lexical'):
-    from final_experiment import System, configs, system_type_mapping, SystemType
+    from final_experiment import System, configs, system_type_mapping, retrieval_type_mapping, SystemType
     config = configs[dataset]
     BEST_MODEL_PATH = 'saved_model/indobenchmark_indobert-large-p1'
     MODEL_TYPE = 'stable-qwen'
@@ -321,6 +321,33 @@ def run_experiment(system_type: str,
 
     if system_type == 'all':
         for type in system_type_mapping.values():
+            system = System(
+                classifier_model_path=BEST_MODEL_PATH,
+                dataset_path=config.dataset_path,
+                dataset_index=config.dataset_index,
+                dataset_name=config.dataset_name,
+                dataset_part=dataset_part,
+                keep_column=config.keep_column,
+                model_type=MODEL_TYPE,
+                question_column=config.question_column,
+                answer_column=config.answer_column,
+                id_column=config.id_column,
+                experiment_result_folder=config.experiment_result_folder,
+                n_bootstrap_samples=bootstrap_samples,
+                retrieval_type=retrieval_type,
+            )
+
+            if aggregate:
+                print(f"📊 Aggregating bootstrap results for {type.value}...")
+                system.aggregate_bootstrap_results(type, n_samples=bootstrap_samples)
+            elif bootstrap:
+                print(f"🔄 Running bootstrap experiments for {type.value}...")
+                system.run_bootstrap_experiments(type, n_samples=bootstrap_samples)
+            else:
+                print(f"🥸 Running normal experiment for {type.value}...")
+                system.process(type)
+    elif system_type == 'retrievals':
+        for type in retrieval_type_mapping.values():
             system = System(
                 classifier_model_path=BEST_MODEL_PATH,
                 dataset_path=config.dataset_path,

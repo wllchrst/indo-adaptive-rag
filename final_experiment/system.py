@@ -35,6 +35,12 @@ system_type_mapping = {
     'adaptive': SystemType.ADAPTIVE,
 }
 
+retrieval_type_mapping = {
+    'single-retrieval': SystemType.SINGLE,
+    'multi-retrieval': SystemType.MULTI,
+    'adaptive': SystemType.ADAPTIVE,
+}
+
 reverse_mapping = {
     SystemType.NON: 'non-retrieval',
     SystemType.SINGLE: 'single-retrieval',
