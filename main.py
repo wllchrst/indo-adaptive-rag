@@ -81,6 +81,17 @@ def parse_all_args():
         choices=['lexical', 'semantic', 'hybrid'],
         help="Retrieval type to use (default: lexical)"
     )
+    parser.add_argument(
+        "--summarize",
+        action='store_true',
+        help="Summarize all experiment results into a single report CSV"
+    )
+    parser.add_argument(
+        "--output_path",
+        type=str,
+        default=None,
+        help="Output path for the summary report CSV"
+    )
 
     return parser.parse_args()
 
@@ -407,6 +418,24 @@ def run_calculation():
     calculate_all_result(result_folder='experiment_results')
 
 
+def run_summarize(output_path: str = None):
+    from final_experiment import System
+
+    system = System(
+        classifier_model_path='saved_model/indobenchmark_indobert-large-p1',
+        dataset_path='',
+        dataset_index='',
+        dataset_name='',
+        dataset_part=1.0,
+        keep_column=[],
+        model_type='stable-qwen',
+        experiment_result_folder='experiment_results',
+    )
+    report = system.summarize_results(output_path=output_path)
+    print(f"\n📊 Summary Report ({len(report)} rows):")
+    print(report.to_string(index=False))
+
+
 def output_multiretrieval_issues():
     from methods import MultistepRetrieval
 
@@ -462,6 +491,10 @@ def main():
 
     elif arguments.action == 'calculate':
         run_calculation()
+        return
+
+    elif arguments.action == 'summarize':
+        run_summarize(output_path=arguments.output_path)
         return
 
     if arguments.dataset is None or arguments.action is None:

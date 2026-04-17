@@ -1,4 +1,4 @@
-﻿import pandas as pd
+import pandas as pd
 import csv
 import time
 import os
@@ -11,8 +11,6 @@ from scipy.stats import bootstrap as scipy_bootstrap
 from typing import Optional, List, Dict
 from pathlib import Path
 import json
-
-from fontTools.subset import subset
 
 from final_experiment.classifier import Classifier
 from typing import List, Tuple, Dict
@@ -1035,10 +1033,12 @@ class System:
                     'time_mean': df['time'].mean(),
                 }
 
-                if 'hit_rate' in df.columns:
-                    row['hit_rate_mean'] = df['hit_rate'].mean()
-                else:
-                    row['hit_rate_mean'] = None
+                hit_rate_columns = ['hit_rate', 'hits', 'total_retrieved', 'expected_count']
+                for col in hit_rate_columns:
+                    if col in df.columns and df[col].notna().any():
+                        row[f'{col}_mean'] = df[col].mean()
+                    else:
+                        row[f'{col}_mean'] = None
 
                 results.append(row)
 
