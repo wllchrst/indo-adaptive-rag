@@ -41,6 +41,8 @@ class SingleRetrieval(BaseMethod):
         if question_id:
             mapping = self.mappings.get(index, {})
             expected_ids = mapping.get(question_id, [])
+            print(f'mappings: {mapping}')
+            print(f'expected_ids: {expected_ids}')
             if expected_ids:
                 hit_rate_stats = self.calculate_hit_rate(retrieved_document, expected_ids)
 
