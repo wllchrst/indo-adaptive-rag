@@ -422,7 +422,7 @@ def run_summarize(output_path: str = None):
     from final_experiment import System
 
     system = System(
-        classifier_model_path='saved_model/indobenchmark_indobert-large-p1',
+        classifier_model_path='',
         dataset_path='',
         dataset_index='',
         dataset_name='',
@@ -430,6 +430,7 @@ def run_summarize(output_path: str = None):
         keep_column=[],
         model_type='stable-qwen',
         experiment_result_folder='experiment_results',
+        skip_init=True,
     )
     report = system.summarize_results(output_path=output_path)
     print(f"\n📊 Summary Report ({len(report)} rows):")

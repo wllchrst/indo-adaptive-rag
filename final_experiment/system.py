@@ -62,7 +62,13 @@ class System:
                  experiment_result_folder: str = 'experiment_results',
                  n_bootstrap_samples: int = 10,
                  random_seed: int = 42,
-                 retrieval_type: str = 'lexical'):
+                 retrieval_type: str = 'lexical',
+                 skip_init: bool = False):
+        self.experiment_result_folder = experiment_result_folder
+
+        if skip_init:
+            return
+
         print("\n🚀 System initialized with configuration:")
         print(f"  classifier_model_path : {classifier_model_path}")
         print(f"  dataset_path          : {dataset_path}")
@@ -1013,8 +1019,15 @@ class System:
                     print(f"⚠️  Skipping unrecognized file: {csv_file}")
                     continue
 
+                retrieval_type = 'lexical'
+                for suffix in ['semantic', 'hybrid']:
+                    if method.endswith(f'_{suffix}'):
+                        retrieval_type = suffix
+                        method = method[:-(len(suffix) + 1)]
+                        break
+
                 try:
-                    df = pd.read_csv(csv_file)
+                    df = pd.read_csv(csv_file, on_bad_lines='warn')
                 except Exception as e:
                     print(f"⚠️  Error reading {csv_file}: {e}")
                     continue
@@ -1023,6 +1036,7 @@ class System:
 
                 row = {
                     'method': method,
+                    'retrieval_type': retrieval_type,
                     'llm_model': model_display_names.get(model_key, model_key),
                     'dataset': dataset_name,
                     'total_data': total_data,

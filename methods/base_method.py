@@ -170,10 +170,10 @@ class BaseMethod(ABC):
         if not os.path.exists(mapping_file):
             return {}
         
-        df = pd.read_csv(mapping_file)
+        df = pd.read_csv(mapping_file, dtype=str)
         mapping = {}
         for _, row in df.iterrows():
-            mapping[row['question_id']] = row['context_ids'].split(',')
+            mapping[str(row['question_id'])] = row['context_ids'].split(',')
         return mapping
 
     def calculate_hit_rate(self, retrieved_docs: List[IDocument], expected_ids: List[str]) -> Dict[str, any]:
