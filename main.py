@@ -413,6 +413,41 @@ def run_experiment(system_type: str,
             system.process(sys_type)
 
 
+def run_qasina_missing():
+    from final_experiment import System, configs, system_type_mapping, SystemType
+    config = configs['qasina']
+    BEST_MODEL_PATH = 'saved_model/indobenchmark_indobert-large-p1'
+    MODEL_TYPE = 'stable-qwen'
+
+    missing = [
+        ('adaptive', 'lexical'),
+        ('adaptive', 'semantic'),
+        ('multi-retrieval', 'lexical'),
+        ('multi-retrieval', 'semantic'),
+    ]
+
+    for method_name, retrieval_type in missing:
+        print(f"\n{'='*60}")
+        print(f"Running {method_name} + {retrieval_type} for qasina")
+        print(f"{'='*60}\n")
+        system = System(
+            classifier_model_path=BEST_MODEL_PATH,
+            dataset_path=config.dataset_path,
+            dataset_index=config.dataset_index,
+            dataset_name=config.dataset_name,
+            dataset_part=1.0,
+            keep_column=config.keep_column,
+            model_type=MODEL_TYPE,
+            question_column=config.question_column,
+            answer_column=config.answer_column,
+            id_column=config.id_column,
+            experiment_result_folder=config.experiment_result_folder,
+            retrieval_type=retrieval_type,
+        )
+        sys_type = system_type_mapping[method_name]
+        system.process(sys_type)
+
+
 def run_calculation():
     from final_experiment.calculation import calculate_all_result
     calculate_all_result(result_folder='experiment_results')
@@ -488,6 +523,10 @@ def main():
         return
     elif arguments.action == 'multi-retrieval-issues':
         output_multiretrieval_issues()
+        return
+
+    elif arguments.action == 'qasina-missing':
+        run_qasina_missing()
         return
 
     elif arguments.action == 'calculate':
