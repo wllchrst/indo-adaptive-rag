@@ -3,7 +3,7 @@
   "dataset_name": "qasina",
   "dataset_index": "qasina",
   "dataset_size": 500,
-  "n_bootstrap_samples": null,
+  "n_bootstrap_samples": 10,
   "random_seed": 42,
   "question_column": "question",
   "answer_column": "answer",
