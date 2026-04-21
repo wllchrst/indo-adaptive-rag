@@ -9,5 +9,5 @@
   "answer_column": "answer",
   "id_column": "ID",
   "experiment_result_folder": "experiment_results",
-  "retrieval_type": "hybrid"
+  "retrieval_type": "semantic"
 }
